@@ -1,0 +1,27 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Project: <a ng-href="#/{{project.id}}">{{project.name}}</a></h1>
+			<h2>Werk item: {{workitem.name}}</h2>
+			<ul class="nav nav-tabs">
+				<li class="active"><a ng-href="#/{{project.id}}/workitems/{{workitem.id}}">Overzicht</a></li>
+				<li><a ng-href="#/{{project.id}}/workitems/{{workitem.id}}/materials">Materialen</a></li>
+				<li><a ng-href="#/{{project.id}}/workitems/{{workitem.id}}/tasks">Taken</a></li>
+			</ul>
+			<div>&nbsp;</div>
+			<div>
+				<form class="form-horizontal">
+					<div class="form-group"><div class="col-md-12">
+						<textarea ng-model="workitem.description" class="form-control" rows="15"></textarea>
+					</div></div>
+                    <div class="form-group">
+                        Macro's
+                    </div>
+					<div class="form-group"><div class="col-md-12">
+						<button class="btn btn-primary" ng-click="save()">Opslaan</button>
+					</div></div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

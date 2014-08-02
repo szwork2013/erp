@@ -1,0 +1,31 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Project: {{project.name}}</h1>
+			<ul class="nav nav-tabs">
+				<li><a ng-href="#/{{project.id}}">Overzicht</a></li>
+				<li class="active"><a ng-href="#/{{project.id}}/workitems">Werk</a></li>
+			</ul>
+			<div>&nbsp;</div>
+			<form class="form-horizontal">
+				<div class="form-group">
+					<label for="name" class="control-label col-md-2">Naam</label>
+					<div class="col-md-10">
+						<input type="text" ng-model="name" name="name" id="name" class="form-control" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="description" class="control-label col-md-2">Naam</label>
+					<div class="col-md-10">
+						<textarea ng-model="description" name="description" id="description" class="form-control" rows="10"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-10 col-md-offset-2">
+						<button class="btn btn-primary" ng-click="save()">Nieuw werk item aanmaken</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

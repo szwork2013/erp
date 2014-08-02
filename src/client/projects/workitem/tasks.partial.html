@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Project: <a data-ng-href="#/{{project.id}}">{{project.name}}</a></h1>
+            <h2>Werk item: {{workitem.name}}</h2>
+            <ul class="nav nav-tabs">
+                <li><a data-ng-href="#/{{project.id}}/workitems/{{workitem.id}}">Overzicht</a></li>
+                <li><a data-ng-href="#/{{project.id}}/workitems/{{workitem.id}}/materials">Materialen</a></li>
+                <li class="active"><a data-ng-href="#/{{project.id}}/workitems/{{workitem.id}}/tasks">Taken</a></li>
+            </ul>
+            <div>&nbsp;</div>
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Naam</th>
+                            <th>Manuren</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                           <tr data-ng-repeat="task in tasks">
+                               <td>{{taks.name}}</td>
+                               <td>{{task.manhours}}</td>
+                               <td>&nbsp;</td>
+                           </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

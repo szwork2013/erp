@@ -1,0 +1,31 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Project: {{project.name}}</h1>
+			<ul class="nav nav-tabs">
+				<li><a ng-href="#/{{project.id}}">Overzicht</a></li>
+				<li class="active"><a ng-href="#/{{project.id}}/workitems">Werk</a></li>
+			</ul>
+			<div>&nbsp;</div>
+			<div>
+				<a ng-href="#/{{project.id}}/workitems/create">Nieuw werk item aanmaken</a>
+			</div>
+			<div>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Naam</th>
+							<th>Omschrijving</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="workitem in workitems">
+							<td><a ng-href="#/{{project.id}}/workitems/{{workitem.id}}">{{workitem.name}}</a></td>
+							<td>{{workitem.description}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
