@@ -8,4 +8,4 @@ var app = express([]);
 app.use(express.static(__dirname + '/client'));
 app.use('/api', server());
 
-app.listen(settings.port);
+app.listen(process.env.PORT || 8082);
