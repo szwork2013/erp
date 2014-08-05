@@ -159,36 +159,46 @@ projectsApp.controller('ProjectWorkItemDetailController', [
 	}
 ]);
 
-projectsApp.controller('ProjectWorkItemMaterialsController', [
+	projectsApp.controller('ProjectWorkItemMaterialsController', [
 	'$scope',
 	'$http',
 	'$routeParams',
-	function($scope, $http, $routeParams) {
-		var projectRequest = $http.get('/api/projects/' + $routeParams.id);
-		projectRequest.success(function(data){
-			$scope.project = data;
-		});
-		
-		var workItemRequest = $http.get('/api/projects/' + $routeParams.id + '/workitems/' + $routeParams.workitemid);
-		workItemRequest.success(function(data) {
-			$scope.workitem = data;
-		});
+	function ($scope, $http, $routeParams) {
+	    var projectRequest = $http.get('/api/projects/' + $routeParams.id);
+	    projectRequest.success(function (data) {
+	        $scope.project = data;
+	    });
+
+	    var workItemRequest = $http.get('/api/projects/' + $routeParams.id + '/workitems/' + $routeParams.workitemid);
+	    workItemRequest.success(function (data) {
+	        $scope.workitem = data;
+	    });
+
+	    var unitsRequest = $http.get('/api/referenceData/units');
+	    unitsRequest.success(function (data) {
+	        $scope.units = data;
+	    });
+
+	    $scope.materials = [];
+	    $scope.addMaterial = function () {
+	        $scope.materials.splice(0, 0, { source: null, name:'', quantity:0, unit:'' });
+	    };
 	}
 ]);
 
-projectsApp.controller('ProjectWorkItemTasksController', [
+	projectsApp.controller('ProjectWorkItemTasksController', [
 	'$scope',
 	'$http',
 	'$routeParams',
-	function($scope, $http, $routeParams) {
-		var projectRequest = $http.get('/api/projects/' + $routeParams.id);
-		projectRequest.success(function(data){
-			$scope.project = data;
-		});
-		
-		var workItemRequest = $http.get('/api/projects/' + $routeParams.id + '/workitems/' + $routeParams.workitemid);
-		workItemRequest.success(function(data) {
-			$scope.workitem = data;
-		});
+	function ($scope, $http, $routeParams) {
+	    var projectRequest = $http.get('/api/projects/' + $routeParams.id);
+	    projectRequest.success(function (data) {
+	        $scope.project = data;
+	    });
+
+	    var workItemRequest = $http.get('/api/projects/' + $routeParams.id + '/workitems/' + $routeParams.workitemid);
+	    workItemRequest.success(function (data) {
+	        $scope.workitem = data;
+	    });
 	}
 ]);

@@ -1,17 +1,45 @@
 <div class="container">
-	<div class="row">
-		<div class="col-md-12">
-			<h1>Project: <a data-ng-href="#/{{project.id}}">{{project.name}}</a></h1>
-			<h2>Werk item: {{workitem.name}}</h2>
-			<ul class="nav nav-tabs">
-				<li><a data-ng-href="#/{{project.id}}/workitems/{{workitem.id}}">Overzicht</a></li>
-				<li class="active"><a data-ng-href="#/{{project.id}}/workitems/{{workitem.id}}/materials">Materialen</a></li>
-				<li><a data-ng-href="#/{{project.id}}/workitems/{{workitem.id}}/tasks">Taken</a></li>
-			</ul>
-			<div>&nbsp;</div>
-			<div>
-				
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Project: <a data-ng-href="#/{{project.id}}/workitems">{{project.name}}</a></h1>
+            <h2>Werk item: {{workitem.name}}</h2>
+            <ul class="nav nav-tabs">
+                <li><a data-ng-href="#/{{project.id}}/workitems/{{workitem.id}}">Overzicht</a></li>
+                <li class="active"><a data-ng-href="#/{{project.id}}/workitems/{{workitem.id}}/materials">Materialen</a></li>
+                <li><a data-ng-href="#/{{project.id}}/workitems/{{workitem.id}}/tasks">Taken</a></li>
+            </ul>
+            <div>&nbsp;</div>
+            <div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Bron</th>
+                        <th>Materiaal</th>
+                        <th>Aantal</th>
+                        <th>Eenheid</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                     <tr>
+                            <td colspan="5"><button class="btn" data-ng-click="addMaterial()">+</button></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr data-ng-repeat="material in materials">
+                            <td>{{material.source}}</td>
+                            <td data-ng-if="material.source != null">{{material.name}}</td>
+                            <td data-ng-if="material.source == null"><input type="text" class="form-control" data-ng-model="material.name" /></td>
+                            <td data-ng-if="material.source != null">{{material.quantity | number}}</td>
+                            <td data-ng-if="material.source == null"><input type="text" class="form-control" data-ng-model="material.quantity" /></td>
+                            <td data-ng-if="material.source != null">{{material.unit}}</td>
+                            <td data-ng-if="material.source == null">
+                                <select class="form-control" data-ng-model="material.unit" data-ng-options="unit.name for unit in units"></select>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
