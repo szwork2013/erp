@@ -131,3 +131,11 @@ exports.getWorkItem = function(projectId, workitemId, cb) {
 		}
 	});
 };
+
+exports.findMaterials = function (projectId, workitemId, cb) {
+    
+};
+
+exports.saveMaterials = function (projectId, workitemId, materials, cb) {
+
+};

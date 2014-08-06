@@ -181,7 +181,11 @@ projectsApp.controller('ProjectWorkItemDetailController', [
 
 	    $scope.materials = [];
 	    $scope.addMaterial = function () {
-	        $scope.materials.splice(0, 0, { source: null, name:'', quantity:0, unit:'' });
+	        $scope.materials.splice(0, 0, { source: null, name: '', quantity: 0, unit: '' });
+	    };
+
+	    $scope.saveMaterials = function () {
+	        alert('not implemented yet, but ' + $scope.materials.length + ' materials detected');
 	    };
 	}
 ]);

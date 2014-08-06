@@ -21,23 +21,28 @@
                     </tr>
                     </thead>
                     <tbody>
-                     <tr>
-                            <td colspan="5"><button class="btn" data-ng-click="addMaterial()">+</button></td>
-                        </tr>
+                    <tr>
+                        <td colspan="5"><button class="btn" data-ng-click="addMaterial()">+</button></td>
+                    </tr>
                     </tbody>
                     <tbody>
-                        <tr data-ng-repeat="material in materials">
-                            <td>{{material.source}}</td>
-                            <td data-ng-if="material.source != null">{{material.name}}</td>
-                            <td data-ng-if="material.source == null"><input type="text" class="form-control" data-ng-model="material.name" /></td>
-                            <td data-ng-if="material.source != null">{{material.quantity | number}}</td>
-                            <td data-ng-if="material.source == null"><input type="text" class="form-control" data-ng-model="material.quantity" /></td>
-                            <td data-ng-if="material.source != null">{{material.unit}}</td>
-                            <td data-ng-if="material.source == null">
-                                <select class="form-control" data-ng-model="material.unit" data-ng-options="unit.name for unit in units"></select>
-                            <td>&nbsp;</td>
-                        </tr>
+                    <tr data-ng-repeat="material in materials">
+                        <td>{{material.source}}</td>
+                        <td data-ng-if="material.source != null">{{material.name}}</td>
+                        <td data-ng-if="material.source == null"><input type="text" class="form-control" data-ng-model="material.name" /></td>
+                        <td data-ng-if="material.source != null">{{material.quantity | number}}</td>
+                        <td data-ng-if="material.source == null"><input type="text" class="form-control" data-ng-model="material.quantity" /></td>
+                        <td data-ng-if="material.source != null">{{material.unit}}</td>
+                        <td data-ng-if="material.source == null">
+                            <select class="form-control" data-ng-model="material.unit" data-ng-options="unit.name for unit in units"></select>
+                        <td>&nbsp;</td>
+                    </tr>
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="5"><button class="btn btn-primary" data-ng-click="saveMaterials()">Opslaan</button></td>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
