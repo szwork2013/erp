@@ -1,0 +1,29 @@
+<html lang="en" data-ng-app="FinancialApp">
+    <head>
+        <title>ERP - Projecten</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+    </head>
+    <body>
+        <div class="navbar navbar-inverse" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html">ERP</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="projecten.html">Projecten</a></li>
+                    <li class="active"><a href="financieel.html">Financieel</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2" data-ng-include="'financial/menu.partial.html'"></div>
+                <div class="col-md-10" data-ng-view></div>
+            </div>
+        </div>
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-route.min.js"></script>
+        <script src="js/financialApp.js"></script>
+    </body>
+</html>
