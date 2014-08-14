@@ -23,7 +23,8 @@ var fromDocument = function(doc) {
 exports.findAccountTypes = function () {
     return [
         'Kosten',
-        'Opbrengsten'
+        'Opbrengsten',
+        'Bankrekening'
     ];
 };
 
@@ -45,3 +46,22 @@ exports.findAccounts = function () {
 
     return deferred.promise;
 };
+
+exports.createAccount = function (name, type) {
+    var deferred = q.defer();
+
+    var account = {};
+    account.name = name;
+    account.type = type;
+
+    db.saveDocument('Accounts', account, function (err, result) {
+        if (err) {
+            deferred.reject(err);
+        }
+        else {
+            deferred.resolve(result);
+        }
+    });
+
+    return deferred.promise;
+}

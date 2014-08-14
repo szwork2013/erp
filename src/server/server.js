@@ -119,6 +119,16 @@ module.exports = function () {
             var promise = financialService.findAccounts();
             promise.then(function (accounts) {
                 res.status(200).json(accounts);
+            }, function (err) {
+                res.status(500).end(err);
+            });
+        })
+        .put(function (req, res, next) {
+            var promise = financialService.createAccount(req.body.name, req.body.type);
+            promise.then(function (account) {
+                res.status(200).json(account);
+            }, function (err) {
+                res.status(500).end(err);
             });
         });
 

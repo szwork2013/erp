@@ -5,6 +5,10 @@ financialApp.config(['$routeProvider', function ($routeProvider) {
         .when('/overview', {
             controller: 'OverviewController'
         })
+        .when('/transactions', {
+            controller: 'TransactionsController',
+            templateUrl: 'financial/transactions/index.partial.html'
+        })
         .when('/settings', {
             redirectTo: '/settings/accounts'
         })
@@ -43,15 +47,27 @@ financialApp.controller('AccountsController', [
 financialApp.controller('CreateAccountController', [
     '$scope',
     '$accountService',
-    function ($scope, $accountService) {
+    '$location',
+    function ($scope, $accountService, $location) {
+        $scope.account = {};
+
         var promise = $accountService.findTypes();
         promise.then(function (types) {
             $scope.types = types;
+
+            $scope.create = function () {
+                var p = $accountService.createAccount($scope.account.name, $scope.account.type);
+                p.then(function () {
+                    $location.path('/settings/accounts');
+                }, function (reason) {
+                    alert('fout: ' + reason);
+                });
+            };
         });
     }
 ]);
 
-    financialApp.factory('$accountService', [
+financialApp.factory('$accountService', [
     '$http',
     '$q',
     function ($http, $q) {
@@ -75,6 +91,19 @@ financialApp.controller('CreateAccountController', [
                 var request = $http.get('/api/financial/accounts/types');
                 request.success(function (types) {
                     deferred.resolve(types);
+                })
+                .error(function (err) {
+                    deferred.reject(err);
+                })
+
+                return deferred.promise;
+            },
+            createAccount: function (name, type) {
+                var deferred = $q.defer();
+
+                var request = $http.put('/api/financial/accounts', { name: name, type: type });
+                request.success(function (data) {
+                    deferred.resolve();
                 })
                 .error(function () {
                     deferred.reject('error');
