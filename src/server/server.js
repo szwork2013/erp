@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 
 var projectService = require('./projectService');
 var referenceDataService = require('./referenceDataService.js');
+var financialService = require('./financialService.js');
 
 module.exports = function () {
     var router = express.Router();
@@ -111,6 +112,19 @@ module.exports = function () {
             referenceDataService.findUnits(function (units) {
                 res.status(200).json(units);
             });
+        });
+
+    router.route('/financial/accounts')
+        .get(function (req, res, next) {
+            var promise = financialService.findAccounts();
+            promise.then(function (accounts) {
+                res.status(200).json(accounts);
+            });
+        });
+
+    router.route('/financial/accounts/types')
+        .get(function (req, res, next) {
+            res.status(200).json(financialService.findAccountTypes());
         });
 
     return router;
