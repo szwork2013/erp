@@ -116,7 +116,7 @@ module.exports = function () {
 
     router.route('/financial/accounts')
         .get(function (req, res, next) {
-            var promise = financialService.findAccounts();
+            var promise = financialService.findAccounts('');
             promise.then(function (accounts) {
                 res.status(200).json(accounts);
             }, function (err) {
@@ -132,9 +132,29 @@ module.exports = function () {
             });
         });
 
+    router.route('/financial/accounts/:type')
+        .get(function (req, res, next) {
+            var promise = financialService.findAccounts(req.params.type);
+            promise.then(function (accounts) {
+                res.status(200).json(accounts);
+            }, function (err) {
+                res.status(500).end(err);
+            })
+        });
+
     router.route('/financial/accounts/types')
         .get(function (req, res, next) {
             res.status(200).json(financialService.findAccountTypes());
+        });
+
+    router.route('/financial/transactions')
+        .put(function (req, res, next) {
+            var promise = financialService.saveTransactions(req.body);
+            promise.then(function () {
+                res.status(200).end();
+            }, function (err) {
+                res.status(500).end(err);
+            });
         });
 
     return router;

@@ -1,21 +1,5 @@
 <h1>Verrichtingen</h1>
-<div>
-    <p>&nbsp;</p>
-    <p><a href="#/settings/accounts/create">Een nieuwe rekening aanmaken</a></p>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Naam</th>
-            <th>Type</th>
-            <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr data-ng-repeat="account in accounts">
-            <td>{{account.name}}</td>
-            <td>{{account.type}}</td>
-            <td>&nbsp;</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#/transactions">Overzicht</a></li>
+    <li><a href="#/transactions/add">Invoeren</a></li>
+</ul>
