@@ -115,14 +115,9 @@ module.exports = function () {
         });
 
     router.route('/financial/accounts')
-        .get(function (req, res, next) {
-            var promise = financialService.findAccounts('');
-            promise.then(function (accounts) {
-                res.status(200).json(accounts);
-            }, function (err) {
-                res.status(500).end(err);
-            });
-        })
+        .get(handlerFactory(function () {
+            return financialService.findAccounts('');
+        }))
         .put(function (req, res, next) {
             var promise = financialService.createAccount(req.body.name, req.body.type);
             promise.then(function (account) {
@@ -132,30 +127,31 @@ module.exports = function () {
             });
         });
 
-    router.route('/financial/accounts/:type')
-        .get(function (req, res, next) {
-            var promise = financialService.findAccounts(req.params.type);
-            promise.then(function (accounts) {
-                res.status(200).json(accounts);
-            }, function (err) {
-                res.status(500).end(err);
-            })
-        });
-
     router.route('/financial/accounts/types')
         .get(function (req, res, next) {
             res.status(200).json(financialService.findAccountTypes());
         });
 
+    router.route('/financial/accounts/:type')
+        .get(handlerFactory(function (req) {
+            return financialService.findAccounts(req.params.type);
+        }));
+
     router.route('/financial/transactions')
-        .put(function (req, res, next) {
-            var promise = financialService.saveTransactions(req.body);
-            promise.then(function () {
-                res.status(200).end();
-            }, function (err) {
-                res.status(500).end(err);
-            });
-        });
+        .put(handlerFactory(function (req) {
+            return financialService.saveTransactions(req.body);
+        }));
 
     return router;
 }
+
+var handlerFactory = function (serviceCall) {
+    return function (req, res, next) {
+        var promise = serviceCall(req);
+        promise.then(function (result) {
+            res.status(200).json(result);
+        }, function (error) {
+            res.status(500).end(error);
+        })
+    };
+};
