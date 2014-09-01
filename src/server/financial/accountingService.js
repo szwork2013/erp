@@ -31,8 +31,8 @@
     // dependencies
     var q = require('q');
     var settings = require('../settings.json');
-    var ravendb = require('ravendb');
-    var db = ravendb(settings.db.host, settings.db.name);
+    var datastore = require('nedb');
+    var db = new datastore({ filename: 'accounting', autload: true });
 
     module.exports = new AccountingService(q, db);
 })();
