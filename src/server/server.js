@@ -115,10 +115,15 @@ module.exports = function () {
         });
 
     router.route('/financial/accounts')
-        .get(function (req, res, next) {
-            var promise = financialService.findAccounts();
-            promise.then(function (accounts) {
-                res.status(200).json(accounts);
+        .get(handlerFactory(function () {
+            return financialService.findAccounts('');
+        }))
+        .put(function (req, res, next) {
+            var promise = financialService.createAccount(req.body.name, req.body.type);
+            promise.then(function (account) {
+                res.status(200).json(account);
+            }, function (err) {
+                res.status(500).end(err);
             });
         });
 
@@ -127,5 +132,26 @@ module.exports = function () {
             res.status(200).json(financialService.findAccountTypes());
         });
 
+    router.route('/financial/accounts/:type')
+        .get(handlerFactory(function (req) {
+            return financialService.findAccounts(req.params.type);
+        }));
+
+    router.route('/financial/transactions')
+        .put(handlerFactory(function (req) {
+            return financialService.saveTransactions(req.body);
+        }));
+
     return router;
 }
+
+var handlerFactory = function (serviceCall) {
+    return function (req, res, next) {
+        var promise = serviceCall(req);
+        promise.then(function (result) {
+            res.status(200).json(result);
+        }, function (error) {
+            res.status(500).end(error);
+        })
+    };
+};

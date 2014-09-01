@@ -9,6 +9,11 @@
 	"ravendb": "0.x",
 	"underscore": "1.x",
     "q": "1.0.x",
+<<<<<<< HEAD
     "nedb", "0.x"
+=======
+    "node-uuid": "1.4.x",
+    "request": "2.40.x"
+>>>>>>> origin/master
   }
 }
