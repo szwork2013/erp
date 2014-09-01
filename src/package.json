@@ -8,6 +8,7 @@
 	"body-parser": "1.x",
 	"ravendb": "0.x",
 	"underscore": "1.x",
-    "q": "1.0.x"
+    "q": "1.0.x",
+    "nedb", "0.x"
   }
 }
