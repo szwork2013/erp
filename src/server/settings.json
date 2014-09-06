@@ -1,1 +1,1 @@
-{"db":{"host":"http://localhost:8081","name":"erp"}}
+{"db":{"host":"http://localhost:8081","name":"erp","files":{"purchases":"./data/purchases.db"}}}

@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var projectService = require('./projectService');
 var referenceDataService = require('./referenceDataService.js');
 var financialService = require('./financialService.js');
+var accountingService = require('./financial/accountingService.js');
 
 module.exports = function () {
     var router = express.Router();
@@ -129,7 +130,12 @@ module.exports = function () {
 
     router.route('/financial/accounts/types')
         .get(function (req, res, next) {
-            res.status(200).json(financialService.findAccountTypes());
+            var promise = accountingService.findAccountTypes();
+            promise.then(function (data) {
+                res.status(200).json(data);
+            }, function (error) {
+                res.status(500).end(error);
+            });
         });
 
     router.route('/financial/accounts/:type')

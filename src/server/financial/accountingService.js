@@ -7,13 +7,22 @@
     AccountingService.prototype.findAccountTypes = function () {
         var d = this.q.defer();
 
-        return q.promise();
+        this.db.accountTypes.find({}, function (err, docs) {
+            if (err) {
+                d.reject(err);
+            }
+            else {
+                d.resolve(docs);
+            }
+        });
+
+        return d.promise;
     };
 
     AccountingService.prototype.findAccounts = function (type) {
         var d = this.q.defer();
 
-        return q.promise();
+        return d.promise();
     };
 
     AccountingService.prototype.createAccount = function (name, type) {
@@ -32,7 +41,8 @@
     var q = require('q');
     var settings = require('../settings.json');
     var datastore = require('nedb');
-    var db = new datastore({ filename: 'accounting', autload: true });
+    var db = {};
+    db.accountTypes = new datastore({ filename: './data/accountTypes.db', autoload: true });
 
     module.exports = new AccountingService(q, db);
 })();
