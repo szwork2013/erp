@@ -148,6 +148,10 @@ module.exports = function () {
             return financialService.saveTransactions(req.body);
         }));
 
+
+    require('./ContactApi.js')(router);
+    require('./TimeRegistrationApi.js')(router);
+
     return router;
 }
 
