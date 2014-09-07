@@ -29,6 +29,7 @@ timesheetsApp.controller('OverviewController', [
     function ($scope, $http) {
         $scope.employee = undefined;
         $scope.project = undefined;
+        $scope.date = new Date();
 
         $scope.employees = [];
         var employeesRequest = $http.get('/api/contacts/Werknemer');
@@ -49,6 +50,12 @@ timesheetsApp.controller('OverviewController', [
             tr.project = $scope.project.id;
             tr.hours = $scope.hours;
             tr.description = $scope.description;
+
+            var req = $http.post('/api/timeregistration', tr);
+            req.success(function () {
+                $scope.hours = undefined;
+                $scope.description = undefined;
+            });
         };
     }
 ]);

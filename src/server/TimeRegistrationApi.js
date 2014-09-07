@@ -10,6 +10,14 @@
             }, function (err) {
                 res.status(500).end(err);
             })
+        })
+        .post(function (req, res, next) {
+            var p = service.create(req.body.employee, req.body.project, req.body.date, req.body.description, req.body.hours);
+            p.then(function (result) {
+                res.status(200).json(result);
+            }, function (err) {
+                res.status(500).end(err);
+            })
         });
     };
 
