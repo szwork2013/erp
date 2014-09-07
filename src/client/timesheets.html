@@ -1,6 +1,6 @@
-<html lang="en" data-ng-app="FinancialApp">
+<html lang="en" data-ng-app="TimesheetsApp">
     <head>
-        <title>ERP - Financieel</title>
+        <title>ERP - Timesheets</title>
         <link rel="stylesheet" href="css/bootstrap.min.css" />
         <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
     </head>
@@ -12,19 +12,21 @@
                 </div>
                 <ul class="nav navbar-nav">
                     <li><a href="projecten.html">Projecten</a></li>
-                    <li class="active"><a href="financieel.html">Financieel</a></li>
-                    <li><a href="timesheets.html">Timesheets</a></li>
+                    <li><a href="financieel.html">Financieel</a></li>
+                    <li class="active"><a href="timesheets.html">Timesheets</a></li>
                 </ul>
             </div>
         </div>
+
         <div class="container">
             <div class="row">
-                <div class="col-md-2" data-ng-include="'financial/menu.partial.html'"></div>
+                <div class="col-md-2" data-ng-include="'timesheets/menu.partial.html'"></div>
                 <div class="col-md-10" data-ng-view></div>
             </div>
         </div>
         <script src="js/angular.min.js"></script>
         <script src="js/angular-route.min.js"></script>
-        <script src="js/financialApp.js"></script>
+        <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+        <script src="js/timesheetsApp.js"></script>
     </body>
 </html>
