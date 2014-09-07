@@ -1,1 +1,12 @@
-{{something}}
+<h1>Overzicht timesheets</h1>
+<table class="table">
+    <tbody>
+        <tr data-ng-repeat="tr in timeregistrations">
+            <td>{{tr.employee.name}}</td>
+            <td>{{tr.date}}</td>
+            <td>{{tr.project.name}}</td>
+            <td>{{tr.hours}}</td>
+            <td>{{tr.description}}</td>
+        </tr>
+    </tbody>
+</table>

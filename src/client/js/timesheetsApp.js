@@ -19,7 +19,36 @@ timesheetsApp.controller('OverviewController', [
     '$scope',
     '$http',
     function ($scope, $http) {
-        $scope.something = 'test';
+        var employees = {};
+        var employeesRequest = $http.get('/api/contacts/Werknemer');
+        employeesRequest.success(function (data) {
+            employees = {};
+            for ($i = 0; $i < data.length; $i++) {
+                employees[data[$i]._id] = data[$i];
+            }
+        });
+
+        var projects = {};
+        var projectsRequest = $http.get('/api/projects');
+        projectsRequest.success(function (data) {
+            projects = {};
+            for ($i = 0; $i < data.length; $i++) {
+                projects[data[$i].id] = data[$i];
+            }
+        });
+
+        var timeregistrations = [];
+        var trRequest = $http.get('/api/timeregistration');
+        trRequest.success(function (data) {
+            timeregistrations = data;
+
+            for ($i = 0; $i < timeregistrations.length; $i++) {
+                timeregistrations[$i].project = projects[timeregistrations[$i].project];
+                timeregistrations[$i].employee = employees[timeregistrations[$i].employee];
+            }
+
+            $scope.timeregistrations = timeregistrations;
+        });
     }
 ]);
 
