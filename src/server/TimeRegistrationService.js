@@ -1,15 +1,37 @@
 (function () {
-    function TimeRegistrationService(q, db) {
+    function TimeRegistrationService(q, db, utils) {
         this.q = q;
         this.db = db;
+        this.utils = utils;
     }
 
-    TimeRegistrationService.prototype.create()
+    TimeRegistrationService.prototype.find = function () {
+        var query = {};
 
-    var q = require('q');
+        var d = this.q.defer();
+        this.db.timeRegistration.find(query, this.utils.createDbCallback(d));
+        return d.promise;
+    }
+
+    TimeRegistrationService.prototype.create = function (employee, project, date, description, hours) {
+        var tr = {};
+        tr.employee = employee;
+        tr.project = project;
+        tr.date = date;
+        tr.description = description;
+        tr.hours = hours;
+
+        var d = this.q.defer();
+        this.db.timeRegistration.insert(tr, this.utils.createDbCallback(d));
+        return d.promise;
+    }
+
+    var _q = require('q');
     var nedb = require('nedb');
-    var db = {};
-    db.timeRegistration = new nedb({ filename: './data/timeRegistration.db', autoload: true });
+    var _db = {};
+    _db.timeRegistration = new nedb({ filename: './data/timeRegistration.db', autoload: true });
 
-    module.exports = new TimeRegistrationService(q, db);
+    var _utils = require('./utils.js');
+
+    module.exports = new TimeRegistrationService(_q, _db, _utils);
 })();

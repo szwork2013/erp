@@ -41,12 +41,8 @@
     var q = require('q');
     var settings = require('../settings.json');
     var datastore = require('nedb');
-<<<<<<< HEAD
     var db = {};
     db.accountTypes = new datastore({ filename: './data/accountTypes.db', autoload: true });
-=======
-    var db = new datastore({ filename: './data/accounting.db', autload: true });
->>>>>>> origin/master
 
     module.exports = new AccountingService(q, db);
 })();
