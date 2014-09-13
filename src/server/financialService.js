@@ -1,12 +1,6 @@
-var ravendb = require('ravendb');
 var settings = require('./settings');
 var _ = require('underscore');
 var q = require('q');
-var uuid = require('node-uuid');
-var request = require('request');
-var url = require('url');
-
-var db = ravendb(settings.db.host, settings.db.name);
 
 var fromDocument = function (doc) {
     if (doc['@metadata']) {

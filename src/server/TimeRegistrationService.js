@@ -27,9 +27,7 @@
     }
 
     var _q = require('q');
-    var nedb = require('nedb');
     var _db = {};
-    _db.timeRegistration = new nedb({ filename: './data/timeRegistration.db', autoload: true });
 
     var _utils = require('./utils.js');
 

@@ -28,39 +28,27 @@
     ContactService.prototype.findTypes = function () {
         var d = this.q.defer();
 
-        this.db.contactTypes.find({}, function (err, docs) {
-            if (err) {
+        this.db.getCollection('ContactTypes')
+            .then(function (collection) {
+                collection.find({}).toArray(function (err, docs) {
+                    if (err) {
+                        d.reject(err);
+                    }
+                    else {
+                        d.resolve(docs);
+                    }
+                });
+
+                this.db.closeCollection(collection);
+            }, function (err) {
                 d.reject(err);
-            }
-            else {
-                d.resolve(docs);
-            }
-        })
-
-        return d.promise;
-    }
-
-    ContactService.prototype.createType = function (name) {
-        var d = this.q.defer();
-
-        this.db.contactTypes.insert({ name: name }, function (err, doc) {
-            if (err) {
-                d.reject(err);
-            }
-            else {
-                d.resolve(doc);
-            }
-        });
+            });
 
         return d.promise;
     }
 
     var q = require('q');
-    var nedb = require('nedb');
-
-    var db = {};
-    db.contactTypes = new nedb({ filename: './data/contactTypes.db', autoload: true });
-    db.contacts = new nedb({ filename: './data/contacts.db', autoload: true });
+    var db = require('./Database.js');
 
     module.exports = new ContactService(q, db);
 

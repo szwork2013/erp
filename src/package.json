@@ -6,11 +6,8 @@
   "dependencies": {
     "express": "4.x",
 	"body-parser": "1.x",
-	"ravendb": "0.x",
 	"underscore": "1.x",
     "q": "1.0.x",
-    "node-uuid": "1.4.x",
-    "request": "2.40.x",
-    "nedb": "0.x"
+    "mongodb": "1.4.x"
   }
 }

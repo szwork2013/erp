@@ -40,9 +40,7 @@
     // dependencies
     var q = require('q');
     var settings = require('../settings.json');
-    var datastore = require('nedb');
     var db = {};
-    db.accountTypes = new datastore({ filename: './data/accountTypes.db', autoload: true });
-
+    
     module.exports = new AccountingService(q, db);
 })();

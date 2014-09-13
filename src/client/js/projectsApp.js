@@ -67,7 +67,7 @@ projectsApp.controller('CreateProjectController', [
 	        else {
 	            var createRequest = $http.put('/api/projects', { name: $scope.name });
 	            createRequest.success(function (data) {
-	                $location.path('/' + data.id);
+	                $location.path('/' + data._id);
 	            })
 				.error(function (data, status) {
 				    alert(status + ' ' + data);

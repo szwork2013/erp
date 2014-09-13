@@ -1,1 +1,1 @@
-{"db":{"host":"http://localhost:8081","name":"erp","files":{"purchases":"./data/purchases.db"}}}
+{"mongodb":{"connectionstring":"mongodb://localhost:27017/erp"}}

@@ -3,12 +3,12 @@
 		<div class="col-md-12">
 			<h1>Project: {{project.name}}</h1>
 			<ul class="nav nav-tabs">
-				<li><a ng-href="#/{{project.id}}">Overzicht</a></li>
-				<li class="active"><a ng-href="#/{{project.id}}/workitems">Werk</a></li>
+				<li><a ng-href="#/{{project._id}}">Overzicht</a></li>
+				<li class="active"><a ng-href="#/{{project._id}}/workitems">Werk</a></li>
 			</ul>
 			<div>&nbsp;</div>
 			<div>
-				<a ng-href="#/{{project.id}}/workitems/create">Nieuw werk item aanmaken</a>
+				<a ng-href="#/{{project._id}}/workitems/create">Nieuw werk item aanmaken</a>
 			</div>
 			<div>
 				<table class="table">
@@ -20,7 +20,7 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="workitem in workitems">
-							<td><a ng-href="#/{{project.id}}/workitems/{{workitem.id}}">{{workitem.name}}</a></td>
+							<td><a ng-href="#/{{project._id}}/workitems/{{workitem.id}}">{{workitem.name}}</a></td>
 							<td>{{workitem.description}}</td>
 						</tr>
 					</tbody>
