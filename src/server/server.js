@@ -53,7 +53,7 @@ module.exports = function () {
         }));
 
     require('./ProjectsApi.js')(router);
-    require('./ContactApi.js')(router);
+    require('./ContactsApi.js')(router);
     require('./TimeRegistrationApi.js')(router);
 
     return router;

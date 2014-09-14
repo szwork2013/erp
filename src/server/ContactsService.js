@@ -20,7 +20,7 @@
         return d.promise;
     }
 
-    ContactService.prototype.find = function (type) {
+    ContactService.prototype.findContacts = function (type) {
         var query = {};
         if (type) {
             query.type = type;
@@ -28,17 +28,38 @@
 
         var d = this.q.defer();
 
-        this.db.contacts.find(query, function (err, docs) {
+        this.domain.Contact.find(query, function (err, contacts) {
             if (err) {
                 d.reject(err);
             }
             else {
-                d.resolve(docs);
+                d.resolve(contacts);
             }
         });
 
         return d.promise;
     };
+
+    ContactService.prototype.createContact = function (name, types) {
+        var d = this.q.defer();
+
+        var typeIds = [];
+        for (var idx = 0; idx < types.length; idx++) {
+            typeIds.push(this.domain.createObjectId(types[idx]));
+        }
+
+        var contact = new this.domain.Contact({ name: name, type: typeIds });
+        contact.save(function (err) {
+            if (err) {
+                d.reject(err);
+            }
+            else {
+                d.resolve(contact);
+            }
+        })
+
+        return d.promise;
+    }
 
     module.exports = new ContactService();
 

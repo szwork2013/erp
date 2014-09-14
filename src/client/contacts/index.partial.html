@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Contacten</h1>
+            <p><a href="#/create">Nieuw contact aanmaken</a></p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Naam</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-ng-repeat="contact in contacts">
+                    <td>{{contact.name}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

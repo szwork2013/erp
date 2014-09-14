@@ -1,4 +1,9 @@
 (function () {
+    var domain = require('./Domain.js');
+    for (i in domain) {
+        module.exports[i] = domain[i];
+    }
+
     var mongoose = require('mongoose');
     var Schema = mongoose.Schema;
 
