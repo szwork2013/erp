@@ -51,9 +51,9 @@ module.exports = function () {
         .put(handlerFactory(function (req) {
             return financialService.saveTransactions(req.body);
         }));
-
-    require('./ProjectsApi.js')(router);
+    
     require('./ContactsApi.js')(router);
+    require('./ProjectsApi.js')(router);
     require('./TimeRegistrationApi.js')(router);
 
     return router;

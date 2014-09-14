@@ -130,14 +130,14 @@ projectsApp.controller('ProjectCreateWorkItemController', [
 
 	        $scope.save = function () {
 	            var workItem = {
-	                projectId: $scope.project.id,
+	                projectId: $scope.project._id,
 	                name: $scope.name,
 	                description: $scope.description
 	            };
 
 	            var createRequest = $http.put('/api/projects/workitems', workItem);
 	            createRequest.success(function (data) {
-	                $location.path('/' + $scope.project.id + '/workitems');
+	                $location.path('/' + $scope.project._id + '/workitems');
 	            });
 	        };
 	    });

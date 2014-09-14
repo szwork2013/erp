@@ -66,74 +66,51 @@
         return d.promise;
     };
 
+    ProjectsService.prototype.findWorkItems = function (projectId) {
+        var d = this.q.defer();
+
+        this.domain.WorkItem.find({ projectId: this.domain.createObjectId(projectId) }, function (err, workitems) {
+            if (err) {
+                d.reject(err);
+            }
+            else {
+                d.resolve(workitems);
+            }
+        });
+
+        return d.promise;
+    };
+
+    ProjectsService.prototype.createWorkItem = function (projectId, name, description) {
+        var d = this.q.defer();
+
+        var wi = new this.domain.WorkItem({ projectId: this.domain.createObjectId(projectId), name: name, description: description });
+        wi.save(function (err) {
+            if (err) {
+                d.reject(err);
+            }
+            else {
+                d.resolve(wi);
+            }
+        })
+
+        return d.promise;
+    };
+
+    ProjectsService.prototype.getWorkItem = function (projectId, workItemId) {
+        var d = this.q.defer();
+
+        this.domain.WorkItem.findOne({ projectId: this.domain.createObjectId(projectId), '_id': this.domain.createObjectId(workItemId) }, function (err, workitem) {
+            if (err) {
+                d.reject(err);
+            }
+            else {
+                d.resolve(workitem);
+            }
+        })
+
+        return d.promise;
+    };
+
     module.exports = new ProjectsService();
 })();
-
-/*
-exports.createWorkItem = function (workitem, cb) {
-if (!workitem.projectId || !workitem.name) {
-throw new Error('no projectid or name');
-}
-
-var wi = {
-projectId: workitem.projectId,
-name: workitem.name,
-description: workitem.description || ''
-};
-
-db.saveDocument('WorkItems', wi, function (err, result) {
-if (err) {
-throw err;
-}
-else {
-cb(result);
-}
-});
-};
-
-exports.findWorkItems = function (projId, cb) {
-db.queryByIndex('WorkItemsByProjectId', { projectId: projId }, 0, 128, function (err, result) {
-if (err) {
-throw err;
-}
-else {
-result = JSON.parse(result.body).Results;
-if (result) {
-_.each(result, fromDocument);
-cb(result);
-}
-else {
-cb([]);
-}
-}
-});
-};
-
-exports.getWorkItem = function (projectId, workitemId, cb) {
-db.getDocument(workitemId, function (err, result) {
-if (err) {
-throw err;
-}
-else {
-if (!result) {
-throw new Error('entity not found');
-}
-
-var workItem = fromDocument(result);
-if (workItem.projectId != projectId) {
-throw new Error('not a workitem of the specified project');
-}
-
-cb(workItem);
-}
-});
-};
-
-exports.findMaterials = function (projectId, workitemId, cb) {
-
-};
-
-exports.saveMaterials = function (projectId, workitemId, materials, cb) {
-
-};
-*/
