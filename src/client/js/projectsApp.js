@@ -77,7 +77,7 @@ projectsApp.controller('CreateProjectController', [
 	}
 ]);
 
-projectsApp.controller('ProjectDetailController', [
+	projectsApp.controller('ProjectDetailController', [
 	'$scope',
 	'$http',
 	'$routeParams',
@@ -90,7 +90,9 @@ projectsApp.controller('ProjectDetailController', [
 	            var saveRequest = $http.post('/api/projects', $scope.project);
 	            saveRequest.success(function (data) {
 	                $scope.saveconfirm = "Wijzigingen opgeslaan";
-	            });
+	            }).error(function (err) {
+	                $scope.saveconfirm = err;
+	            })
 	        };
 	    });
 	}

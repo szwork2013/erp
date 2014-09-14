@@ -1,8 +1,23 @@
 (function () {
 
-    function ContactService(q, db) {
-        this.q = q;
-        this.db = db;
+    function ContactService() {
+        this.q = require('q');
+        this.domain = require('./ContactsDomain.js');
+    }
+
+    ContactService.prototype.findTypes = function () {
+        var d = this.q.defer();
+
+        this.domain.ContactType.find({}, function (err, types) {
+            if (err) {
+                d.reject(err);
+            }
+            else {
+                d.resolve(types)
+            }
+        });
+
+        return d.promise;
     }
 
     ContactService.prototype.find = function (type) {
@@ -25,31 +40,6 @@
         return d.promise;
     };
 
-    ContactService.prototype.findTypes = function () {
-        var d = this.q.defer();
-
-        this.db.getCollection('ContactTypes')
-            .then(function (collection) {
-                collection.find({}).toArray(function (err, docs) {
-                    if (err) {
-                        d.reject(err);
-                    }
-                    else {
-                        d.resolve(docs);
-                    }
-                });
-
-                this.db.closeCollection(collection);
-            }, function (err) {
-                d.reject(err);
-            });
-
-        return d.promise;
-    }
-
-    var q = require('q');
-    var db = require('./Database.js');
-
-    module.exports = new ContactService(q, db);
+    module.exports = new ContactService();
 
 })();
