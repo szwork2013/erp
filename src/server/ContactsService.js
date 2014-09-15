@@ -3,19 +3,15 @@
     function ContactService() {
         this.q = require('q');
         this.domain = require('./ContactsDomain.js');
+        this.service = require('./Service.js');
     }
 
     ContactService.prototype.findTypes = function () {
         var d = this.q.defer();
 
-        this.domain.ContactType.find({}, function (err, types) {
-            if (err) {
-                d.reject(err);
-            }
-            else {
-                d.resolve(types)
-            }
-        });
+        var c = this.service.createDbCallback(d);
+        console.log(c);
+        this.domain.ContactType.find({}, c);
 
         return d.promise;
     }
@@ -28,14 +24,8 @@
 
         var d = this.q.defer();
 
-        this.domain.Contact.find(query, function (err, contacts) {
-            if (err) {
-                d.reject(err);
-            }
-            else {
-                d.resolve(contacts);
-            }
-        });
+        var c = this.service.createDbCallback(d);
+        this.domain.Contact.find(query, c);
 
         return d.promise;
     };

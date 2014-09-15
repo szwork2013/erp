@@ -7,8 +7,8 @@
             response.status(200).json(result);
         }, function (err) {
             response.status(500).end(err);
-        })
-    }
+        });
+    };
 
     module.exports = new Api();
 })();
