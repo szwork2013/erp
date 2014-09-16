@@ -29,28 +29,26 @@ contactsApp.controller('OverviewController', [
     }
 ]);
 
-contactsApp.controller('CreateController', [
+    contactsApp.controller('CreateController', [
     '$scope',
     '$http',
     '$location',
     function ($scope, $http, $location) {
         $scope.name = undefined;
+        $scope.type = {
+            personeel: false,
+            klant: false,
+            leverancier: false
+        };
 
         var contactTypesRequest = $http.get('/api/contacts/types');
         contactTypesRequest.success(function (data) {
             $scope.types = data;
 
             $scope.save = function () {
-                var typeIds = [];
-                for (var idx = 0; idx < $scope.types.length; idx++) {
-                    if ($scope.types[idx].selected) {
-                        typeIds.push($scope.types[idx]._id);
-                    }
-                }
-
                 var contact = {
                     name: $scope.name,
-                    types: typeIds
+                    types: $scope.type
                 };
 
                 var saveRequest = $http.put('/api/contacts', contact);

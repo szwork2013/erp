@@ -10,11 +10,11 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">Types:</label>
+                    <label class="control-label col-md-3">Type:</label>
                     <div class="col-md-9">
-                        <div data-ng-repeat="type in types">
-                            <input type="checkbox" data-ng-model="type.selected" data-ng-change="" />&nbsp;{{type.name}}
-                        </div>
+                        <div><input type="checkbox" data-ng-model="type.personeel" />&nbsp;Personeel</div>
+                        <div><input type="checkbox" data-ng-model="type.klant" />&nbsp;Klant</div>
+                        <div><input type="checkbox" data-ng-model="type.leverancier" />&nbsp;Leverancier</div>
                     </div>
                 </div>
                 <div class="form-group">

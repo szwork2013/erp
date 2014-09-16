@@ -6,16 +6,13 @@
 
     var mongoose = require('mongoose');
 
-    var contactTypeSchema = new mongoose.Schema({
-        name: String
-    });
-
-    var ContactType = mongoose.model('ContactType', contactTypeSchema, 'ContactTypes');
-    module.exports['ContactType'] = ContactType;
-
     var contactSchema = new mongoose.Schema({
         name: String,
-        type: [mongoose.Schema.Types.ObjectId]
+        type: {
+            personeel: Boolean,
+            klant: Boolean,
+            leverancier: Boolean
+        }
     });
 
     var Contact = mongoose.model('Contact', contactSchema, 'Contacts');

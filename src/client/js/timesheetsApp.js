@@ -20,7 +20,7 @@ timesheetsApp.controller('OverviewController', [
     '$http',
     function ($scope, $http) {
         var employees = {};
-        var employeesRequest = $http.get('/api/contacts/Werknemer');
+        var employeesRequest = $http.get('/api/contacts/personeel');
         employeesRequest.success(function (data) {
             employees = {};
             for ($i = 0; $i < data.length; $i++) {
@@ -61,7 +61,7 @@ timesheetsApp.controller('OverviewController', [
         $scope.date = new Date();
 
         $scope.employees = [];
-        var employeesRequest = $http.get('/api/contacts/Werknemer');
+        var employeesRequest = $http.get('/api/contacts/personeel');
         employeesRequest.success(function (data) {
             $scope.employees = data;
         });
