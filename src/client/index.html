@@ -1,22 +1,38 @@
-<html lang="en">
-	<head>
-		<title>ERP</title>
-		<link rel="stylesheet" href="css/bootstrap.min.css" />
-		<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-	</head>
-	<body>
-		<div class="navbar navbar-inverse" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="index.html">ERP</a>
-				</div>
-				<ul class="nav navbar-nav">
+<html lang="en" data-ng-app="IndexApp">
+    <head>
+        <title>ERP</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+    </head>
+    <body>
+        <div class="navbar navbar-inverse" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html">ERP</a>
+                </div>
+                <ul class="nav navbar-nav">
                     <li><a href="contacts.html">Contacten</a></li>
-					<li><a href="projecten.html">Projecten</a></li>
+                    <li><a href="projecten.html">Projecten</a></li>
                     <li><a href="financieel.html">Financieel</a></li>
                     <li><a href="timesheets.html">Timesheets</a></li>
-				</ul>
-			</div>
-		</div>
-	</body>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div data-ng-controller="TodosViewController">
+                        <h3>Todo's</h3>
+                        <div>
+                            <div data-ng-repeat="todo in todos">
+                                <h4>{{todo.name}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="js/angular.min.js"></script>
+        <script type="text/javascript" src="js/indexApp.js"></script>
+    </body>
 </html>

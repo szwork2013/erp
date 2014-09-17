@@ -8,7 +8,8 @@
 
     var todoSchema = new mongoose.Schema({
         title: String,
-        description: String
+        description: String,
+        status: String
     });
 
     var todo = mongoose.model('Todo', todoSchema, 'Todos');

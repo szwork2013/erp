@@ -51,10 +51,11 @@ module.exports = function () {
         .put(handlerFactory(function (req) {
             return financialService.saveTransactions(req.body);
         }));
-    
+
     require('./ContactsApi.js')(router);
     require('./ProjectsApi.js')(router);
     require('./TimeRegistrationApi.js')(router);
+    require('./TodosApi.js')(router);
 
     return router;
 }
