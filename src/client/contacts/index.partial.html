@@ -7,11 +7,17 @@
                 <thead>
                 <tr>
                     <th>Naam</th>
+                    <th>Personeel</th>
+                    <th>Klant</th>
+                    <th>Leverancier</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr data-ng-repeat="contact in contacts">
-                    <td>{{contact.name}}</td>
+                    <td><a data-ng-href="#/{{contact._id}}">{{contact.name}}</a></td>
+                    <td><i data-ng-if="contact.type.personeel" class="glyphicon glyphicon-ok"></i></td>
+                    <td><i data-ng-if="contact.type.klant" class="glyphicon glyphicon-ok"></i></td>
+                    <td><i data-ng-if="contact.type.leverancier" class="glyphicon glyphicon-ok"></i></td>
                 </tr>
                 </tbody>
             </table>

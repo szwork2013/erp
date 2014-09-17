@@ -36,6 +36,15 @@
         return d.promise;
     }
 
+    ContactService.prototype.getContact = function (id) {
+        var d = this.q.defer();
+
+        var c = this.service.createDbCallback(d);
+        this.domain.Contact.findById(id, c);
+
+        return d.promise;
+    }
+
     module.exports = new ContactService();
 
 })();

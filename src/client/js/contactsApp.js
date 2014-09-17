@@ -12,6 +12,10 @@ contactsApp.config([
                 controller: 'CreateController',
                 templateUrl: 'contacts/create.partial.html'
             })
+            .when('/:contactId', {
+                controller: 'DetailsController',
+                templateUrl: 'contacts/details.partial.html'
+            })
             .otherwise({
                 redirectTo: '/overview'
             });
@@ -29,7 +33,7 @@ contactsApp.controller('OverviewController', [
     }
 ]);
 
-    contactsApp.controller('CreateController', [
+contactsApp.controller('CreateController', [
     '$scope',
     '$http',
     '$location',
@@ -53,9 +57,21 @@ contactsApp.controller('OverviewController', [
 
                 var saveRequest = $http.put('/api/contacts', contact);
                 saveRequest.success(function (data) {
-                    $location.path('overview');
+                    $location.path(data._id);
                 })
             }
+        });
+    }
+]);
+
+    contactsApp.controller('DetailsController', [
+    '$scope',
+    '$http',
+    '$routeParams',
+    function ($scope, $http, $routeParams) {
+        var contactRequest = $http.get('/api/contacts/contact/' + $routeParams.contactId);
+        contactRequest.success(function (data) {
+            $scope.contact = data;
         });
     }
 ]);

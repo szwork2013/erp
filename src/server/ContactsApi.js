@@ -9,6 +9,12 @@
                 api.processResponse(p, res);
             });
 
+        router.route('/contacts/contact/:id')
+            .get(function (req, res, next) {
+                var p = service.getContact(req.params.id);
+                api.processResponse(p, res);
+            })
+
         router.route('/contacts')
             .put(function (req, res, next) {
                 var p = service.createContact(req.body.name, req.body.types);
