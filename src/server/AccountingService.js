@@ -12,6 +12,20 @@
         return d.promise;
     };
 
+    AccountingService.prototype.findBankTransactions = function (pageSize) {
+        var d = this.q.defer();
+
+        var query = this.domain.BankTransaction.find({}).sort({ date: 'desc' });
+        if (pageSize) {
+            query = query.limit(pageSize);
+        }
+
+        var c = this.service.createDbCallback(d);
+        query.exec(c);
+
+        return d.promise;
+    }
+
     AccountingService.prototype.createBankTransaction = function (bankAccountId, date, amount, message) {
         var d = this.q.defer();
 

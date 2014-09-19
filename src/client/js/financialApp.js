@@ -32,10 +32,19 @@ financialApp.controller('TransactionsController', [
         }
         $scope.dates = dates;
 
-        var bankAccountsRequest = $http.get('/api/accounting/bankaccounts');
+        var bankAccountsRequest = $http.get('/api/accounting/bank/accounts');
         bankAccountsRequest.success(function (data) {
             $scope.bankAccounts = data;
         });
+
+        function refreshTransactions() {
+            var bankTransactionsRequest = $http.get('/api/accounting/bank/transactions/25');
+            bankTransactionsRequest.success(function (data) {
+                $scope.transactions = data;
+            });
+        }
+
+        refreshTransactions();
 
         $scope.saveTransaction = function () {
             var trans = {
@@ -49,7 +58,9 @@ financialApp.controller('TransactionsController', [
             saveTransactionRequest.success(function () {
                 $scope.transaction.amount = 0;
                 $scope.transaction.message = '';
-                $scope.broadcast('TransactionSaved');
+                $scope.$broadcast('TransactionSaved');
+
+                refreshTransactions();
             });
         }
     }

@@ -25,3 +25,15 @@
         </form>
     </div>
 </div>
+<div>
+    <table class="table">
+        <tbody>
+        <tr data-ng-repeat="transaction in transactions">
+            <td>{{transaction.bankAccountId}}</td>
+            <td>{{transaction.date |date:'dd/MM/yyyy'}}</td>
+            <td>{{transaction.amount}}</td>
+            <td>{{transaction.message}}</td>
+        </tr>
+    </tbody>
+    </table>
+</div>
