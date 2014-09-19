@@ -1,4 +1,4 @@
-var financialApp = angular.module('FinancialApp', ['ngRoute']);
+var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap']);
 
 financialApp.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
@@ -20,6 +20,11 @@ financialApp.controller('TransactionsController', [
     '$http',
     function ($scope, $http) {
         $scope.transaction = {};
+
+        var bankAccountsRequest = $http.get('/api/accounting/bankaccounts');
+        bankAccountsRequest.success(function (data) {
+            $scope.bankAccounts = data;
+        })
     }
 ]);
 
