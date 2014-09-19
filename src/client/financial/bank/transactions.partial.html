@@ -8,19 +8,19 @@
     <div class="panel-body">
         <form>
             <div class="form-group col-md-8">
-                <input type="text" class="form-control" placeholder="rekening" data-ng-model="transaction.bankAccount" data-typeahead="ba as ba.name for ba in bankAccounts | filter:{name:$viewValue}" data-typeahead-input-formatter="$model.name" />
+                <input type="text" class="form-control" placeholder="rekening" data-ng-model="transaction.bankAccount" data-typeahead="ba as ba.name for ba in bankAccounts | filter:{name:$viewValue}" data-typeahead-input-formatter="$model.name" data-focus-on="TransactionSaved" />
             </div>
             <div class="form-group col-md-4">
-                <input type="text" class="form-control" placeholder="datum" />
+                <input type="text" class="form-control" placeholder="datum" data-ng-model="transaction.date" data-typeahead="d as d.text for d in dates | filter:{text:$viewValue}" />
             </div>
             <div class="form-group col-md-4">
-                <input type="text" class="form-control" placeholder="bedrag" />
+                <input type="text" class="form-control" placeholder="bedrag" data-ng-model="transaction.amount" />
             </div>
             <div class="form-group col-md-8">
-                <input type="text" class="form-control" placeholder="mededeling" />
+                <input type="text" class="form-control" placeholder="mededeling" data-ng-model="transaction.message" />
             </div>
             <div class="form-group col-md-12">
-                <button type="button" class="btn btn-primary">Opslaan</button>
+                <button type="button" class="btn btn-primary" data-ng-click="saveTransaction();">Opslaan</button>
             </div>
         </form>
     </div>

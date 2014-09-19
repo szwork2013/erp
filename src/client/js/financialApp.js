@@ -18,13 +18,40 @@ financialApp.config(['$routeProvider', function ($routeProvider) {
 financialApp.controller('TransactionsController', [
     '$scope',
     '$http',
-    function ($scope, $http) {
+    '$filter',
+    function ($scope, $http, $filter) {
         $scope.transaction = {};
+
+        $scope.dates = [];
+        // load dates
+        var now = new Date();
+        var dates = [];
+        for (var i = -367; i <= 366; i++) {
+            var d = new Date().setDate(now.getDate() + i);
+            dates.push({ date: d, text: $filter('date')(d, 'dd/MM/yyyy') });
+        }
+        $scope.dates = dates;
 
         var bankAccountsRequest = $http.get('/api/accounting/bankaccounts');
         bankAccountsRequest.success(function (data) {
             $scope.bankAccounts = data;
-        })
+        });
+
+        $scope.saveTransaction = function () {
+            var trans = {
+                bankAccountId: $scope.transaction.bankAccount._id,
+                date: $scope.transaction.date.date,
+                amount: $scope.transaction.amount,
+                message: $scope.transaction.message
+            };
+
+            var saveTransactionRequest = $http.put('/api/accounting/bank/transactions', trans);
+            saveTransactionRequest.success(function () {
+                $scope.transaction.amount = 0;
+                $scope.transaction.message = '';
+                $scope.broadcast('TransactionSaved');
+            });
+        }
     }
 ]);
 

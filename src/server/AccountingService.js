@@ -12,5 +12,27 @@
         return d.promise;
     };
 
+    AccountingService.prototype.createBankTransaction = function (bankAccountId, date, amount, message) {
+        var d = this.q.defer();
+
+        var transaction = new this.domain.BankTransaction({
+            bankAccountId: bankAccountId,
+            date: date,
+            amount: amount,
+            message: message
+        });
+
+        transaction.save(function (err) {
+            if (err) {
+                d.reject(err);
+            }
+            else {
+                d.resolve(transaction);
+            }
+        })
+
+        return d.promise;
+    }
+
     module.exports = new AccountingService();
 })();
