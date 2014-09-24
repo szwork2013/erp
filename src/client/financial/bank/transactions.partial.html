@@ -29,7 +29,7 @@
     <table class="table">
         <tbody>
         <tr data-ng-repeat="transaction in transactions">
-            <td>{{transaction.bankAccountId}}</td>
+            <td>{{transaction.bankAccount.name}}</td>
             <td>{{transaction.date |date:'dd/MM/yyyy'}}</td>
             <td>{{transaction.amount}}</td>
             <td>{{transaction.message}}</td>
