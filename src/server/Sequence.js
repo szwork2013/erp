@@ -8,7 +8,7 @@
         value: Number
     });
 
-    sequenceSchema.statics.nextSequence = function (name) {
+    sequenceSchema.statics.nextValue = function (name) {
         var d = q.defer();
 
         this.findByIdAndUpdate(name, { $inc: { value: 1} }, { 'new': true, upsert: true }, function (err, result) {

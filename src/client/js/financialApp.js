@@ -94,6 +94,19 @@ financialApp.controller('ExpensesController', [
     '$http',
     '$filter',
     function ($scope, $http, $filter) {
+        $scope.expenses = [];
+        function refreshExpenses() {
+            var expensesRequest = $http.get('/api/accounting/expenses/25');
+            expensesRequest.success(function (data) {
+                $scope.expenses = data;
+                angular.forEach($scope.expenses, function (item) {
+                    item.supplier = $scope.suppliersLookup[item.supplierId];
+                });
+
+                $scope.expenses = data;
+            });
+        }
+
         var now = new Date();
         var dates = [];
         for (var i = -367; i <= 100; i++) {
@@ -102,67 +115,53 @@ financialApp.controller('ExpensesController', [
         }
         $scope.dates = dates;
 
+        $scope.suppliersLookup = {};
         $scope.suppliers = [];
         var suppliersRequest = $http.get('/api/contacts/leverancier');
         suppliersRequest.success(function (data) {
+            angular.forEach(data, function (item) {
+                $scope.suppliersLookup[item._id] = item;
+            });
             $scope.suppliers = data;
+
+            refreshExpenses();
         });
 
-        $scope.purchase = {
-            netAmount: 0,
-            vatAmount: 0,
-            totalAmount: 0,
-            partialAmounts: [createNewPartialAmount()],
-            update: function () {
-                this.netAmount = 0;
-                this.vatAmount = 0;
-                this.totalAmount = 0;
+        resetPurchase();
 
-                var me = this;
-
-                angular.forEach(this.partialAmounts, function (pa) {
-                    pa.update();
-                    me.netAmount += Number.parseFloat(pa.netAmount);
-                    me.vatAmount += pa.vatAmount;
-                    me.totalAmount += pa.totalAmount;
-                })
-
-                this.netAmount = Math.round(this.netAmount * 10000) / 10000;
-                this.vatAmount = Math.round(this.vatAmount * 10000) / 10000;
-                this.totalAmount = Math.round(this.totalAmount * 10000) / 10000;
-            },
-            addPartialAmount: function () {
-                this.partialAmounts.push(createNewPartialAmount());
-            },
-            removePartialAmount: function (index) {
-                this.partialAmounts.splice(index, 1);
-            }
-        };
-
-        $scope.addPartialAmount = function () {
-            $scope.purchase.addPartialAmount();
-        }
-
-        $scope.removePartialAmount = function (index) {
-            $scope.purchase.removePartialAmount(index);
-        }
-
-        function createNewPartialAmount() {
-            return {
+        function resetPurchase() {
+            $scope.purchase = {
                 netAmount: 0,
-                vatPercentage: 0.21,
                 vatAmount: 0,
                 totalAmount: 0,
                 update: function () {
-                    this.vatAmount = Math.round(this.netAmount * Number.parseFloat(this.vatPercentage) * 10000) / 10000;
-                    this.totalAmount = Math.round((Number.parseFloat(this.netAmount) + this.vatAmount) * 10000) / 10000;
+                    this.netAmount = Math.round(this.netAmount * 10000) / 10000;
+                    this.vatAmount = Math.round(this.vatAmount * 10000) / 10000;
+                    this.totalAmount = this.netAmount + this.vatAmount;
                 }
             };
         }
 
-        $scope.$watch('purchase.partialAmounts', function () {
+        $scope.$watch('purchase', function () {
             $scope.purchase.update();
         }, true);
+
+        $scope.save = function () {
+            var ex = {};
+            angular.copy($scope.purchase, ex);
+            ex.supplierId = ex.supplier._id;
+            delete ex.supplier;
+            var d = ex.date;
+            ex.date = d.date;
+            d = ex.expirationDate;
+            ex.expirationDate = d.date;
+
+            var saveRequest = $http.put('/api/accounting/expenses', ex);
+            saveRequest.success(function (data) {
+                resetPurchase();
+                refreshExpenses();
+            });
+        }
     }
 ]);
 

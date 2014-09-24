@@ -24,4 +24,19 @@
 
     var bankTransaction = mongoose.model('BankTransaction', bankTransactionSchema, 'BankTransactions');
     module.exports['BankTransaction'] = bankTransaction;
+
+    var expenseSchema = new mongoose.Schema({
+        sequence: Number,
+        supplierId: mongoose.SchemaTypes.ObjectId,
+        documentNumber: String,
+        date: Date,
+        expirationDate: Date,
+        paymentMessage: String,
+        netAmount: Number,
+        vatAmount: Number,
+        totalAmount: Number
+    });
+
+    var expense = mongoose.model('Expense', expenseSchema, 'Expenses');
+    module.exports['Expense'] = expense;
 })();
