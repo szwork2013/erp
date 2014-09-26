@@ -3,3 +3,30 @@
     <li class="active"><a href="#/expenses">Overzicht</a></li>
     <li><a href="#/expenses/purchases">Aankopen</a></li>
 </ul>
+<br />
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="text-right">Nr.</th>
+            <th>Leverancier</th>
+            <th>Datum</th>
+            <th>Vervaldatum</th>
+            <th>Documentnr.</th>
+            <th class="text-right">Bedrag</th>
+            <th class="text-right">Saldo</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="expense in expenses">
+                <td class="text-right">{{expense.sequence}}</td>
+                <td>{{expense.supplier.name}}</td>
+                <td>{{expense.date|date:'dd/MM/yyyy'}}</td>
+                <td>{{expense.expirationDate|date:'dd/MM/yyyy'}}</td>
+                <td>{{expense.documentNumber}}</td>
+                <td class="text-right">{{expense.totalAmount|currency:"€ "}}</td>
+                <td class="text-right">{{expense.outstandingAmount|currency:"€ "}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
