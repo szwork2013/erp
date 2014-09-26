@@ -81,13 +81,24 @@ financialApp.controller('TransactionsController', [
     }
 ]);
 
-financialApp.controller('ExpensesController', [
+    financialApp.controller('ExpensesController', [
     '$scope',
     '$expenses',
     function ($scope, $expenses) {
-        $expenses.findExpenses(25).then(function (expenses) {
-            $scope.expenses = expenses;
-        });
+        $scope.searchOpened = false;
+        $scope.toggleSearch = function () {
+            $scope.searchOpened = !$scope.searchOpened;
+        }
+
+        $scope.filter = {};
+
+        $scope.findExpenses = function () {
+            $expenses.findExpenses(25, 0, $scope.filter).then(function (expenses) {
+                $scope.expenses = expenses;
+            });
+        }
+
+        $scope.findExpenses();
     }
 ]);
 
@@ -179,7 +190,8 @@ financialApp.factory('$expenses', [
     '$http',
     '$cacheFactory',
     '$q',
-    function ($http, $cacheFactory, $q) {
+    '$filter',
+    function ($http, $cacheFactory, $q, $filter) {
         return {
             _getContactsCache: function () {
                 var cache = $cacheFactory.get('contacts');
@@ -188,7 +200,7 @@ financialApp.factory('$expenses', [
                 }
                 return cache;
             },
-            findExpenses: function (pageSize) {
+            findExpenses: function (pageSize, page, query) {
                 var me = this;
                 function getLeveranciers() {
                     var cache = me._getContactsCache();
@@ -215,16 +227,33 @@ financialApp.factory('$expenses', [
                     return d.promise;
                 }
 
+                function filterLeveranciers(leveranciersLookup) {
+                    var d = $q.defer();
+
+                    var filter = {};
+                    if (query && query.name) {
+                        filter = { 'name': query.name };
+                    }
+
+                    d.resolve($filter('filter')(leveranciersLookup, filter));
+
+                    return d.promise;
+                }
+
                 function getExpenses(leveranciersLookup) {
                     var d = $q.defer();
                     $http
                         .get('/api/accounting/expenses/' + pageSize)
                         .success(function (data) {
+                            var expenses = [];
                             angular.forEach(data, function (item) {
                                 item.supplier = leveranciersLookup[item.supplierId];
+                                if (item.supplier) {
+                                    expenses.push(item);
+                                }
                             });
 
-                            d.resolve(data);
+                            d.resolve(expenses);
                         })
                         .error(function (err) {
                             d.reject(err);
@@ -233,7 +262,7 @@ financialApp.factory('$expenses', [
                     return d.promise;
                 }
 
-                return getLeveranciers().then(getExpenses);
+                return getLeveranciers().then(filterLeveranciers).then(getExpenses);
             }
         };
     }
