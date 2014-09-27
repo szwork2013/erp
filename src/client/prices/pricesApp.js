@@ -16,8 +16,46 @@ pricesApp.config([
     '$scope',
     '$prices',
     function ($scope, $prices) {
-        $prices.findPrices().then(function (prices) {
-            $scope.prices = prices;
-        });
+        $scope.editMode = false;
+
+        $scope.createPrice = function () {
+            if (!$scope.editMode) {
+                $scope.editMode = 'create';
+                $scope.price = {};
+            }
+        }
+
+        $scope.editPrice = function (priceToEdit) {
+            if (!$scope.editMode) {
+                $scope.editMode = 'edit';
+                $scope.price = angular.copy(priceToEdit);
+            }
+        }
+
+        $scope.savePrice = function () {
+            var price = angular.copy($scope.price);
+            var p;
+            if (!price._id) {
+                p = $prices.createPrice(price.name, price.unit, price.price);
+            }
+            else {
+                p = $prices.updatePrice(price._id, price.name, price.unit, price.price);
+            }
+
+            p.then(function () { $scope.cancelEdit(); reloadPrices(); }, function(err) { alert('fout: ' + err); });
+        }
+
+        $scope.cancelEdit = function () {
+            $scope.editMode = false;
+            $scope.price = null;
+        }
+
+        function reloadPrices() {
+            $prices.findPrices().then(function (prices) {
+                $scope.prices = prices;
+            });
+        }
+
+        reloadPrices();
     }
 ]);

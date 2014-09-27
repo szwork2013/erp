@@ -19,6 +19,34 @@ appServices.factory('$prices', [
                     });
 
                 return d.promise;
+            },
+            createPrice: function (name, unit, price) {
+                var d = $q.defer();
+
+                $http
+                    .put('/api/prices', { name: name, unit: unit, price: price })
+                    .success(function (price) {
+                        d.resolve(price);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
+
+                return d.promise;
+            },
+            updatePrice: function (id, name, unit, price) {
+                var d = $q.defer();
+
+                $http
+                    .post('/api/prices/' + id, { name: name, unit: unit, price: price })
+                    .success(function (price) {
+                        d.resolve(price);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    })
+
+                return d.promise;
             }
         };
     }

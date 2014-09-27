@@ -2,19 +2,50 @@
     <h1>Eenheidsprijzen</h1>
 </div>
 <div>
+    <a href="" data-ng-if="!editMode" data-ng-click="createPrice();">Nieuwe prijs aanmaken</a>
+</div>
+<div class="panel panel-default" data-ng-if="editMode">
+    <div class="panel-heading">
+        <span data-ng-if="editMode == 'create'">Nieuwe prijs aanmaken</span>
+        <span data-ng-if="editMode == 'edit'">Prijs wijzigen</span>
+    </div>
+    <div class="panel-body">
+        <form>
+            <div class="form-group col-md-6">
+                <label>Naam:</label><br />
+                <input type="text" class="form-control" data-ng-model="price.name" data-ng-required="true" />
+            </div>
+            <div class="form-group col-md-2">
+                <label>Eenheid:</label><br />
+                <input type="text" class="form-control" data-ng-model="price.unit" data-ng-required="true" />
+            </div>
+            <div class="form-group col-md-4">
+                <label>Prijs:</label><br />
+                <input type="number" step="0.01" class="form-control" data-ng-model="price.price" data-ng-required="true" />
+            </div>
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-primary" data-ng-click="savePrice();">Opslaan</button>
+                <button type="button" class="btn btn-default" data-ng-click="cancelEdit();">Annuleren</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
     <table class="table">
         <thead>
         <tr>
             <th>Naam</th>
             <th>Eenheid</th>
-            <th>Prijs</th>
+            <th class="text-right">Prijs</th>
+            <th>&nbsp;</th>
         </tr>
         </thead>
         <tbody>
         <tr data-ng-repeat="price in prices">
             <td>{{price.name}}</td>
             <td>{{price.unit}}</td>
-            <td>{{price.price}}</td>
+            <td class="text-right">{{price.price|currency:"€ "}}</td>
+            <td><a href="" data-ng-click="editPrice(price);">Wijzigen</a></td>
         </tr>
         </tbody>
     </table>
