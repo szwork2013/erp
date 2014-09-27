@@ -1,0 +1,21 @@
+<div>
+    <h1>Eenheidsprijzen</h1>
+</div>
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Eenheid</th>
+            <th>Prijs</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="price in prices">
+            <td>{{price.name}}</td>
+            <td>{{price.unit}}</td>
+            <td>{{price.price}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

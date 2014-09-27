@@ -1,6 +1,6 @@
-<html lang="en" data-ng-app="FinancialApp">
+<html lang="en" data-ng-app="PricesApp">
     <head>
-        <title>ERP - Financieel</title>
+        <title>ERP</title>
         <link rel="stylesheet" href="css/bootstrap.min.css" />
         <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
     </head>
@@ -13,21 +13,22 @@
                 <ul class="nav navbar-nav">
                     <li><a href="contacts.html">Contacten</a></li>
                     <li><a href="projecten.html">Projecten</a></li>
-                    <li><a href="prices.html">Prijzen</a></li>
-                    <li class="active"><a href="financieel.html">Financieel</a></li>
+                    <li class="active"><a href="prices.html">Prijzen</a></li>
+                    <li><a href="financieel.html">Financieel</a></li>
                     <li><a href="timesheets.html">Timesheets</a></li>
                 </ul>
             </div>
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-md-2" data-ng-include="'financial/menu.partial.html'"></div>
+                <div class="col-md-2" data-ng-include="'prices/menu.partial.html'"></div>
                 <div class="col-md-10" data-ng-view></div>
             </div>
         </div>
-        <script src="js/angular.min.js"></script>
-        <script src="js/angular-route.min.js"></script>
-        <script src="js/ui-bootstrap-tpls-0.11.0.min.js"></script>
-        <script src="js/financialApp.js"></script>
+        <script type="text/javascript" src="js/angular.min.js"></script>
+        <script type="text/javascript" src="js/angular-route.min.js"></script>
+        <script type="text/javascript" src="js/ui-bootstrap-tpls-0.11.0.min.js"></script>
+        <script type="text/javascript" src="js/appServices.js"></script>
+        <script type="text/javascript" src="prices/pricesApp.js"></script>
     </body>
 </html>
