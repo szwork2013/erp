@@ -73,4 +73,85 @@ pricesApp.controller('CalculationsOverviewController', [
     function ($scope) {
 
     }
-])
+]);
+
+    pricesApp.controller('CreateCalculationController', [
+    '$scope',
+    '$priceCalculations',
+    function ($scope, $priceCalculations) {
+        $scope.calculation = {
+            parameters: [],
+            operations: []
+        };
+
+        // parameter
+        $scope.parameterMode = 'create';
+        $scope.parameter = {};
+
+        $scope.saveParameter = function () {
+            var par = angular.copy($scope.parameter);
+            $scope.calculation.parameters.push(par);
+            $scope.parameter = {};
+            $scope.parameterMode = 'create';
+        };
+
+        $scope.editParameter = function (param, idx) {
+            var par = angular.copy(param);
+            $scope.calculation.parameters.splice(idx, 1);
+            $scope.parameterMode = 'edit';
+            $scope.parameter = par;
+            $scope.editedParameter = param;
+        }
+
+        $scope.cancelEditParameter = function () {
+            if ($scope.editedParameter) {
+                $scope.parameter = {};
+                $scope.calculation.parameters.push($scope.editedParameter);
+                $scope.editedParameter = undefined;
+                $scope.parameterMode = 'create';
+            }
+        }
+
+        // operation
+        $scope.operationMode = 'create';
+        $scope.operation = {};
+
+        $scope.saveOperation = function () {
+            var op = angular.copy($scope.operation);
+            $scope.calculation.operations.push(op);
+            $scope.operation = {};
+            $scope.operationMode = 'create';
+        }
+
+        $scope.editOperation = function (oper, idx) {
+            var op = angular.copy(oper);
+            $scope.calculation.operations.splice(idx, 1);
+            $scope.operationMode = 'edit';
+            $scope.operation = op;
+            $scope.editedOperation = oper;
+        }
+
+        $scope.cancelEditOperation = function () {
+            if ($scope.editedOperation) {
+                $scope.operation = {};
+                $scope.calculation.operations.push($scope.editedOperation);
+                $scope.editedOperation = undefined;
+                $scope.operationMode = 'create';
+            }
+        }
+
+        // reference data
+        $priceCalculations.findOperations().then(function (operations) {
+            $scope.operations = operations;
+        });
+
+        $scope.save = function () {
+            $priceCalculations.createCalculation($scope.calculation).then(function (calculation) {
+                $scope.calculation = calculation;
+                alert('ok');
+            }, function (err) {
+                alert('nok: ' + err);
+            });
+        }
+    }
+]);

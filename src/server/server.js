@@ -25,6 +25,7 @@ module.exports = function () {
     require('./TodosApi.js')(router);
     require('./AccountingApi.js')(router);
     require('./PricesApi.js')(router);
+    require('./PriceCalculationsApi.js')(router);
 
     return router;
 }

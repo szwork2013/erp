@@ -51,3 +51,40 @@ appServices.factory('$prices', [
         };
     }
 ]);
+
+appServices.factory('$priceCalculations', [
+    '$http',
+    '$q',
+    function ($http, $q) {
+        return {
+            createCalculation: function (calculation) {
+                var d = $q.defer();
+
+                $http
+                    .put('/api/pricecalculations/calculations', calculation)
+                    .success(function (calculation) {
+                        d.resolve(calculation);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
+
+                return d.promise;
+            },
+            findOperations: function () {
+                var d = $q.defer();
+
+                $http
+                    .get('/api/pricecalculations/operations')
+                    .success(function (data) {
+                        d.resolve(data);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    })
+
+                return d.promise;
+            }
+        };
+    }
+]);

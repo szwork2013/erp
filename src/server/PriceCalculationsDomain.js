@@ -3,8 +3,7 @@
 
     var ResourceSchema = new mongoose.Schema({
         name: { type: String, unique: true, required: true },
-        group: { type: String },
-        quantity: { type: Number }
+        group: { type: String }
     });
 
     var Resource = mongoose.model('Resource', ResourceSchema, 'Resources');
@@ -14,7 +13,10 @@
         name: { type: String, unique: true, required: true },
         description: { type: String },
         unit: { type: String, required: true },
-        resources: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Resource'}]
+        resources: [{
+            resourceId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Resource' },
+            quantity: { type: Number }
+        }]
     });
 
     var Operation = mongoose.model('Operation', OperationSchema, 'Operations');
@@ -29,7 +31,7 @@
             description: { type: String }
         }],
         operations: [{
-            operation: { type: mongoose.SchemaTypes.ObjectId, ref: 'Operation' },
+            operationId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Operation' },
             conversion: { type: String }
         }]
     });
