@@ -10,8 +10,18 @@
             });
 
         router.route('/pricecalculations/calculations')
+            .get(function (req, res, next) {
+                var p = service.findCalculations();
+                api.processResponse(p, res);
+            })
             .put(function (req, res, next) {
                 var p = service.createCalculation(req.body);
+                api.processResponse(p, res);
+            });
+
+        router.route('/pricecalculations/calculations/:calculationId')
+            .get(function (req, res, next) {
+                var p = service.getCalculation(req.params.calculationId);
                 api.processResponse(p, res);
             });
     }

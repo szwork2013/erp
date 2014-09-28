@@ -14,7 +14,11 @@ pricesApp.config([
             })
             .when('/calculations/create', {
                 controller: 'CreateCalculationController',
-                templateUrl: 'prices/calculations/create.partial.html'
+                templateUrl: 'prices/calculations/edit.partial.html'
+            })
+            .when('/calculations/:calculationId', {
+                controller: 'EditCalculationController',
+                templateUrl: 'prices/calculations/edit.partial.html'
             })
             .otherwise({ redirectTo: '/prices' });
     }
@@ -70,19 +74,61 @@ pricesApp.controller('PricesOverviewController', [
 
 pricesApp.controller('CalculationsOverviewController', [
     '$scope',
-    function ($scope) {
-
+    '$priceCalculations',
+    function ($scope, $priceCalculations) {
+        $priceCalculations.findCalculations().then(function (calculations) {
+            $scope.calculations = calculations;
+        });
     }
 ]);
 
-    pricesApp.controller('CreateCalculationController', [
+pricesApp.controller('CreateCalculationController', [
     '$scope',
     '$priceCalculations',
     function ($scope, $priceCalculations) {
+        $scope.pageTitle = "Nieuwe berekening aanmaken";
+
         $scope.calculation = {
             parameters: [],
             operations: []
         };
+
+        $scope.save = function () {
+            $priceCalculations.createCalculation($scope.calculation).then(function (calculation) {
+                $scope.calculation = calculation;
+            });
+        }
+    }
+]);
+
+pricesApp.controller('EditCalculationController', [
+    '$scope',
+    '$priceCalculations',
+    '$routeParams',
+    function ($scope, $priceCalculations, $routeParams) {
+        $scope.calculation = { name: '' };
+        $scope.pageTitle = 'Berekening: ';
+        $scope.$watch('calculation.name', function (value) {
+            $scope.pageTitle = 'Berekening: ' + value;
+        });
+
+        $priceCalculations.getCalculation($routeParams.calculationId).then(function (calculation) {
+            $scope.calculation = calculation;
+        });
+
+        $scope.save = function () {
+
+        }
+    }
+]);
+
+    pricesApp.controller('EditCalculationDetailsController', [
+    '$scope',
+    '$priceCalculations',
+    function ($scope, $priceCalculations) {
+        $scope.$parent.$watch('calculation', function (calculation) {
+            $scope.calculation = calculation;
+        });
 
         // parameter
         $scope.parameterMode = 'create';
@@ -101,6 +147,10 @@ pricesApp.controller('CalculationsOverviewController', [
             $scope.parameterMode = 'edit';
             $scope.parameter = par;
             $scope.editedParameter = param;
+        }
+
+        $scope.removeParameter = function (idx) {
+            $scope.calculation.parameters.splice(idx, 1);
         }
 
         $scope.cancelEditParameter = function () {
@@ -131,6 +181,10 @@ pricesApp.controller('CalculationsOverviewController', [
             $scope.editedOperation = oper;
         }
 
+        $scope.removeOperation = function (idx) {
+            $scope.calculation.operations.splice(idx, 1);
+        }
+
         $scope.cancelEditOperation = function () {
             if ($scope.editedOperation) {
                 $scope.operation = {};
@@ -144,14 +198,5 @@ pricesApp.controller('CalculationsOverviewController', [
         $priceCalculations.findOperations().then(function (operations) {
             $scope.operations = operations;
         });
-
-        $scope.save = function () {
-            $priceCalculations.createCalculation($scope.calculation).then(function (calculation) {
-                $scope.calculation = calculation;
-                alert('ok');
-            }, function (err) {
-                alert('nok: ' + err);
-            });
-        }
     }
 ]);

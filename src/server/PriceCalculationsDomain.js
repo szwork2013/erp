@@ -14,8 +14,8 @@
         description: { type: String },
         unit: { type: String, required: true },
         resources: [{
-            resourceId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Resource' },
-            quantity: { type: Number }
+            resourceId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Resource', required: true },
+            quantity: { type: Number, required: true }
         }]
     });
 
@@ -31,8 +31,10 @@
             description: { type: String }
         }],
         operations: [{
-            operationId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Operation' },
-            conversion: { type: String }
+            operationId: { type: mongoose.SchemaTypes.ObjectId, ref: 'Operation', required: true },
+            conversion: { type: String },
+            note: { type: String },
+            count: { type: Number, required: true }
         }]
     });
 

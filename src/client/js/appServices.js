@@ -57,6 +57,34 @@ appServices.factory('$priceCalculations', [
     '$q',
     function ($http, $q) {
         return {
+            findCalculations: function () {
+                var d = $q.defer();
+
+                $http
+                    .get('/api/pricecalculations/calculations')
+                    .success(function (calculations) {
+                        d.resolve(calculations);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
+
+                return d.promise;
+            },
+            getCalculation: function (id) {
+                var d = $q.defer();
+
+                $http
+                    .get('/api/pricecalculations/calculations/' + id)
+                    .success(function (calculation) {
+                        d.resolve(calculation);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
+
+                return d.promise;
+            },
             createCalculation: function (calculation) {
                 var d = $q.defer();
 

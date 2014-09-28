@@ -1,0 +1,106 @@
+<div>
+    <h1>{{pageTitle}}</h1>
+</div>
+<div>
+    <form>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group col-md-2">
+                    <label class="control-label">Naam</label>
+                </div>
+                <div class="form-group col-md-10">
+                    <input type="text" class="form-control" data-ng-model="calculation.name" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">Omschrijving</label>
+                </div>
+                <div class="form-group col-md-10">
+                    <textarea class="form-control" rows="5" data-ng-model="calculation.description"></textarea>
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">Eenheid</label>
+                </div>
+                <div class="form-group col-md-10">
+                    <input type="text" class="form-control" data-ng-model="calculation.unit" />
+                </div>
+            </div>
+        </div>
+        <div data-ng-controller="EditCalculationDetailsController">
+            <div class="panel panel-default">
+                <div class="panel-heading">Parameters</div>
+                <div class="panel-body">
+                    <div class="form-group col-md-2">
+                        <input type="text" class="form-control" placeholder="naam" data-ng-model="parameter.name" />
+                    </div>
+                    <div class="form-group col-md-7">
+                        <input type="text" class="form-control" placeholder="omschrijving" data-ng-model="parameter.description" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <button type="button" class="btn btn-primary" data-ng-click="saveParameter();" data-ng-if="parameterMode=='create'">Toevoegen</button>
+                        <button type="button" class="btn btn-primary" data-ng-click="saveParameter();" data-ng-if="parameterMode=='edit'">Wijzigen</button>
+                        <button type="button" class="btn btn-default" data-ng-click="cancelEditParameter();" data-ng-if="parameterMode=='edit'">Annuleren</button>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <table class="table">
+                            <tbody>
+                            <tr data-ng-repeat="parameter in calculation.parameters">
+                                <td>{{parameter.name}}</td>
+                                <td>{{parameter.description}}</td>
+                                <td class="text-right"><a href="" data-ng-click="editParameter(parameter, $index);"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                                    <a href="" data-ng-click="removeParameter($index);"><i class="glyphicon glyphicon-trash"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Bewerkingen</div>
+                <div class="panel-body">
+                    <div class="form-group col-md-2">
+                        <input type="number" min="1" class="form-control" placeholder="aantal" data-ng-model="operation.count" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <select class="form-control" data-ng-model="operation.operation" data-ng-options="_operation.name for _operation in operations" data-ng-required></select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" placeholder="nota" data-ng-model="operation.note" />
+                    </div>
+                    <div class="form-group col-md-9">
+                        <input type="text" class="form-control" placeholder="conversie" data-ng-model="operation.conversion" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <button type="button" class="btn btn-primary" data-ng-click="saveOperation();" data-ng-if="operationMode=='create'">Toevoegen</button>
+                        <button type="button" class="btn btn-primary" data-ng-click="saveOperation();" data-ng-if="operationMode=='edit'">Wijzigen</button>
+                        <button type="button" class="btn btn-default" data-ng-click="cancelEditOperation();" data-ng-if="operationMode=='edit'">Annuleren</button>
+                    </div>
+                    <div class="form-group col-dm-12">
+                        <table class="table">
+                            <tbody data-ng-repeat="operation in calculation.operations">
+                            <tr>
+                                <td>{{operation.count}}</td>
+                                <td>{{operation.operation.name}}</td>
+                                <td>{{operation.note}}</td>
+
+                            </tr>
+                            <tr>
+                                <td colspan="2"><pre>{{operation.conversion}}</pre></td>
+                                <td class="text-right"><a href="" data-ng-click="editOperation(operation, $index);"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                                    <a href="" data-ng-click="removeOperation($index);"><i class="glyphicon glyphicon-trash"></i></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <button class="btn btn-primary" data-ng-click="save();">Opslaan</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

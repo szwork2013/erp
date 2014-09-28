@@ -10,12 +10,14 @@
         <tr>
             <th>Naam</th>
             <th>Omschrijving</th>
+            <th>Eenheid</th>
         </tr>
         </thead>
         <tbody>
         <tr data-ng-repeat="calculation in calculations">
-            <td>{{calculation.name}}</td>
+            <td><a data-ng-href="#/calculations/{{calculation._id}}">{{calculation.name}}</a></td>
             <td>{{calculation.description}}</td>
+            <td>{{calculation.unit}}</td>
         </tr>
         </tbody>
     </table>
