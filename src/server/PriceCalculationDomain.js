@@ -1,15 +1,20 @@
 (function () {
     var mongoose = require('mongoose');
 
+    var ResourceSchema = new mongoose.Schema({
+        name: { type: String, unique: true, required: true },
+        group: { type: String },
+        quantity: { type: Number }
+    });
+
+    var Resource = mongoose.model('Resource', ResourceSchema, 'Resources');
+    module.exports['Resource'] = Resource;
+
     var OperationSchema = new mongoose.Schema({
         name: { type: String, unique: true, required: true },
         description: { type: String },
         unit: { type: String, required: true },
-        resources: [{
-            name: { type: String, unique: true, required: true },
-            group: { type: String },
-            quantity: { type: Number }
-        }]
+        resources: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Resource'}]
     });
 
     var Operation = mongoose.model('Operation', OperationSchema, 'Operations');

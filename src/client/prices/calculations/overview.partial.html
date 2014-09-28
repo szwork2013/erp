@@ -1,0 +1,22 @@
+<div>
+    <h1>Berekeningen</h1>
+</div>
+<div>
+    <a href="#/calculations/create">Nieuwe berekening aanmaken</a>
+</div>
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Omschrijving</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="calculation in calculations">
+            <td>{{calculation.name}}</td>
+            <td>{{calculation.description}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

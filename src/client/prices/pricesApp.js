@@ -8,11 +8,19 @@ pricesApp.config([
                 controller: 'PricesOverviewController',
                 templateUrl: 'prices/prices/overview.partial.html'
             })
+            .when('/calculations', {
+                controller: 'CalculationsOverviewController',
+                templateUrl: 'prices/calculations/overview.partial.html'
+            })
+            .when('/calculations/create', {
+                controller: 'CreateCalculationController',
+                templateUrl: 'prices/calculations/create.partial.html'
+            })
             .otherwise({ redirectTo: '/prices' });
     }
 ]);
 
-    pricesApp.controller('PricesOverviewController', [
+pricesApp.controller('PricesOverviewController', [
     '$scope',
     '$prices',
     function ($scope, $prices) {
@@ -42,7 +50,7 @@ pricesApp.config([
                 p = $prices.updatePrice(price._id, price.name, price.unit, price.price);
             }
 
-            p.then(function () { $scope.cancelEdit(); reloadPrices(); }, function(err) { alert('fout: ' + err); });
+            p.then(function () { $scope.cancelEdit(); reloadPrices(); }, function (err) { alert('fout: ' + err); });
         }
 
         $scope.cancelEdit = function () {
@@ -59,3 +67,10 @@ pricesApp.config([
         reloadPrices();
     }
 ]);
+
+pricesApp.controller('CalculationsOverviewController', [
+    '$scope',
+    function ($scope) {
+
+    }
+])
