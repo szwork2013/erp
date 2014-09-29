@@ -1,4 +1,4 @@
-var appServices = angular.module('appServices', []);
+var appServices = angular.module('appServices', ['ngRoute']);
 
 appServices.factory('$prices', [
     '$http',
@@ -110,6 +110,48 @@ appServices.factory('$priceCalculations', [
                     .error(function (err) {
                         d.reject(err);
                     })
+
+                return d.promise;
+            },
+            findResources: function () {
+                var d = $q.defer();
+
+                $http
+                    .get('/api/pricecalculations/resources')
+                    .success(function (data) {
+                        d.resolve(data);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    })
+
+                return d.promise;
+            },
+            createResource: function (resource) {
+                var d = $q.defer();
+
+                $http
+                    .put('/api/pricecalculations/resources', resource)
+                    .success(function (data) {
+                        d.resolve(data);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
+
+                return d.promise;
+            },
+            updateResource: function (resource) {
+                var d = $q.defer();
+
+                $http
+                    .post('/api/pricecalculations/resources/' + resource._id, resource)
+                    .success(function (data) {
+                        d.resolve(data);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
 
                 return d.promise;
             }

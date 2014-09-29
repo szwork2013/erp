@@ -3,7 +3,8 @@
 
     var ResourceSchema = new mongoose.Schema({
         name: { type: String, unique: true, required: true },
-        group: { type: String }
+        group: { type: String },
+        unit: { type: String, required: true }
     });
 
     var Resource = mongoose.model('Resource', ResourceSchema, 'Resources');

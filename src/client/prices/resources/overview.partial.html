@@ -1,0 +1,55 @@
+<div>
+    <h1>Middelen</h1>
+</div>
+<div>
+    <ul class="nav nav-tabs">
+        <li><a href="#/calculations">Berekeningen</a></li>
+        <li><a href="#/operations">Bewerkingen</a></li>
+        <li class="active"><a href="#/resources">Middelen</a></li>
+    </ul>
+    <br />
+</div>
+<div data-ng-if="!editMode">
+    <a href="" data-ng-click="createResource()">Maak nieuw middel</a>
+</div>
+<div class="panel panel-default" data-ng-if="editMode">
+    <div class="panel-heading" data-ng-if="editMode == 'create'">Nieuw middel</div>
+    <div class="panel-heading" data-ng-if="editMode == 'edit'">Wijzig middel: {{resource.name}}</div>
+    <div class="panel-body">
+        <form>
+            <div class="form-group col-md-4">
+                <input type="text" class="form-control" placeholder="naam" data-ng-model="resource.name" data-ng-required="true" />
+            </div>
+            <div class="form-group col-md-3">
+                <input type="text" class="form-control" placeholder="groep" data-ng-model="resource.group" />
+            </div>
+            <div class="form-group col-md-2">
+                <input type="text" class="form-control" placeholder="eenheid" data-ng-model="resource.unit" data-ng-required="true" />
+            </div>
+            <div class="form-group col-md-3">
+                <button type="submit" class="btn btn-primary" data-ng-click="save();">Opslaan</button>
+                <button type="button" class="btn btn-default" data-ng-click="cancelEdit();">Annuleren</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Groep</th>
+            <th>Eenheid</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="resource in resources">
+            <td>{{resource.name}}</td>
+            <td>{{resource.group}}</td>
+            <td>{{resource.unit}}</td>
+            <td class="text-right"><a href="" data-ng-click="editResource(resource);"><i class="glyphicon glyphicon-pencil"></i></a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -20,6 +20,14 @@ pricesApp.config([
                 controller: 'EditCalculationController',
                 templateUrl: 'prices/calculations/edit.partial.html'
             })
+            .when('/operations', {
+                controller: 'OperationsOverviewController',
+                templateUrl: 'prices/operations/overview.partial.html'
+            })
+            .when('/resources', {
+                controller: 'ResourcesOverviewController',
+                templateUrl: 'prices/resources/overview.partial.html'
+            })
             .otherwise({ redirectTo: '/prices' });
     }
 ]);
@@ -122,7 +130,7 @@ pricesApp.controller('EditCalculationController', [
     }
 ]);
 
-    pricesApp.controller('EditCalculationDetailsController', [
+pricesApp.controller('EditCalculationDetailsController', [
     '$scope',
     '$priceCalculations',
     function ($scope, $priceCalculations) {
@@ -198,5 +206,65 @@ pricesApp.controller('EditCalculationController', [
         $priceCalculations.findOperations().then(function (operations) {
             $scope.operations = operations;
         });
+    }
+]);
+
+pricesApp.controller('OperationsOverviewController', [
+    '$scope',
+    function ($scope) {
+
+    }
+]);
+
+    pricesApp.controller('ResourcesOverviewController', [
+    '$scope',
+    '$priceCalculations',
+    function ($scope, $priceCalculations) {
+        $scope.resource = {};
+        $scope.editMode = false;
+
+        $scope.createResource = function () {
+            if (!$scope.editMode) {
+                $scope.editMode = 'create';
+                $scope.resource = {};
+            }
+        }
+
+        $scope.editResource = function (resource) {
+            if (!$scope.editMode) {
+                $scope.editMode = 'edit';
+                $scope.resource = angular.copy(resource);
+            }
+        }
+
+        $scope.save = function () {
+            if ($scope.editMode == 'create') {
+                $priceCalculations.createResource($scope.resource).then(function () {
+                    $scope.resource = {};
+                    $scope.editMode = false;
+                    reloadResources();
+                });
+            }
+
+            if ($scope.editMode == 'edit') {
+                $priceCalculations.updateResource($scope.resource).then(function () {
+                    $scope.resource = {};
+                    $scope.editMode = false;
+                    reloadResources();
+                })
+            }
+        }
+
+        $scope.cancelEdit = function () {
+            $scope.editMode = false;
+        }
+
+        function reloadResources() {
+            $priceCalculations.findResources().then(function (resources) {
+                $scope.resources = resources;
+            });
+        }
+
+        reloadResources();
     }
 ]);
