@@ -9,3 +9,78 @@
     </ul>
     <br />
 </div>
+<div data-ng-if="!editMode">
+    <a href="" data-ng-click="createOperation();">Maak nieuwe bewerking</a>
+</div>
+<div class="panel panel-default" data-ng-if="editMode">
+    <div class="panel-heading" data-ng-if="editMode == 'create'">Nieuwe bewerking</div>
+    <div class="panel-heading" data-ng-if="editMode == 'edit'">Wijzig bewerking: {{operation.name}}</div>
+    <div class="panel-body">
+        <form>
+            <div class="form-group col-md-6">
+                <input type="text" class="form-control" placeholder="naam" data-ng-model="operation.name" data-ng-required="true" />
+            </div>
+            <div class="form-group col-md-2">
+                <input type="text" class="form-control" placeholder="eenheid" data-ng-model="operation.unit" data-ng-required="true" />
+            </div>
+            <div class="col-md-4"></div>
+            <div class="form-group col-md-12">
+                <textarea class="form-control" rows="5" placeholder="omschrijving" data-ng-model="operation.description"></textarea>
+            </div>
+            <div>
+                <div class="form-group col-md-6">
+                    <select class="form-control" data-ng-model="resource.resource" data-ng-options="_resource.name for _resource in resources"></select>
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="number" min="0" step="0.01" class="form-control" placeholder="quantity" data-ng-model="resource.quantity" />
+                </div>
+                <div class="form-group col-md-3">
+                    <div class="form-group col-md-3">
+                        <button type="button" class="btn btn-primary" data-ng-click="saveResource();" data-ng-if="resourceMode=='create'">Toevoegen</button>
+                        <button type="button" class="btn btn-primary" data-ng-click="saveResource();" data-ng-if="resourceMode=='edit'">Wijzigen</button>
+                        <button type="button" class="btn btn-default" data-ng-click="cancelEditResource();" data-ng-if="resourceMode=='edit'">Annuleren</button>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <table class="table">
+                        <tbody>
+                        <tr data-ng-repeat="res in operation.resources">
+                            <td>{{res.resource.name}}</td>
+                            <td>{{res.quantity}}</td>
+                            <td class="text-right"><a href="" data-ng-click="editResource(res, $index);"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                                <a href="" data-ng-click="removeResource($index);"><i class="glyphicon glyphicon-trash"></i></a>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-primary" data-ng-click="save();">Opslaan</button>
+                <button type="button" class="btn btn-default" data-ng-click="cancelEdit();">Annuleren</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Eenheid</th>
+            <th>Omschrijving</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="operation in operations">
+            <td>{{operation.name}}</td>
+            <td>{{operation.unit}}</td>
+            <td>{{operation.description}}</td>
+            <td class="text-right">
+                <a href="" data-ng-click="editOperation(operation);" data-ng-if="!editMode"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                <a href="" data-ng-click="deleteOperation(operation);" data-ng-if="!editMode"><i class="glyphicon glyphicon-trash"></i></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

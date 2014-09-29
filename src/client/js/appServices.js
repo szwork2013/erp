@@ -109,7 +109,35 @@ appServices.factory('$priceCalculations', [
                     })
                     .error(function (err) {
                         d.reject(err);
+                    });
+
+                return d.promise;
+            },
+            createOperation: function (operation) {
+                var d = $q.defer();
+
+                $http
+                    .put('/api/pricecalculations/operations', operation)
+                    .success(function (data) {
+                        d.resolve(data);
                     })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
+
+                return d.promise;
+            },
+            updateOperation: function (operation) {
+                var d = $q.defer();
+
+                $http
+                    .post('/api/pricecalculations/operations/' + operation._id, operation)
+                    .success(function (data) {
+                        d.resolve(data);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
 
                 return d.promise;
             },

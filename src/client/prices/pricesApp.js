@@ -211,12 +211,74 @@ pricesApp.controller('EditCalculationDetailsController', [
 
 pricesApp.controller('OperationsOverviewController', [
     '$scope',
-    function ($scope) {
+    '$priceCalculations',
+    function ($scope, $priceCalculations) {
+        $scope.operation = { resources: [] };
+        $scope.editMode = false;
 
+        $scope.createOperation = function () {
+            if (!$scope.editMode) {
+                $scope.editMode = 'create';
+                $scope.operation = { resources: [] };
+            }
+        }
+
+        $scope.editOperation = function (operation) {
+            if (!$scope.editMode) {
+                $scope.editMode = 'edit';
+                $scope.operation = angular.copy(operation);
+            }
+        }
+
+        $scope.save = function () {
+            if ($scope.editMode == 'create') {
+                $priceCalculations.createOperation($scope.operation).then(function () {
+                    $scope.operation = {};
+                    $scope.editMode = false;
+                    reloadOperations();
+                });
+            }
+
+            if ($scope.editMode == 'edit') {
+                $priceCalculations.updateOperation($scope.operation).then(function () {
+                    $scope.operation = {};
+                    $scope.editMode = false;
+                    reloadOperations();
+                })
+            }
+        }
+
+        $scope.cancelEdit = function () {
+            $scope.editMode = false;
+            $scope.operation = { resources: [] };
+        }
+
+        // operation resources
+        $priceCalculations.findResources().then(function (resources) {
+            $scope.resources = resources;
+        });
+
+        $scope.resourceMode = 'create';
+        $scope.resource = {};
+
+        $scope.saveResource = function () {
+            var res = angular.copy($scope.resource);
+            $scope.operation.resources.push(res);
+            $scope.resource = {};
+            $scope.resourceMode = 'create';
+        }
+
+        function reloadOperations() {
+            $priceCalculations.findOperations().then(function (operations) {
+                $scope.operations = operations;
+            });
+        }
+
+        reloadOperations();
     }
 ]);
 
-    pricesApp.controller('ResourcesOverviewController', [
+pricesApp.controller('ResourcesOverviewController', [
     '$scope',
     '$priceCalculations',
     function ($scope, $priceCalculations) {

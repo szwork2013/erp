@@ -23,6 +23,16 @@
             .get(function (req, res, next) {
                 var p = service.findOperations();
                 api.processResponse(p, res);
+            })
+            .put(function (req, res, next) {
+                var p = service.createOperation(req.body.name, req.body.description, req.body.unit);
+                api.processResponse(p, res);
+            });
+
+        router.route('/pricecalculations/operations/:operationId')
+            .post(function (req, res, next) {
+                var p = service.updateOperation(req.params.operationId, req.body.name, req.body.description, req.body.unit);
+                api.processResponse(p, res);
             });
 
         router.route('/pricecalculations/resources')

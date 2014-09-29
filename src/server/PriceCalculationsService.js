@@ -41,6 +41,27 @@
         return d.promise;
     }
 
+    PriceCalculationsService.prototype.createOperation = function (name, description, unit) {
+        var d = this.q.defer();
+
+        try {
+            new this.domain.Operation({ name: name, description: description, unit: unit }).save(d.makeNodeResolver());
+        }
+        catch (err) {
+            d.reject(err);
+        }
+
+        return d.promise;
+    }
+
+    PriceCalculationsService.prototype.updateOperation = function (id, name, description, unit) {
+        var d = this.q.defer();
+
+        this.domain.Operation.findByIdAndUpdate(id, { $set: { name: name, description: description, unit: unit} }, d.makeNodeResolver());
+
+        return d.promise;
+    }
+
     PriceCalculationsService.prototype.findResources = function () {
         var d = this.q.defer();
 
