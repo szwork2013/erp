@@ -23,16 +23,37 @@
     PriceCalculationsService.prototype.createCalculation = function (calculation) {
         var d = this.q.defer();
 
-        console.log(JSON.stringify(calculation));
+        new this.domain.Calculation(calculation).save(d.makeNodeResolver());
 
-        new this.domain.Calculation(calculation).save(function (err, value) {
+        return d.promise;
+    }
+
+    PriceCalculationsService.prototype.updateCalculation = function (id, calculation) {
+        var d = this.q.defer();
+
+        this.domain.Calculation.findById(id, function (err, result) {
             if (err) {
                 d.reject(err);
-                console.log(err);
+                return;
             }
-            else {
-                d.resolve(value);
+
+            result.name = calculation.name;
+            result.description = calculation.description;
+            result.unit = calculation.unit;
+
+            result.parameters = [];
+            for (var pindex in calculation.parameters) {
+                var param = calculation.parameters[pindex];
+                result.parameters.push({ name: param.name, description: param.description });
             }
+
+            result.operations = [];
+            for (var oindex in calculation.operations) {
+                var oper = calculation.operations[oindex];
+                result.operations.push({ count: oper.count, operationId: oper.operationId, note: oper.note, conversion: oper.conversion });
+            }
+
+            result.save(d.makeNodeResolver());
         });
 
         return d.promise;
@@ -49,12 +70,7 @@
     PriceCalculationsService.prototype.createOperation = function (name, description, unit) {
         var d = this.q.defer();
 
-        try {
-            new this.domain.Operation({ name: name, description: description, unit: unit }).save(d.makeNodeResolver());
-        }
-        catch (err) {
-            d.reject(err);
-        }
+        new this.domain.Operation({ name: name, description: description, unit: unit }).save(d.makeNodeResolver());
 
         return d.promise;
     }
@@ -62,7 +78,18 @@
     PriceCalculationsService.prototype.updateOperation = function (id, name, description, unit) {
         var d = this.q.defer();
 
-        this.domain.Operation.findByIdAndUpdate(id, { $set: { name: name, description: description, unit: unit} }, d.makeNodeResolver());
+        this.domain.Operation.findById(id, function (err, operation) {
+            if (err) {
+                d.reject(err);
+                return;
+            }
+
+            operation.name = name;
+            operation.description = description;
+            operation.unit = unit;
+
+            operation.save(d.makeNodeResolver());
+        });
 
         return d.promise;
     }
@@ -78,12 +105,7 @@
     PriceCalculationsService.prototype.createResource = function (name, group, unit) {
         var d = this.q.defer();
 
-        try {
-            new this.domain.Resource({ name: name, group: group, unit: unit }).save(d.makeNodeResolver());
-        }
-        catch (err) {
-            d.reject(err);
-        }
+        new this.domain.Resource({ name: name, group: group, unit: unit }).save(d.makeNodeResolver());
 
         return d.promise;
     }

@@ -17,6 +17,10 @@
             .get(function (req, res, next) {
                 var p = service.getCalculation(req.params.calculationId);
                 api.processResponse(p, res);
+            })
+            .post(function (req, res, next) {
+                var p = service.updateCalculation(req.params.calculationId, req.body);
+                api.processResponse(p, res);
             });
 
         router.route('/pricecalculations/operations')

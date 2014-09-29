@@ -3,10 +3,11 @@
     }
 
     Api.prototype.processResponse = function (promise, response) {
-        promise.then(function (result) {
+        promise.done(function (result) {
             response.status(200).json(result);
         }, function (err) {
-            response.status(500).end(err);
+            console.log(err);
+            response.status(500).end(err.toString());
         });
     };
 

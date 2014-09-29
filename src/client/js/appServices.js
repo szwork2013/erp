@@ -89,8 +89,10 @@ appServices.factory('$prices', [
                 var d = $q.defer();
 
                 angular.forEach(calculation.operations, function (operation) {
-                    operation.operationId = operation.operation._id;
-                    delete operation.operation;
+                    if (operation.operation) {
+                        operation.operationId = operation.operation._id;
+                        delete operation.operation;
+                    }
                 });
 
                 $http
@@ -107,10 +109,22 @@ appServices.factory('$prices', [
             updateCalculation: function (calculation) {
                 var d = $q.defer();
 
+                angular.forEach(calculation.operations, function (operation) {
+                    if (operation.operation) {
+                        operation.operationId = operation.operation._id;
+                        delete operation.operation;
+                    }
+                });
+
                 $http
                     .post('/api/pricecalculations/calculations/' + calculation._id, calculation)
-                    .success(function (calculation) {
-                        d.resolve(calculation);
+                    .success(function (result) {
+                        if (Array.isArray(result) && result.length > 0) {
+                            d.resolve(result[0]);
+                        }
+                        else {
+                            d.resolve(result);
+                        }
                     })
                     .error(function (err) {
                         d.reject(err);
