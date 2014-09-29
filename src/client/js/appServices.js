@@ -52,7 +52,7 @@ appServices.factory('$prices', [
     }
 ]);
 
-appServices.factory('$priceCalculations', [
+    appServices.factory('$priceCalculations', [
     '$http',
     '$q',
     function ($http, $q) {
@@ -88,8 +88,27 @@ appServices.factory('$priceCalculations', [
             createCalculation: function (calculation) {
                 var d = $q.defer();
 
+                angular.forEach(calculation.operations, function (operation) {
+                    operation.operationId = operation.operation._id;
+                    delete operation.operation;
+                });
+
                 $http
                     .put('/api/pricecalculations/calculations', calculation)
+                    .success(function (calculation) {
+                        d.resolve(calculation);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
+
+                return d.promise;
+            },
+            updateCalculation: function (calculation) {
+                var d = $q.defer();
+
+                $http
+                    .post('/api/pricecalculations/calculations/' + calculation._id, calculation)
                     .success(function (calculation) {
                         d.resolve(calculation);
                     })

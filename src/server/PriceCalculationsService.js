@@ -23,12 +23,17 @@
     PriceCalculationsService.prototype.createCalculation = function (calculation) {
         var d = this.q.defer();
 
-        try {
-            new this.domain.Calculation(calculation).save(d.makeNodeResolver());
-        }
-        catch (err) {
-            d.reject(err);
-        }
+        console.log(JSON.stringify(calculation));
+
+        new this.domain.Calculation(calculation).save(function (err, value) {
+            if (err) {
+                d.reject(err);
+                console.log(err);
+            }
+            else {
+                d.resolve(value);
+            }
+        });
 
         return d.promise;
     }

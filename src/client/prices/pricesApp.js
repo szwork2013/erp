@@ -93,7 +93,8 @@ pricesApp.controller('CalculationsOverviewController', [
 pricesApp.controller('CreateCalculationController', [
     '$scope',
     '$priceCalculations',
-    function ($scope, $priceCalculations) {
+    '$location',
+    function ($scope, $priceCalculations, $location) {
         $scope.pageTitle = "Nieuwe berekening aanmaken";
 
         $scope.calculation = {
@@ -103,13 +104,13 @@ pricesApp.controller('CreateCalculationController', [
 
         $scope.save = function () {
             $priceCalculations.createCalculation($scope.calculation).then(function (calculation) {
-                $scope.calculation = calculation;
+                $location.path('/calculations/' + calculation._id);
             });
         }
     }
 ]);
 
-pricesApp.controller('EditCalculationController', [
+    pricesApp.controller('EditCalculationController', [
     '$scope',
     '$priceCalculations',
     '$routeParams',
@@ -125,7 +126,9 @@ pricesApp.controller('EditCalculationController', [
         });
 
         $scope.save = function () {
-
+            $priceCalculations.updateCalculation($scope.calculation).then(function (calculation) {
+                $scope.calculation = calculation;
+            });
         }
     }
 ]);
