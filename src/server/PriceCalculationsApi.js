@@ -29,7 +29,7 @@
                 api.processResponse(p, res);
             })
             .put(function (req, res, next) {
-                var p = service.createOperation(req.body.name, req.body.description, req.body.unit);
+                var p = service.createOperation(req.body.name, req.body.description, req.body.unit, req.body.resources);
                 api.processResponse(p, res);
             });
 

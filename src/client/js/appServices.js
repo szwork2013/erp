@@ -149,6 +149,13 @@ appServices.factory('$prices', [
             createOperation: function (operation) {
                 var d = $q.defer();
 
+                angular.forEach(operation.resources, function (res) {
+                    if (res.resource) {
+                        res.resourceId = res.resource._id;
+                        delete res.resource;
+                    }
+                });
+
                 $http
                     .put('/api/pricecalculations/operations', operation)
                     .success(function (data) {
@@ -162,6 +169,13 @@ appServices.factory('$prices', [
             },
             updateOperation: function (operation) {
                 var d = $q.defer();
+
+                angular.forEach(operation.resources, function (res) {
+                    if (res.resource) {
+                        res.resourceId = res.resource._id;
+                        delete res.resource;
+                    }
+                });
 
                 $http
                     .post('/api/pricecalculations/operations/' + operation._id, operation)

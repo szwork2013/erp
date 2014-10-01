@@ -67,15 +67,15 @@
         return d.promise;
     }
 
-    PriceCalculationsService.prototype.createOperation = function (name, description, unit) {
+    PriceCalculationsService.prototype.createOperation = function (name, description, unit, resources) {
         var d = this.q.defer();
 
-        new this.domain.Operation({ name: name, description: description, unit: unit }).save(d.makeNodeResolver());
+        new this.domain.Operation({ name: name, description: description, unit: unit, resources: resources }).save(d.makeNodeResolver());
 
         return d.promise;
     }
 
-    PriceCalculationsService.prototype.updateOperation = function (id, name, description, unit) {
+    PriceCalculationsService.prototype.updateOperation = function (id, name, description, unit, resources) {
         var d = this.q.defer();
 
         this.domain.Operation.findById(id, function (err, operation) {
@@ -87,6 +87,12 @@
             operation.name = name;
             operation.description = description;
             operation.unit = unit;
+
+            operation.resources = [];
+            for (var rindex in resources) {
+                var res = resources[rindex];
+                operation.resources.push({ resourceId: res.resourceId, quantity: res.quantity });
+            }
 
             operation.save(d.makeNodeResolver());
         });
