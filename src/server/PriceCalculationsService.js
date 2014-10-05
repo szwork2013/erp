@@ -50,7 +50,7 @@
             result.operations = [];
             for (var oindex in calculation.operations) {
                 var oper = calculation.operations[oindex];
-                result.operations.push({ count: oper.count, operationId: oper.operationId, note: oper.note, conversion: oper.conversion });
+                result.operations.push({ count: oper.count, operation: oper.operation, note: oper.note, conversion: oper.conversion });
             }
 
             result.save(d.makeNodeResolver());
@@ -62,7 +62,7 @@
     PriceCalculationsService.prototype.findOperations = function () {
         var d = this.q.defer();
 
-        this.domain.Operation.find({}, d.makeNodeResolver());
+        this.domain.Operation.find({}).populate('resources.resource').exec(d.makeNodeResolver());
 
         return d.promise;
     }
@@ -91,7 +91,7 @@
             operation.resources = [];
             for (var rindex in resources) {
                 var res = resources[rindex];
-                operation.resources.push({ resourceId: res.resourceId, quantity: res.quantity });
+                operation.resources.push({ resource: res.resource, quantity: res.quantity });
             }
 
             operation.save(d.makeNodeResolver());

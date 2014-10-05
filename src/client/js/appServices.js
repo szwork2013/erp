@@ -89,9 +89,8 @@ appServices.factory('$prices', [
                 var d = $q.defer();
 
                 angular.forEach(calculation.operations, function (operation) {
-                    if (operation.operation) {
-                        operation.operationId = operation.operation._id;
-                        delete operation.operation;
+                    if (operation.operation && operation.operation._id) {
+                        operation.operation = operation.operation._id;
                     }
                 });
 
@@ -110,9 +109,8 @@ appServices.factory('$prices', [
                 var d = $q.defer();
 
                 angular.forEach(calculation.operations, function (operation) {
-                    if (operation.operation) {
-                        operation.operationId = operation.operation._id;
-                        delete operation.operation;
+                    if (operation.operation && operation.operation._id) {
+                        operation.operation = operation.operation._id;
                     }
                 });
 
@@ -150,9 +148,8 @@ appServices.factory('$prices', [
                 var d = $q.defer();
 
                 angular.forEach(operation.resources, function (res) {
-                    if (res.resource) {
-                        res.resourceId = res.resource._id;
-                        delete res.resource;
+                    if (res.resource && res.resource._id) {
+                        res.resource = res.resource._id;
                     }
                 });
 
@@ -171,9 +168,8 @@ appServices.factory('$prices', [
                 var d = $q.defer();
 
                 angular.forEach(operation.resources, function (res) {
-                    if (res.resource) {
-                        res.resourceId = res.resource._id;
-                        delete res.resource;
+                    if (res.resource && res.resource._id) {
+                        res.resource = res.resource._id;
                     }
                 });
 
