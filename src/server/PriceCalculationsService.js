@@ -91,6 +91,7 @@
             operation.resources = [];
             for (var rindex in resources) {
                 var res = resources[rindex];
+                console.log(JSON.stringify(res));
                 operation.resources.push({ resource: res.resource, quantity: res.quantity });
             }
 

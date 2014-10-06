@@ -29,7 +29,7 @@
             </div>
             <div>
                 <div class="form-group col-md-6">
-                    <select class="form-control" data-ng-model="resource.resource" data-ng-options="_resource.name for _resource in resources"></select>
+                    <select class="form-control" data-ng-model="resource.resource" data-ng-options="_resource.name for _resource in resources track by _resource._id"></select>
                 </div>
                 <div class="form-group col-md-3">
                     <input type="number" min="0" step="0.01" class="form-control" placeholder="quantity" data-ng-model="resource.quantity" />

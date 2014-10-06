@@ -35,7 +35,7 @@
 
         router.route('/pricecalculations/operations/:operationId')
             .post(function (req, res, next) {
-                var p = service.updateOperation(req.params.operationId, req.body.name, req.body.description, req.body.unit);
+                var p = service.updateOperation(req.params.operationId, req.body.name, req.body.description, req.body.unit, req.body.resources);
                 api.processResponse(p, res);
             });
 

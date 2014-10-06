@@ -52,7 +52,7 @@ appServices.factory('$prices', [
     }
 ]);
 
-    appServices.factory('$priceCalculations', [
+appServices.factory('$priceCalculations', [
     '$http',
     '$q',
     function ($http, $q) {
