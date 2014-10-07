@@ -36,29 +36,29 @@
                 </div>
             </div>
         </div>
-        <div data-ng-controller="EditCalculationDetailsController">
+        <div data-ng-controller="CalculationDetailsController">
             <div class="panel panel-default">
                 <div class="panel-heading">Parameters</div>
                 <div class="panel-body">
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" placeholder="naam" data-ng-model="parameter.name" />
+                        <input type="text" class="form-control" placeholder="naam" data-ng-model="parameterCollection.currentItem.name" />
                     </div>
                     <div class="form-group col-md-7">
-                        <input type="text" class="form-control" placeholder="omschrijving" data-ng-model="parameter.description" />
+                        <input type="text" class="form-control" placeholder="omschrijving" data-ng-model="parameterCollection.currentItem.description" />
                     </div>
                     <div class="form-group col-md-3">
-                        <button type="button" class="btn btn-primary" data-ng-click="saveParameter();" data-ng-if="parameterMode=='create'">Toevoegen</button>
-                        <button type="button" class="btn btn-primary" data-ng-click="saveParameter();" data-ng-if="parameterMode=='edit'">Wijzigen</button>
-                        <button type="button" class="btn btn-default" data-ng-click="cancelEditParameter();" data-ng-if="parameterMode=='edit'">Annuleren</button>
+                        <button type="button" class="btn btn-primary" data-ng-click="parameterCollection.saveItem();" data-ng-if="parameterCollection.mode=='create'">Toevoegen</button>
+                        <button type="button" class="btn btn-primary" data-ng-click="parameterCollection.saveItem();" data-ng-if="parameterCollection.mode=='edit'">Wijzigen</button>
+                        <button type="button" class="btn btn-default" data-ng-click="parameterCollection.cancelEditItem();" data-ng-if="parameterCollection.mode=='edit'">Annuleren</button>
                     </div>
                     <div class="form-group col-md-12">
                         <table class="table">
                             <tbody>
-                            <tr data-ng-repeat="parameter in calculation.parameters">
-                                <td>{{parameter.name}}</td>
-                                <td>{{parameter.description}}</td>
-                                <td class="text-right"><a href="" data-ng-click="editParameter(parameter, $index);"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
-                                    <a href="" data-ng-click="removeParameter($index);"><i class="glyphicon glyphicon-trash"></i></a>
+                            <tr data-ng-repeat="param in parameterCollection.collection">
+                                <td>{{param.name}}</td>
+                                <td>{{param.description}}</td>
+                                <td class="text-right"><a href="" data-ng-click="parameterCollection.editItem(param, $index);"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                                    <a href="" data-ng-click="parameterCollection.deleteItem(param, $index);"><i class="glyphicon glyphicon-trash"></i></a>
                                 </td>
                             </tr>
                             </tbody>

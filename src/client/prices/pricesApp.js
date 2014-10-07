@@ -110,7 +110,7 @@ pricesApp.controller('CreateCalculationController', [
     }
 ]);
 
-    pricesApp.controller('EditCalculationController', [
+pricesApp.controller('EditCalculationController', [
     '$scope',
     '$priceCalculations',
     '$routeParams',
@@ -133,77 +133,55 @@ pricesApp.controller('CreateCalculationController', [
     }
 ]);
 
-pricesApp.controller('EditCalculationDetailsController', [
+    pricesApp.controller('CalculationDetailsController', [
     '$scope',
     '$priceCalculations',
     function ($scope, $priceCalculations) {
-        $scope.$parent.$watch('calculation', function (calculation) {
-            $scope.calculation = calculation;
+        $scope.parameterCollection = {};
+
+        $scope.$parent.$watch('calculation', function (value) {
+            //$scope.calculation = value;
+            $scope.parameterCollection.collection = value.parameters;
+            $scope.variableCollection.collection = value.variables;
+            $scope.operationColleciton.collection = value.opeartions;
         });
 
-        // parameter
-        $scope.parameterMode = 'create';
-        $scope.parameter = {};
-
-        $scope.saveParameter = function () {
-            var par = angular.copy($scope.parameter);
-            $scope.calculation.parameters.push(par);
-            $scope.parameter = {};
-            $scope.parameterMode = 'create';
-        };
-
-        $scope.editParameter = function (param, idx) {
-            var par = angular.copy(param);
-            $scope.calculation.parameters.splice(idx, 1);
-            $scope.parameterMode = 'edit';
-            $scope.parameter = par;
-            $scope.editedParameter = param;
-        }
-
-        $scope.removeParameter = function (idx) {
-            $scope.calculation.parameters.splice(idx, 1);
-        }
-
-        $scope.cancelEditParameter = function () {
-            if ($scope.editedParameter) {
-                $scope.parameter = {};
-                $scope.calculation.parameters.push($scope.editedParameter);
-                $scope.editedParameter = undefined;
-                $scope.parameterMode = 'create';
+        function CollectionManager() {
+            return {
+                collection: [],
+                mode: 'create',
+                oldItem: null,
+                currentItem: {},
+                editItem: function (item, index) {
+                    this.mode = 'edit';
+                    this.oldItem = item;
+                    this.collection.splice(index, 1);
+                    this.currentItem = angular.copy(item);
+                },
+                cancelEditItem: function () {
+                    if (this.oldItem) {
+                        this.currentItem = {};
+                        this.collection.push(this.oldItem);
+                        this.oldItem = undefined;
+                        this.mode = 'create';
+                    }
+                },
+                deleteItem: function (item, index) {
+                    this.collection.splice(index, 1);
+                },
+                saveItem: function () {
+                    var i = angular.copy(this.currentItem);
+                    this.collection.push(i);
+                    this.currentItem = {};
+                    this.oldItem = undefined;
+                    this.mode = 'create';
+                }
             }
         }
 
-        // operation
-        $scope.operationMode = 'create';
-        $scope.operation = {};
-
-        $scope.saveOperation = function () {
-            var op = angular.copy($scope.operation);
-            $scope.calculation.operations.push(op);
-            $scope.operation = {};
-            $scope.operationMode = 'create';
-        }
-
-        $scope.editOperation = function (oper, idx) {
-            var op = angular.copy(oper);
-            $scope.calculation.operations.splice(idx, 1);
-            $scope.operationMode = 'edit';
-            $scope.operation = op;
-            $scope.editedOperation = oper;
-        }
-
-        $scope.removeOperation = function (idx) {
-            $scope.calculation.operations.splice(idx, 1);
-        }
-
-        $scope.cancelEditOperation = function () {
-            if ($scope.editedOperation) {
-                $scope.operation = {};
-                $scope.calculation.operations.push($scope.editedOperation);
-                $scope.editedOperation = undefined;
-                $scope.operationMode = 'create';
-            }
-        }
+        $scope.parameterCollection = CollectionManager();
+        $scope.variableCollection = CollectionManager();
+        $scope.opeartionCollection = CollectionManager();
 
         // reference data
         $priceCalculations.findOperations().then(function (operations) {
@@ -212,7 +190,7 @@ pricesApp.controller('EditCalculationDetailsController', [
     }
 ]);
 
-    pricesApp.controller('OperationsOverviewController', [
+pricesApp.controller('OperationsOverviewController', [
     '$scope',
     '$priceCalculations',
     function ($scope, $priceCalculations) {
@@ -260,6 +238,28 @@ pricesApp.controller('EditCalculationDetailsController', [
         $priceCalculations.findResources().then(function (resources) {
             $scope.resources = resources;
         });
+
+        $scope.resourceCollection = {
+            collection: $scope.operation.resources,
+            mode: 'create',
+            oldItem: null,
+            currentItem: {},
+            editItem: function (item, index) {
+                this.mode = 'edit';
+                this.oldItem = item;
+                this.collection.splice(index, 1);
+                this.currentItem = angular.copy(item);
+            },
+            deleteItem: function (item, index) {
+                this.collection.splice(index, 1);
+            },
+            saveItem: function () {
+                var i = angular.copy(this.currentItem);
+                this.collection.push(i);
+                this.currentItem = {};
+                this.mode = 'create';
+            }
+        };
 
         $scope.resourceMode = 'create';
         $scope.resource = {};
