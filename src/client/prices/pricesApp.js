@@ -212,7 +212,7 @@ pricesApp.controller('EditCalculationDetailsController', [
     }
 ]);
 
-pricesApp.controller('OperationsOverviewController', [
+    pricesApp.controller('OperationsOverviewController', [
     '$scope',
     '$priceCalculations',
     function ($scope, $priceCalculations) {
@@ -263,6 +263,17 @@ pricesApp.controller('OperationsOverviewController', [
 
         $scope.resourceMode = 'create';
         $scope.resource = {};
+
+        $scope.editResource = function (res, index) {
+            $scope.resourceMode = 'edit';
+            $scope.editedResource = res;
+            $scope.operation.resources.splice(index, 1);
+            $scope.resource = angular.copy(res);
+        }
+
+        $scope.deleteResource = function (index) {
+
+        }
 
         $scope.saveResource = function () {
             var res = angular.copy($scope.resource);
