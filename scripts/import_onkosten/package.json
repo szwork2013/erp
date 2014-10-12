@@ -1,0 +1,10 @@
+{
+  "name": "erp-expenses-import",
+  "description": "ERP Expenses Import",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "mongoose": "3.8.x",
+    "ya-csv": "0.9.4"
+  }
+}
