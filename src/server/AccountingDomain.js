@@ -4,37 +4,43 @@
         module.exports[i] = domain[i];
     }
 
+    var contactsDomain = require('./ContactsDomain.js');
+    for (var i in domain) {
+        module.exports[i] = domain[i];
+    }
+
     var mongoose = require('mongoose');
 
     var bankAccountSchema = new mongoose.Schema({
-        name: String,
-        accountNumber: String
+        accountNumber: { type: String, required: true, unique: true },
+        name: { type: String, required: true }
     });
 
     var bankAccount = mongoose.model('BankAccount', bankAccountSchema, 'BankAccounts');
     module.exports['BankAccount'] = bankAccount;
-
-
+    
     var bankTransactionSchema = new mongoose.Schema({
-        bankAccountId: mongoose.SchemaTypes.ObjectId,
-        date: Date,
-        amount: Number,
-        message: String
+        bankAccountId: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'BankAccount' },
+        date: { type: Date, required: true },
+        valueDate: { type: Date },
+        message: { type: String },
+        amount: { type: Number, required: true, 'default': 0.0 },
+        info: { type: mongoose.SchemaTypes.Mixed }
     });
 
     var bankTransaction = mongoose.model('BankTransaction', bankTransactionSchema, 'BankTransactions');
     module.exports['BankTransaction'] = bankTransaction;
 
     var expenseSchema = new mongoose.Schema({
-        sequence: Number,
-        supplierId: mongoose.SchemaTypes.ObjectId,
-        documentNumber: String,
-        date: Date,
-        expirationDate: Date,
-        paymentMessage: String,
-        netAmount: Number,
-        vatAmount: Number,
-        totalAmount: Number
+        sequence: { type: Number, required: true, unique: true },
+        supplier: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'Contact' },
+        date: { type: Date, required: true },
+        expirationDate: { type: Date, required: true },
+        documentNumber: { type: String },
+        paymentMessage: { type: String },
+        netAmount: { type: Number, required: true },
+        vatAmount: { type: Number, required: true },
+        totalAmount: { type: Number, required: true }
     });
 
     var expense = mongoose.model('Expense', expenseSchema, 'Expenses');
