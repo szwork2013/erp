@@ -3,6 +3,9 @@ var domain = require('../AccountingDomain.js');
 
 var program = require('commander');
 var csv = require('ya-csv');
+var q = require('q');
+
+var lock = require('lockfile');
 
 program
     .command('import_bank_transactions')
@@ -52,18 +55,23 @@ function importBankTransactions(file) {
 function importExpenses(file) {
     console.log('Start importing expenses from file ' + file);
 
+
     var reader = csv.createCsvFileReader(file, { separator: ';', quote: '"', 'escape': '"', columnsFromHeader: true });
 
     reader.on('error', function (err) {
         console.error(err);
     });
 
+    reader.on('end', function () {
+        console.log('done processing: ' + file);
+    });
+
     reader.on('data', function (record) {
         // nummer;leverancier;datum;vervaldatum;document;mededeling;netto;btw;totaal
-
+        
         var expense = new domain.Expense({
             sequence: parseInt(record.nummer),
-            supplier: record.leverancier,
+            supplier: record.lev_id,
             date: parseDate(record.datum),
             expirationDate: parseDate(record.vervaldatum),
             documentNumber: record.document,
@@ -78,10 +86,7 @@ function importExpenses(file) {
                 console.error(err);
             }
         });
-    });
 
-    reader.on('end', function () {
-        console.log('done processing: ' + file);
     });
 };
 

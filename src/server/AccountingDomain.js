@@ -5,8 +5,8 @@
     }
 
     var contactsDomain = require('./ContactsDomain.js');
-    for (var i in domain) {
-        module.exports[i] = domain[i];
+    for (var i in contactsDomain) {
+        module.exports[i] = contactsDomain[i];
     }
 
     var mongoose = require('mongoose');
@@ -18,7 +18,7 @@
 
     var bankAccount = mongoose.model('BankAccount', bankAccountSchema, 'BankAccounts');
     module.exports['BankAccount'] = bankAccount;
-    
+
     var bankTransactionSchema = new mongoose.Schema({
         bankAccountId: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'BankAccount' },
         date: { type: Date, required: true },

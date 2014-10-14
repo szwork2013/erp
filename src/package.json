@@ -10,6 +10,7 @@
     "q": "1.0.x",
     "mongoose": "3.8.x",
     "ya-csv": "0.9.4",
-    "commander": "2.3.x"
+    "commander": "2.3.x",
+    "lockfile": "1.0.x"
   }
 }

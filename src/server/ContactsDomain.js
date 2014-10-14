@@ -7,7 +7,7 @@
     var mongoose = require('mongoose');
 
     var contactSchema = new mongoose.Schema({
-        name: String,
+        name: { type: String, required: true, unique: true },
         type: {
             personeel: Boolean,
             klant: Boolean,

@@ -1,9 +1,10 @@
 var csv = require('ya-csv');
 var mongoose = require('mongoose');
+var domain = require('./ExpenseDomain.js');
 
-mongoose.connect('mongodb://localhost:27017/test');
+mongoose.connect('mongodb://localhost:27017/import');
 
-var inputFile = "D:\\_zaak\\dries\\erp\\src\\scripts\\import_onkosten\\onkosten_2014Q3.csv";
+var inputFile = "onkosten_2014Q3.csv";
 var reader = csv.createCsvFileReader(inputFile, { separator: ';', quote: '"', 'escape': '"', columnsFromHeader: true });
 
 reader.on('error', function (err) {
@@ -13,7 +14,7 @@ reader.on('error', function (err) {
 reader.on('data', function (record) {
     // nummer;leverancier;datum;vervaldatum;document;mededeling;netto;btw;totaal
 
-    var expense = new Expense({
+    var expense = new domain.Expense({
         number: parseInt(record.nummer),
         supplier: record.leverancier,
         date: parseDate(record.datum),
@@ -40,17 +41,3 @@ function parseDate(str) {
     var split = str.split('/');
     return new Date(split[2], split[1] - 1, split[0], 0, 0, 0);
 }
-
-var ExpenseSchema = new mongoose.Schema({
-    number: { type: Number, required: true, unique: true },
-    supplier: { type: String, required: true },
-    date: { type: Date, required: true },
-    expirationDate: { type: Date, required: true },
-    documentNumber: { type: String },
-    paymentMessage: { type: String },
-    netAmount: { type: Number, required: true },
-    vatAmount: { type: Number, required: true },
-    totalAmount: { type: Number, required: true }
-});
-
-var Expense = mongoose.model('Expense', ExpenseSchema, 'Expenses');

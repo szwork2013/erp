@@ -101,11 +101,6 @@ financialApp.controller('PurchasesController', [
             var expensesRequest = $http.get('/api/accounting/expenses/25');
             expensesRequest.success(function (data) {
                 $scope.expenses = data;
-                angular.forEach($scope.expenses, function (item) {
-                    item.supplier = $scope.suppliersLookup[item.supplierId];
-                });
-
-                $scope.expenses = data;
             });
         }
 
@@ -189,51 +184,17 @@ financialApp.factory('$expenses', [
                 return cache;
             },
             findExpenses: function (pageSize) {
-                var me = this;
-                function getLeveranciers() {
-                    var cache = me._getContactsCache();
+                var d = $q.defer();
+                $http
+                    .get('/api/accounting/expenses/' + pageSize)
+                    .success(function (data) {
+                        d.resolve(data);
+                    })
+                    .error(function (err) {
+                        d.reject(err);
+                    });
 
-                    var leveranciersLookup = cache.get('leveranciers_lookup');
-                    var d = $q.defer();
-                    if (!leveranciersLookup) {
-                        leveranciersLookup = {};
-                        $http.get('/api/contacts/leverancier').success(function (data) {
-                            angular.forEach(data, function (item) {
-                                leveranciersLookup[item._id] = item;
-                            });
-
-                            cache.put('leveranciers_lookup', leveranciersLookup);
-                            d.resolve(leveranciersLookup);
-                        }).error(function (err) {
-                            d.reject(err);
-                        });
-                    }
-                    else {
-                        d.resolve(leveranciersLookup);
-                    }
-
-                    return d.promise;
-                }
-
-                function getExpenses(leveranciersLookup) {
-                    var d = $q.defer();
-                    $http
-                        .get('/api/accounting/expenses/' + pageSize)
-                        .success(function (data) {
-                            angular.forEach(data, function (item) {
-                                item.supplier = leveranciersLookup[item.supplierId];
-                            });
-
-                            d.resolve(data);
-                        })
-                        .error(function (err) {
-                            d.reject(err);
-                        });
-
-                    return d.promise;
-                }
-
-                return getLeveranciers().then(getExpenses);
+                return d.promise;
             }
         };
     }
