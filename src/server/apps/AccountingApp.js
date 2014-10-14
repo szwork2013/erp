@@ -50,7 +50,39 @@ function importBankTransactions(file) {
 };
 
 function importExpenses(file) {
-    
+    console.log('Start importing expenses from file ' + file);
+
+    var reader = csv.createCsvFileReader(file, { separator: ';', quote: '"', 'escape': '"', columnsFromHeader: true });
+
+    reader.on('error', function (err) {
+        console.error(err);
+    });
+
+    reader.on('data', function (record) {
+        // nummer;leverancier;datum;vervaldatum;document;mededeling;netto;btw;totaal
+
+        var expense = new domain.Expense({
+            sequence: parseInt(record.nummer),
+            supplier: record.leverancier,
+            date: parseDate(record.datum),
+            expirationDate: parseDate(record.vervaldatum),
+            documentNumber: record.document,
+            paymentMessage: record.mededeling,
+            netAmount: parseFloat(record.netto.replace(',', '.')),
+            vatAmount: parseFloat(record.btw.replace(',', '.')),
+            totalAmount: parseFloat(record.totaal.replace(',', '.'))
+        });
+
+        expense.save(function (err) {
+            if (err) {
+                console.error(err);
+            }
+        });
+    });
+
+    reader.on('end', function () {
+        console.log('done processing: ' + file);
+    });
 };
 
 function parseDate(str) {

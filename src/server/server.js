@@ -2,9 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
-var financialService = require('./financialService.js');
-var accountingService = require('./financial/accountingService.js');
-
 module.exports = function () {
     // very important
     var settings = require('./settings.json');
