@@ -85,7 +85,7 @@ financialApp.controller('ExpensesController', [
     '$scope',
     '$expenses',
     function ($scope, $expenses) {
-        $expenses.findExpenses(25).then(function (expenses) {
+        $expenses.findExpenses(100).then(function (expenses) {
             $scope.expenses = expenses;
         });
     }

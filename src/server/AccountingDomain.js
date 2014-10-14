@@ -40,7 +40,8 @@
         paymentMessage: { type: String },
         netAmount: { type: Number, required: true },
         vatAmount: { type: Number, required: true },
-        totalAmount: { type: Number, required: true }
+        totalAmount: { type: Number, required: true },
+        outstandingBalance: {type: Number }
     });
 
     var expense = mongoose.model('Expense', expenseSchema, 'Expenses');

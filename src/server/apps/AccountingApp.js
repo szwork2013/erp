@@ -68,7 +68,7 @@ function importExpenses(file) {
 
     reader.on('data', function (record) {
         // nummer;leverancier;datum;vervaldatum;document;mededeling;netto;btw;totaal
-        
+
         var expense = new domain.Expense({
             sequence: parseInt(record.nummer),
             supplier: record.lev_id,
@@ -78,7 +78,8 @@ function importExpenses(file) {
             paymentMessage: record.mededeling,
             netAmount: parseFloat(record.netto.replace(',', '.')),
             vatAmount: parseFloat(record.btw.replace(',', '.')),
-            totalAmount: parseFloat(record.totaal.replace(',', '.'))
+            totalAmount: parseFloat(record.totaal.replace(',', '.')),
+            outstandingBalance: parseFloat(record.totaal.replace(',', '.'))
         });
 
         expense.save(function (err) {
