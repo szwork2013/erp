@@ -5,8 +5,6 @@ var program = require('commander');
 var csv = require('ya-csv');
 var q = require('q');
 
-var lock = require('lockfile');
-
 program
     .command('import_bank_transactions')
     .description('Import Bank Transactions')
@@ -54,8 +52,7 @@ function importBankTransactions(file) {
 
 function importExpenses(file) {
     console.log('Start importing expenses from file ' + file);
-
-
+    
     var reader = csv.createCsvFileReader(file, { separator: ';', quote: '"', 'escape': '"', columnsFromHeader: true });
 
     reader.on('error', function (err) {

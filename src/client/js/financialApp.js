@@ -81,13 +81,32 @@ financialApp.controller('TransactionsController', [
     }
 ]);
 
-financialApp.controller('ExpensesController', [
+    financialApp.controller('ExpensesController', [
     '$scope',
     '$expenses',
-    function ($scope, $expenses) {
-        $expenses.findExpenses(100).then(function (expenses) {
+    '$http',
+    function ($scope, $expenses, $http) {
+        $expenses.findExpenses(100, {}).then(function (expenses) {
             $scope.expenses = expenses;
         });
+
+        var suppliersRequest = $http.get('/api/contacts/leverancier');
+        suppliersRequest.success(function (data) {
+            $scope.suppliers = data;
+        });
+
+        $scope.filter = {};
+
+        $scope.query = function () {
+            var query = {};
+            if ($scope.filter.supplier) {
+                query.supplier = $scope.filter.supplier._id;
+            }
+
+            $expenses.findExpenses(100, query).then(function (expenses) {
+                $scope.expenses = expenses;
+            });
+        }
     }
 ]);
 
@@ -183,10 +202,17 @@ financialApp.factory('$expenses', [
                 }
                 return cache;
             },
-            findExpenses: function (pageSize) {
+            findExpenses: function (pageSize, query) {
+                var querystring = '?';
+                for (var field in query) {
+                    if (query.hasOwnProperty(field)) {
+                        querystring += field + '=' + query[field];
+                    }
+                }
+
                 var d = $q.defer();
                 $http
-                    .get('/api/accounting/expenses/' + pageSize)
+                    .get('/api/accounting/expenses/' + pageSize + querystring)
                     .success(function (data) {
                         d.resolve(data);
                     })

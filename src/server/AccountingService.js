@@ -48,10 +48,10 @@
         return d.promise;
     }
 
-    AccountingService.prototype.findExpenses = function (pageSize) {
+    AccountingService.prototype.findExpenses = function (pageSize, query) {
         var d = this.q.defer();
 
-        var query = this.domain.Expense.find({}).populate('supplier').sort({ sequence: 'desc' });
+        var query = this.domain.Expense.find(query).populate('supplier').sort({ sequence: 'desc' });
         if (pageSize) {
             query = query.limit(pageSize);
         }

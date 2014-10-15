@@ -21,7 +21,7 @@
 
         router.route('/accounting/expenses/:pageSize?')
             .get(function (req, res, next) {
-                var p = service.findExpenses(req.params.pageSize);
+                var p = service.findExpenses(req.params.pageSize, req.query);
                 api.processResponse(p, res);
             })
             .put(function (req, res, next) {
