@@ -19,6 +19,42 @@ program.parse(process.argv);
 
 
 function importBankTransactions(file) {
+    var regex = [
+        {
+            regex: new RegExp(/^EUROPESE OVERSCHRIJVING NAAR (.*) BANKIER BEGUNSTIGDE: ([a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?) (.*)/),
+            parse: function (match) {
+                return {
+                    type: 'credit-transfer',
+                    creditorAccountNumber: match[1].replace(' ', ''),
+                    message: match[4]
+                };
+            }
+        },
+        {
+            regex: new RegExp(/^EUROPESE OVERSCHRIJVING VAN (.*) BANKIER OPDRACHTGEVER: ([a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?) (.*)/),
+            parse: function (match) {
+                return {
+                    type: 'credit-transfer',
+                    debtorAccountNumber: match[1],
+                    message: match[4]
+                };
+            }
+        },
+        {
+            regex: new RegExp(/^EUROPESE DOMICILIERING( B2B)? SCHULDEISER(\s*): (.*) REF\. SCHULDEISER: (.*) MANDAATREFERTE(\s*): (.*) EIGEN OMSCHR\.(\s*): (.*) MEDEDELING[\s]{0,}: (.*)/),
+            parse: function (match) {
+                return {
+                    type: 'direct-debit',
+                    creditor: match[3],
+                    creditorReference: match[4],
+                    creditorMandateReference: match[6],
+                    creditorDescription: match[8],
+                    message: match[9]
+                };
+            }
+        }
+    ];
+
     console.log('Start importing bank transactions from ' + file);
 
     var reader = csv.createCsvFileReader(file, { separator: ';', quote: '"', 'escape': '"', columnsFromHeader: true });
@@ -38,6 +74,15 @@ function importBankTransactions(file) {
             amount: parseFloat(record.Bedrag.replace(',', '.'))
         });
 
+        for (var i = 0; i < regex.length; i++) {
+            var r = regex[i];
+            var match = record.Omschrijving.match(r.regex);
+            if (match) {
+                trans.info = r.parse(match);
+                break;
+            }
+        }
+
         trans.save(function (err) {
             if (err) {
                 console.error(err);
@@ -52,7 +97,7 @@ function importBankTransactions(file) {
 
 function importExpenses(file) {
     console.log('Start importing expenses from file ' + file);
-    
+
     var reader = csv.createCsvFileReader(file, { separator: ';', quote: '"', 'escape': '"', columnsFromHeader: true });
 
     reader.on('error', function (err) {

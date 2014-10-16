@@ -50,7 +50,7 @@ financialApp.controller('TransactionsController', [
         });
 
         function refreshTransactions() {
-            var bankTransactionsRequest = $http.get('/api/accounting/bank/transactions/25');
+            var bankTransactionsRequest = $http.get('/api/accounting/bank/transactions/250');
             bankTransactionsRequest.success(function (data) {
                 $scope.transactions = data;
                 angular.forEach($scope.transactions, function (transaction) {
