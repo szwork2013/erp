@@ -36,3 +36,5 @@ Icon
 .Trashes
 /scripts/import_onkosten/node_modules
 *.csv
+*.xls
+*.xlsx
