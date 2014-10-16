@@ -31,7 +31,7 @@
         </thead>
         <tbody>
         <tr data-ng-repeat="expense in expenses">
-            <td class="text-right">{{expense.sequence}}</td>
+            <td class="text-right"><a href="" data-ng-click="show(expense);">{{expense.sequence}}</a></td>
             <td>{{expense.supplier.name}}</td>
             <td>{{expense.date|date:'dd/MM/yyyy'}}</td>
             <td>{{expense.expirationDate|date:'dd/MM/yyyy'}}</td>

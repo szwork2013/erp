@@ -81,11 +81,30 @@ financialApp.controller('TransactionsController', [
     }
 ]);
 
-    financialApp.controller('ExpensesController', [
+financialApp.controller('ExpensesController', [
     '$scope',
     '$expenses',
     '$http',
-    function ($scope, $expenses, $http) {
+    '$modal',
+    function ($scope, $expenses, $http, $modal) {
+        $scope.show = function (ex) {
+            var modalInstance = $modal.open({
+                templateUrl: 'financial/expenses/detail.modal.html',
+                controller: 'ExpenseDetailsModalController',
+                size: 'lg',
+                resolve: {
+                    expense: function () {
+                        return ex;
+                    }
+                }
+            });
+
+            modalInstance.result.then(
+                function () { },
+                function () { }
+            );
+        }
+
         $expenses.findExpenses(100, {}).then(function (expenses) {
             $scope.expenses = expenses;
         });
@@ -107,6 +126,23 @@ financialApp.controller('TransactionsController', [
                 $scope.expenses = expenses;
             });
         }
+    }
+]);
+
+financialApp.controller('ExpenseDetailsModalController', [
+    '$scope',
+    '$modalInstance',
+    'expense',
+    function ($scope, $modalInstance, expense) {
+        $scope.expense = expense;
+
+        $scope.ok = function () {
+            $modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss();
+        };
     }
 ]);
 
