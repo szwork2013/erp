@@ -81,7 +81,7 @@ financialApp.controller('TransactionsController', [
     }
 ]);
 
-financialApp.controller('ExpensesController', [
+    financialApp.controller('ExpensesController', [
     '$scope',
     '$expenses',
     '$http',
@@ -94,29 +94,22 @@ financialApp.controller('ExpensesController', [
                 size: 'lg',
                 resolve: {
                     expense: function () {
-                        return ex;
+                        return angular.copy(ex);
                     }
                 }
             });
 
             modalInstance.result.then(
-                function () { },
+                function () {
+                    $scope.reloadExpenses();
+                },
                 function () { }
             );
         }
 
-        $expenses.findExpenses(100, {}).then(function (expenses) {
-            $scope.expenses = expenses;
-        });
-
-        var suppliersRequest = $http.get('/api/contacts/leverancier');
-        suppliersRequest.success(function (data) {
-            $scope.suppliers = data;
-        });
-
         $scope.filter = {};
 
-        $scope.query = function () {
+        $scope.reloadExpenses = function() {
             var query = {};
             if ($scope.filter.supplier) {
                 query.supplier = $scope.filter.supplier._id;
@@ -126,6 +119,13 @@ financialApp.controller('ExpensesController', [
                 $scope.expenses = expenses;
             });
         }
+
+        $scope.reloadExpenses();
+
+        var suppliersRequest = $http.get('/api/contacts/leverancier');
+        suppliersRequest.success(function (data) {
+            $scope.suppliers = data;
+        });
     }
 ]);
 
@@ -137,6 +137,8 @@ financialApp.controller('ExpenseDetailsModalController', [
         $scope.expense = expense;
 
         $scope.ok = function () {
+            
+
             $modalInstance.close();
         };
 

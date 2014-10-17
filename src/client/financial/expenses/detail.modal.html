@@ -1,8 +1,34 @@
 <div class="modal-header">
-    <h3 class="modal-title">Onkost {{expense.sequence}}</h3>
+    <h3 class="modal-title">Detail kost {{expense.sequence}}</h3>
 </div>
 <div class="modal-body">
-    <p>{{expense.supplier.name}}</p>
+    <form>
+        <div class="form-group col-md-8">
+            <input type="text" class="form-control" data-ng-model="expense.supplier" data-typeahead="s as s.name for s in suppliers | filter:{name:$viewValue}" />
+        </div>
+        <div class="form-group col-md-4">   
+            <input type="text" class="form-control" data-ng-model="expense.documentNumber" />
+        </div>
+        <div class="form-group col-md-4">
+            <input type="text" class="form-control" data-ng-model="expense.date" />
+        </div>
+        <div class="form-group col-md-4">
+            <input type="text" class="form-control" data-ng-model="expense.expirationDate" />
+        </div>
+        <div class="form-group col-md-4">
+            <input type="text" class="form-control" data-ng-model="expense.paymentMessage" />
+        </div>
+        <div class="form-group col-md-4">
+            <input type="number" step="0.01" class="form-control" data-ng-model="expense.netAmount" />
+        </div>
+        <div class="form-group col-md-4">
+            <input type="number" step="0.01" class="form-control" data-ng-model="expense.vatAmount" />
+        </div>
+        <div class="form-group col-md-4">
+            <input type="number" step="0.01" class="form-control" data-ng-model="expense.totalAmount" />
+        </div>
+        <div class="clearfix"></div>
+    </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" data-ng-click="ok()">Opslaan</button>
