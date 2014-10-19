@@ -1,27 +1,27 @@
-<html lang="en" data-ng-app="ContactsApp">
-	<head>
-		<title>ERP</title>
-		<link rel="stylesheet" href="css/bootstrap.min.css" />
-		<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-	</head>
-	<body>
-		<div class="navbar navbar-inverse" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="index.html">ERP</a>
-				</div>
-				<ul class="nav navbar-nav">
+<html lang="en">
+    <head>
+        <title>ERP</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+    </head>
+    <body>
+        <div class="navbar navbar-inverse" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html">ERP</a>
+                </div>
+                <ul class="nav navbar-nav">
                     <li class="active"><a href="contacts.html">Contacten</a></li>
-					<li><a href="projecten.html">Projecten</a></li>
+                    <li><a href="projecten.html">Projecten</a></li>
                     <li><a href="prices.html">Prijzen</a></li>
                     <li><a href="financieel.html">Financieel</a></li>
                     <li><a href="timesheets.html">Timesheets</a></li>
-				</ul>
-			</div>
-		</div>
+                </ul>
+            </div>
+        </div>
         <div data-ng-view></div>
-		<script src="js/angular.min.js"></script>
-		<script src="js/angular-route.min.js"></script>
-		<script src="js/contactsApp.js"></script>
-	</body>
+
+        <script src="js/config.js" type="text/javascript"></script>
+        <script src="js/require.js" type="text/javascript" data-main="contacts/app"></script>
+    </body>
 </html>
