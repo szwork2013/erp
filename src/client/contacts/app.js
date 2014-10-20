@@ -1,5 +1,5 @@
-require(['require', 'angular', 'angular-route'], function (r, angular) {
-    var contactsApp = angular.module('ContactsApp', ['ngRoute']);
+require(['require', 'angular', 'angular-route', 'contacts/services'], function (r, angular) {
+    var contactsApp = angular.module('ContactsApp', ['ngRoute', 'ContactsServices']);
 
     contactsApp.config([
         '$routeProvider',
@@ -25,11 +25,10 @@ require(['require', 'angular', 'angular-route'], function (r, angular) {
 
     contactsApp.controller('OverviewController', [
         '$scope',
-        '$http',
-        function ($scope, $http) {
-            var contactsRequest = $http.get('/api/contacts');
-            contactsRequest.success(function (data) {
-                $scope.contacts = data;
+        '$contacts',
+        function ($scope, $contacts) {
+            $contacts.findContacts().then(function (contacts) {
+                $scope.contacts = contacts;
             });
         }
     ]);
