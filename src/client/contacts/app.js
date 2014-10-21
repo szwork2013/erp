@@ -45,22 +45,17 @@ require(['require', 'angular', 'angular-route', 'contacts/services'], function (
                 leverancier: false
             };
 
-            var contactTypesRequest = $http.get('/api/contacts/types');
-            contactTypesRequest.success(function (data) {
-                $scope.types = data;
+            $scope.save = function () {
+                var contact = {
+                    name: $scope.name,
+                    types: $scope.type
+                };
 
-                $scope.save = function () {
-                    var contact = {
-                        name: $scope.name,
-                        types: $scope.type
-                    };
-
-                    var saveRequest = $http.put('/api/contacts', contact);
-                    saveRequest.success(function (data) {
-                        $location.path(data._id);
-                    })
-                }
-            });
+                var saveRequest = $http.put('/api/contacts', contact);
+                saveRequest.success(function (data) {
+                    $location.path(data._id);
+                });
+            };
         }
     ]);
 
