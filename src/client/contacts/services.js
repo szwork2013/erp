@@ -21,6 +21,21 @@ require(['angular', 'angular-ui'], function (angular, angularUi) {
 
 
                     return d.promise;
+                },
+                findSuppliers: function () {
+                    var d = $q.defer();
+
+                    var request =
+                        $http
+                            .get('/api/contacts/leverancier')
+                            .success(function (data) {
+                                d.resolve(data);
+                            })
+                            .error(function (err) {
+                                d.reject(err);
+                            });
+
+                    return d.promise;
                 }
             }
         }

@@ -1,5 +1,5 @@
-require(['require', 'angular', 'angular-route', 'angular-ui'], function (r, angular) {
-    var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap']);
+require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/services', 'contacts/services'], function (r, angular) {
+    var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap', 'FinancialServices', 'ContactsServices']);
 
     financialApp.config(['$routeProvider', function ($routeProvider) {
         $routeProvider
@@ -85,9 +85,10 @@ require(['require', 'angular', 'angular-route', 'angular-ui'], function (r, angu
     financialApp.controller('ExpensesController', [
         '$scope',
         '$expenses',
+        '$contacts',
         '$http',
         '$modal',
-        function ($scope, $expenses, $http, $modal) {
+        function ($scope, $expenses, $contacts, $http, $modal) {
             $scope.show = function (ex) {
                 var modalInstance = $modal.open({
                     templateUrl: 'financial/expenses/detail.modal.html',
@@ -123,8 +124,7 @@ require(['require', 'angular', 'angular-route', 'angular-ui'], function (r, angu
 
             $scope.reloadExpenses();
 
-            var suppliersRequest = $http.get('/api/contacts/leverancier');
-            suppliersRequest.success(function (data) {
+            $contacts.findSuppliers().then(function (data) {
                 $scope.suppliers = data;
             });
         }
@@ -135,11 +135,11 @@ require(['require', 'angular', 'angular-route', 'angular-ui'], function (r, angu
         '$modalInstance',
         'expense',
         function ($scope, $modalInstance, expense) {
+            $scope.suppliers = [];
+
             $scope.expense = expense;
 
             $scope.ok = function () {
-
-
                 $modalInstance.close();
             };
 
@@ -227,43 +227,6 @@ require(['require', 'angular', 'angular-route', 'angular-ui'], function (r, angu
             });
         };
     });
-
-    financialApp.factory('$expenses', [
-        '$http',
-        '$cacheFactory',
-        '$q',
-        function ($http, $cacheFactory, $q) {
-            return {
-                _getContactsCache: function () {
-                    var cache = $cacheFactory.get('contacts');
-                    if (!cache) {
-                        cache = $cacheFactory('contacts');
-                    }
-                    return cache;
-                },
-                findExpenses: function (pageSize, query) {
-                    var querystring = '?';
-                    for (var field in query) {
-                        if (query.hasOwnProperty(field)) {
-                            querystring += field + '=' + query[field];
-                        }
-                    }
-
-                    var d = $q.defer();
-                    $http
-                        .get('/api/accounting/expenses/' + pageSize + querystring)
-                        .success(function (data) {
-                            d.resolve(data);
-                        })
-                        .error(function (err) {
-                            d.reject(err);
-                        });
-
-                    return d.promise;
-                }
-            };
-        }
-    ]);
 
     r(['domReady!'], function (document) {
         angular.bootstrap(document, ['FinancialApp']);
