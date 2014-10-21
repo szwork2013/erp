@@ -1,5 +1,5 @@
-require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/services', 'contacts/services'], function (r, angular) {
-    var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap', 'FinancialServices', 'ContactsServices']);
+require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/services', 'contacts/services', 'common/services'], function (r, angular) {
+    var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap', 'FinancialServices', 'ContactsServices', 'CommonServices']);
 
     financialApp.config(['$routeProvider', function ($routeProvider) {
         $routeProvider
@@ -27,19 +27,11 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
     financialApp.controller('TransactionsController', [
         '$scope',
         '$http',
-        '$filter',
-        function ($scope, $http, $filter) {
+        '$common',
+        function ($scope, $http, $common) {
             $scope.transaction = {};
 
-            $scope.dates = [];
-            // load dates
-            var now = new Date();
-            var dates = [];
-            for (var i = -367; i <= 0; i++) {
-                var d = new Date().setDate(now.getDate() + i);
-                dates.push({ date: d, text: $filter('date')(d, 'dd/MM/yyyy') });
-            }
-            $scope.dates = dates;
+            $scope.dates = $common.findDates(367, 0);
 
             var bankAccountsLookup = {};
             var bankAccountsRequest = $http.get('/api/accounting/bank/accounts');
@@ -133,9 +125,15 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
     financialApp.controller('ExpenseDetailsModalController', [
         '$scope',
         '$modalInstance',
+        '$contacts',
+        '$common',
         'expense',
-        function ($scope, $modalInstance, expense) {
-            $scope.suppliers = [];
+        function ($scope, $modalInstance, $contacts, $common, expense) {
+            $contacts.findSuppliers().then(function (data) {
+                $scope.suppliers = data;
+            });
+
+            $scope.dates = $common.findDates(367, 0);
 
             $scope.expense = expense;
 
