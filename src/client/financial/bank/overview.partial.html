@@ -10,7 +10,7 @@
         <tr>
             <th>Datum</th>
             <th>Bedrag</th>
-            <th>Omschrijving</th>
+            <th>Geboekt</th>
             <th>&nbsp;</th>
         </tr>
         </thead>
@@ -18,21 +18,9 @@
         <tr data-ng-repeat="transaction in transactions">
             <td>{{transaction.date |date:'dd/MM/yyyy'}}</td>
             <td>{{transaction.amount|currency:'€'}}</td>
-            <td data-ng-if="transaction.info && transaction.info.type == 'credit-transfer' && transaction.info.creditorAccountNumber" data-ng-include="'credit-transfer-in'"></td>
-            <td data-ng-if="transaction.info && transaction.info.type == 'credit-transfer' && transaction.info.debtorAccountNumber" data-ng-include="'credit-transfer-out'"></td>
-            <td data-ng-if="transaction.info && transaction.info.type == 'direct-debit'" data-ng-include="'direct-debit'"></td>
-            <td data-ng-if="!transaction.info">{{transaction.message|lowercase}}</td>
+            <td><span data-ng-if="transaction.booked"><i class="glyphicon glyphicon-ok"></i></span></td>
             <td><a href="" data-ng-click="showDetails(transaction);">details</a></td>
         </tr>
     </tbody>
     </table>
 </div>
-<script type="text/ng-template" id="credit-transfer-in">
-    {{transaction.info.message|lowercase}}
-</script>
-<script type="text/ng-template" id="credit-transfer-out">
-    {{transaction.info.message|lowercase}}
-</script>
-<script type="text/ng-template" id="direct-debit">
-    Domicili&euml;ring: {{transaction.info.creditor|lowercase}}
-</script>

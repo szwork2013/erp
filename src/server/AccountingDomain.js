@@ -25,7 +25,8 @@
         valueDate: { type: Date },
         message: { type: String },
         amount: { type: Number, required: true, 'default': 0.0 },
-        info: { type: mongoose.SchemaTypes.Mixed }
+        info: { type: mongoose.SchemaTypes.Mixed },
+        booked: { type: Boolean, 'default': false }
     });
 
     var bankTransaction = mongoose.model('BankTransaction', bankTransactionSchema, 'BankTransactions');

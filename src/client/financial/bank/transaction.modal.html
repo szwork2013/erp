@@ -2,9 +2,29 @@
     <h3 class="modal-title">Detail transactie {{transaction.date|date:'dd/MM/yyyy'}} {{transaction.amount|currency:'€'}}</h3>
 </div>
 <div class="modal-body">
-    <pre>{{transaction|json}}</pre>
+    <div data-ng-if="transaction.info && transaction.info.type == 'credit-transfer' && transaction.info.creditorAccountNumber" data-ng-include="'credit-transfer-out'"></div>
+    <div data-ng-if="transaction.info && transaction.info.type == 'credit-transfer' && transaction.info.debtorAccountNumber" data-ng-include="'credit-transfer-in'"></div>
+    <div data-ng-if="transaction.info && transaction.info.type == 'direct-debit'" data-ng-include="'direct-debit'"></div>
+    <div data-ng-if="!transaction.info" data-ng-include="'other'"></div>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" data-ng-click="ok()">Opslaan</button>
     <button class="btn btn-default" data-ng-click="cancel()">Annuleren</button>
 </div>
+
+<script type="text/ng-template" id="credit-transfer-out">
+    <h4>Overschrijving naar {{transaction.info.creditorAccountNumber}}</h4>
+    <p>{{transaction.info.message}}</p>
+</script>
+<script type="text/ng-template" id="credit-transfer-in">
+    <h4>Overschrijving van {{transaction.info.debtorAccountNumber}}</h4>
+    <p>{{transaction.info.message}}</p>
+</script>
+<script type="text/ng-template" id="direct-debit">
+    <h4>Domicili&euml;ring {{transaction.info.creditor}}</h4>
+    <p>{{transaction.info.message}}</p>
+</script>
+<script type="text/ng-template" id="other">
+    <h4>Transactie</h4>
+    <p>{{transaction.message}}</p>
+</script>
