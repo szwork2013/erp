@@ -26,7 +26,7 @@
         return d.promise;
     };
 
-    AccountingService.prototype.saveLedgerAccountBookings = function (params, bookings) {
+    AccountingService.prototype.saveLedgerAccountBookings = function (request) {
         var self = this;
 
         // todo add check for total sum (= domain logic)

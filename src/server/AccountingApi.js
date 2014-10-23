@@ -15,7 +15,7 @@
                 api.processResponse(p, res);
             })
             .post(function (req, res, next) {
-                var p = service.saveLedgerAccountBookings(req.query, req.body);
+                var p = service.saveLedgerAccountBookings(req.body);
                 api.processResponse(p, res);
             });
 
