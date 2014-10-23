@@ -33,10 +33,10 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
                 $scope.transactions = transactions;
             });
 
-            $scope.showDetails = function (transaction) {
+            $scope.showBookings = function (transaction) {
                 var modal = $modal.open({
-                    templateUrl: 'financial/bank/transaction.modal.html',
-                    controller: 'TransactionDetailsModalController',
+                    templateUrl: 'financial/bank/bookings.modal.html',
+                    controller: 'TransactionBookingsModalController',
                     size: 'lg',
                     resolve: {
                         transaction: function () {
@@ -53,12 +53,32 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
         }
     ]);
 
-    financialApp.controller('TransactionDetailsModalController', [
+    financialApp.controller('TransactionBookingsModalController', [
         '$scope',
         '$modalInstance',
+        '$bankTransactions',
+        '$ledgerAccounts',
         'transaction',
-        function ($scope, $modalInstance, transaction) {
+        function ($scope, $modalInstance, $bankTransactions, $ledgerAccounts, transaction) {
             $scope.transaction = transaction;
+            $scope.bookings = [];
+
+            $ledgerAccounts.findLedgerAccounts().then(function (data) {
+                $scope.ledgerAccounts = data;
+            });
+
+            $bankTransactions.findBankTransactionBookings(transaction._id).then(function (data) {
+                $scope.bookings = data;
+            });
+
+            $scope.edited = {};
+
+            $scope.addBooking = function () {
+                if ($scope.edited.ledgerAccount && $scope.edited.amount) {
+                    $scope.bookings.push(angular.copy($scope.edited));
+                    $scope.edited = {};
+                }
+            }
 
             $scope.ok = function () {
                 $modalInstance.close();

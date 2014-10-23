@@ -16,9 +16,6 @@
         name: { type: String, required: true }
     });
 
-    var bankAccount = mongoose.model('BankAccount', bankAccountSchema, 'BankAccounts');
-    module.exports['BankAccount'] = bankAccount;
-
     var bankTransactionSchema = new mongoose.Schema({
         bankAccountId: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'BankAccount' },
         date: { type: Date, required: true },
@@ -28,9 +25,6 @@
         info: { type: mongoose.SchemaTypes.Mixed },
         booked: { type: Boolean, 'default': false }
     });
-
-    var bankTransaction = mongoose.model('BankTransaction', bankTransactionSchema, 'BankTransactions');
-    module.exports['BankTransaction'] = bankTransaction;
 
     var expenseSchema = new mongoose.Schema({
         sequence: { type: Number, required: true, unique: true },
@@ -42,9 +36,23 @@
         netAmount: { type: Number, required: true },
         vatAmount: { type: Number, required: true },
         totalAmount: { type: Number, required: true },
-        outstandingBalance: { type: Number }
+        outstandingBalance: { type: Number, required: false }
     });
 
-    var expense = mongoose.model('Expense', expenseSchema, 'Expenses');
-    module.exports['Expense'] = expense;
+    var ledgerAccountSchema = new mongoose.Schema({
+        name: { type: String, required: true, unique: true }
+    });
+
+    var bankTransactionBookingSchema = new mongoose.Schema({
+        bankTransaction: { type: mongoose.SchemaTypes.ObjectId, ref: 'BankTransaction', required: true },
+        ledgerAccount: { type: mongoose.SchemaTypes.ObjectId, ref: 'LedgerAccount', required: true },
+        note: { type: String },
+        amount: { type: Number, required: true }
+    });
+
+    module.exports['BankAccount'] = mongoose.model('BankAccount', bankAccountSchema, 'BankAccounts');
+    module.exports['Expense'] = mongoose.model('Expense', expenseSchema, 'Expenses');
+    module.exports['BankTransaction'] = mongoose.model('BankTransaction', bankTransactionSchema, 'BankTransactions');
+    module.exports['LedgerAccount'] = mongoose.model('LedgerAccount', ledgerAccountSchema, 'LedgerAccounts');
+    module.exports['BankTransactionBooking'] = mongoose.model('BankTransactionBooking', bankTransactionBookingSchema, 'BankTransactionBookings');
 })();

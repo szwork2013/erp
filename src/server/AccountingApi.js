@@ -3,6 +3,12 @@
         var api = require('./Api.js');
         var service = require('./AccountingService.js');
 
+        router.route('/accounting/ledgeraccounts')
+            .get(function (req, res, next) {
+                var p = service.findLedgerAccounts();
+                api.processResponse(p, res);
+            })
+
         router.route('/accounting/bank/accounts')
             .get(function (req, res, next) {
                 var p = service.findBankAccounts();
