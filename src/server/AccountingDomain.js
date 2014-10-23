@@ -43,8 +43,8 @@
         name: { type: String, required: true, unique: true }
     });
 
-    var bankTransactionBookingSchema = new mongoose.Schema({
-        bankTransaction: { type: mongoose.SchemaTypes.ObjectId, ref: 'BankTransaction', required: true },
+    var ledgerAccountBookingSchema = new mongoose.Schema({
+        bankTransaction: { type: mongoose.SchemaTypes.ObjectId, ref: 'BankTransaction', required: false },
         ledgerAccount: { type: mongoose.SchemaTypes.ObjectId, ref: 'LedgerAccount', required: true },
         note: { type: String },
         amount: { type: Number, required: true }
@@ -54,5 +54,5 @@
     module.exports['Expense'] = mongoose.model('Expense', expenseSchema, 'Expenses');
     module.exports['BankTransaction'] = mongoose.model('BankTransaction', bankTransactionSchema, 'BankTransactions');
     module.exports['LedgerAccount'] = mongoose.model('LedgerAccount', ledgerAccountSchema, 'LedgerAccounts');
-    module.exports['BankTransactionBooking'] = mongoose.model('BankTransactionBooking', bankTransactionBookingSchema, 'BankTransactionBookings');
+    module.exports['LedgerAccountBooking'] = mongoose.model('LedgerAccountBooking', ledgerAccountBookingSchema, 'LedgerAccountBookings');
 })();

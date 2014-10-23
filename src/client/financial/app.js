@@ -56,10 +56,9 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
     financialApp.controller('TransactionBookingsModalController', [
         '$scope',
         '$modalInstance',
-        '$bankTransactions',
         '$ledgerAccounts',
         'transaction',
-        function ($scope, $modalInstance, $bankTransactions, $ledgerAccounts, transaction) {
+        function ($scope, $modalInstance, $ledgerAccounts, transaction) {
             $scope.transaction = transaction;
             $scope.bookings = [];
 
@@ -67,7 +66,7 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
                 $scope.ledgerAccounts = data;
             });
 
-            $bankTransactions.findBankTransactionBookings(transaction._id).then(function (data) {
+            $ledgerAccounts.findBankTransactionBookings(transaction._id).then(function (data) {
                 $scope.bookings = data;
             });
 
@@ -75,13 +74,18 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
 
             $scope.addBooking = function () {
                 if ($scope.edited.ledgerAccount && $scope.edited.amount) {
-                    $scope.bookings.push(angular.copy($scope.edited));
+                    var booking = angular.copy($scope.edited);
+                    $scope.bookings.push(booking);
                     $scope.edited = {};
                 }
             }
 
             $scope.ok = function () {
-                $modalInstance.close();
+                $ledgerAccounts.saveBankTransactionBookings(transaction._id, $scope.bookings).then(function () {
+                    $modalInstance.close();
+                }, function (err) {
+                    alert(err);
+                });
             };
 
             $scope.cancel = function () {

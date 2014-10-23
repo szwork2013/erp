@@ -7,7 +7,17 @@
             .get(function (req, res, next) {
                 var p = service.findLedgerAccounts();
                 api.processResponse(p, res);
+            });
+
+        router.route('/accounting/ledgeraccountbookings')
+            .get(function (req, res, next) {
+                var p = service.findLedgerAccountBookings(req.query);
+                api.processResponse(p, res);
             })
+            .post(function (req, res, next) {
+                var p = service.saveLedgerAccountBookings(req.query, req.body);
+                api.processResponse(p, res);
+            });
 
         router.route('/accounting/bank/accounts')
             .get(function (req, res, next) {
