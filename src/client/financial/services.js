@@ -29,4 +29,31 @@ require(['angular', 'angular-ui'], function (angular) {
             };
         }
     ]);
+
+    services.factory('$bankTransactions', [
+        '$http',
+        '$q',
+        function ($http, $q) {
+            return {
+                findBankTransactions: function (pageSize) {
+                    if (!pageSize) {
+                        pageSize = 50;
+                    }
+
+                    var d = $q.defer();
+
+                    $http
+                        .get('/api/accounting/bank/transactions/' + pageSize)
+                        .success(function (data) {
+                            d.resolve(data);
+                        })
+                        .error(function (err) {
+                            d.reject(err);
+                        });
+
+                    return d.promise;
+                }
+            };
+        }
+    ]);
 });

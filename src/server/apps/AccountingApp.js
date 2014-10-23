@@ -21,7 +21,7 @@ program.parse(process.argv);
 function importBankTransactions(file) {
     var regex = [
         {
-            regex: new RegExp(/^EUROPESE OVERSCHRIJVING NAAR (.*) BANKIER BEGUNSTIGDE: ([a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?) (.*)/),
+            regex: new RegExp(/^EUROPESE OVERSCHRIJVING NAAR (.*) BANKIER BEGUNSTIGDE: ([a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?) (.*) DOORGEGEVEN OP [0-9\-]{8,10} MET KBC-ONLINE FOR BUSINESS \/ ISABEL/),
             parse: function (match) {
                 return {
                     type: 'credit-transfer',

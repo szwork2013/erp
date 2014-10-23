@@ -24,6 +24,52 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
         });
     } ]);
 
+    financialApp.controller('BankController', [
+        '$scope',
+        '$bankTransactions',
+        '$modal',
+        function ($scope, $bankTransactions, $modal) {
+            $bankTransactions.findBankTransactions(50).then(function (transactions) {
+                $scope.transactions = transactions;
+            });
+
+            $scope.showDetails = function (transaction) {
+                var modal = $modal.open({
+                    templateUrl: 'financial/bank/transaction.modal.html',
+                    controller: 'TransactionDetailsModalController',
+                    size: 'lg',
+                    resolve: {
+                        transaction: function () {
+                            return angular.copy(transaction);
+                        }
+                    }
+                });
+
+                modal.result.then(
+                    function () { },
+                    function () { }
+                );
+            }
+        }
+    ]);
+
+    financialApp.controller('TransactionDetailsModalController', [
+        '$scope',
+        '$modalInstance',
+        'transaction',
+        function ($scope, $modalInstance, transaction) {
+            $scope.transaction = transaction;
+
+            $scope.ok = function () {
+                $modalInstance.close();
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
+            };
+        }
+    ]);
+
     financialApp.controller('TransactionsController', [
         '$scope',
         '$http',
