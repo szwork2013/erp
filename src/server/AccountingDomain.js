@@ -47,13 +47,4 @@
 
     var expense = mongoose.model('Expense', expenseSchema, 'Expenses');
     module.exports['Expense'] = expense;
-
-    //var expensePaymentSchema = new mongoose.Schema({
-    //    expense: { type: mongoose.SchemaTypes.ObjectId, ref: 'Expense', required: true },
-    //    bankTransaction: { type: mongoose.SchemaTypes.ObjectId, ref: 'BankTransaction', required: true },
-    //    amount: { type: Number, required: true }
-    //});
-
-    //var expensePayment = mongoose.model('ExpensePayment', expensePaymentSchema, 'ExpensePayments');
-    //module.exports['ExpensePayment'] = expensePayment;
 })();
