@@ -4,7 +4,8 @@ var require = {
         'domReady': 'js/domReady',
         'angular': 'js/angular.min',
         'angular-route': 'js/angular-route.min',
-        'angular-ui': 'js/ui-bootstrap-tpls-0.11.0.min'
+        'angular-ui': 'js/ui-bootstrap-tpls-0.11.0.min',
+        'underscore': 'js/underscore-min'
     },
     shim: {
         'angular': {
@@ -17,6 +18,9 @@ var require = {
         'angular-route': {
             deps: ['angular'],
             exports: 'angular'
+        },
+        'underscore': {
+            exports: '_'
         }
     }
 };

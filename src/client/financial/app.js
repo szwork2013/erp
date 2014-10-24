@@ -1,4 +1,4 @@
-require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/services', 'contacts/services', 'common/services'], function (r, angular) {
+require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'financial/services', 'contacts/services', 'common/services'], function (r, angular, $_) {
     var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap', 'FinancialServices', 'ContactsServices', 'CommonServices']);
 
     financialApp.config(['$routeProvider', function ($routeProvider) {
@@ -31,17 +31,20 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
     financialApp.controller('LedgerOverviewController', [
         '$scope',
         '$ledgers',
-        '$modalInstance',
-        function ($scope, $ledgers, $modalInstance) {
-            var ledgerAccounts = [];
+        function ($scope, $ledgers) {
+            var ledgerAccounts = {};
 
             $ledgers.findLedgers().then(function (data) {
                 $scope.ledgers = data;
             });
 
             $ledgers.findLedgerAccounts().then(function (data) {
-                $scope.ledgerAccounts = data;
+                ledgerAccounts = $_.groupBy(data, 'ledger');
             });
+
+            $scope.findLedgerAccounts = function (ledger) {
+                return ledgerAccounts[leger];
+            };
         }
     ]);
 
