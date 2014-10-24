@@ -39,8 +39,13 @@
         outstandingBalance: { type: Number, required: false }
     });
 
-    var ledgerAccountSchema = new mongoose.Schema({
+    var ledgerSchema = new mongoose.Schema({
         name: { type: String, required: true, unique: true }
+    });
+
+    var ledgerAccountSchema = new mongoose.Schema({
+        name: { type: String, required: true, unique: true },
+        ledger: { type: mongoose.SchemaTypes.ObjectId, ref: 'Ledger', required: true }
     });
 
     var ledgerAccountBookingSchema = new mongoose.Schema({
@@ -53,6 +58,7 @@
     module.exports['BankAccount'] = mongoose.model('BankAccount', bankAccountSchema, 'BankAccounts');
     module.exports['Expense'] = mongoose.model('Expense', expenseSchema, 'Expenses');
     module.exports['BankTransaction'] = mongoose.model('BankTransaction', bankTransactionSchema, 'BankTransactions');
+    module.exports['Ledger'] = mongoose.model('Ledger', ledgerSchema, 'Ledgers');
     module.exports['LedgerAccount'] = mongoose.model('LedgerAccount', ledgerAccountSchema, 'LedgerAccounts');
     module.exports['LedgerAccountBooking'] = mongoose.model('LedgerAccountBooking', ledgerAccountBookingSchema, 'LedgerAccountBookings');
 })();

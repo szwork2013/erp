@@ -3,6 +3,10 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
 
     financialApp.config(['$routeProvider', function ($routeProvider) {
         $routeProvider
+        .when('/ledger', {
+            controller: 'LedgerOverviewController',
+            templateUrl: 'financial/ledger/overview.partial.html'
+        })
         .when('/bank', {
             controller: 'BankController',
             templateUrl: 'financial/bank/overview.partial.html'
@@ -23,6 +27,23 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
             redirectTo: '/bank'
         });
     } ]);
+
+    financialApp.controller('LedgerOverviewController', [
+        '$scope',
+        '$ledgers',
+        '$modalInstance',
+        function ($scope, $ledgers, $modalInstance) {
+            var ledgerAccounts = [];
+
+            $ledgers.findLedgers().then(function (data) {
+                $scope.ledgers = data;
+            });
+
+            $ledgers.findLedgerAccounts().then(function (data) {
+                $scope.ledgerAccounts = data;
+            });
+        }
+    ]);
 
     financialApp.controller('BankController', [
         '$scope',
@@ -56,17 +77,17 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
     financialApp.controller('TransactionBookingsModalController', [
         '$scope',
         '$modalInstance',
-        '$ledgerAccounts',
+        '$ledgers',
         'transaction',
-        function ($scope, $modalInstance, $ledgerAccounts, transaction) {
+        function ($scope, $modalInstance, $ledgers, transaction) {
             $scope.transaction = transaction;
             $scope.bookings = [];
 
-            $ledgerAccounts.findLedgerAccounts().then(function (data) {
+            $ledgers.findLedgerAccounts().then(function (data) {
                 $scope.ledgerAccounts = data;
             });
 
-            $ledgerAccounts.findBankTransactionBookings(transaction._id).then(function (data) {
+            $ledgers.findBankTransactionBookings(transaction._id).then(function (data) {
                 $scope.bookings = data;
             });
 
@@ -81,7 +102,7 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'financial/service
             }
 
             $scope.ok = function () {
-                $ledgerAccounts.saveBankTransactionBookings(transaction._id, $scope.bookings).then(function () {
+                $ledgers.saveBankTransactionBookings(transaction._id, $scope.bookings).then(function () {
                     $modalInstance.close();
                 }, function (err) {
                     alert(err);

@@ -5,6 +5,13 @@
         this.service = require('./Service.js');
     }
 
+    AccountingService.prototype.findLedgers = function () {
+        var d = this.q.defer();
+        var c = this.service.createDbCallback(d);
+        this.domain.Ledger.find({}, c);
+        return d.promise;
+    };
+
     AccountingService.prototype.findLedgerAccounts = function () {
         var d = this.q.defer();
         var c = this.service.createDbCallback(d);

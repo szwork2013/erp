@@ -57,11 +57,25 @@ require(['angular', 'angular-ui'], function (angular) {
         }
     ]);
 
-    services.factory('$ledgerAccounts', [
+    services.factory('$ledgers', [
         '$http',
         '$q',
         function ($http, $q) {
             return {
+                findLedgers: function () {
+                    var d = $q.defer();
+
+                    $http
+                        .get('/api/accounting/ledgers')
+                        .success(function (data) {
+                            d.resolve(data);
+                        })
+                        .error(function (err) {
+                            d.reject(err);
+                        });
+
+                    return d.promise;
+                },
                 findLedgerAccounts: function () {
                     var d = $q.defer();
 
