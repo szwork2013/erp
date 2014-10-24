@@ -76,6 +76,11 @@ require(['angular', 'angular-ui'], function (angular) {
 
                     return d.promise;
                 },
+                createLedger: function (name) {
+                    var d = $q.defer();
+
+                    return d.promise;
+                },
                 findLedgerAccounts: function () {
                     var d = $q.defer();
 

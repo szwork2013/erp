@@ -31,19 +31,56 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
     financialApp.controller('LedgerOverviewController', [
         '$scope',
         '$ledgers',
-        function ($scope, $ledgers) {
+        '$modal',
+        function ($scope, $ledgers, $modal) {
             var ledgerAccounts = {};
 
-            $ledgers.findLedgers().then(function (data) {
-                $scope.ledgers = data;
-            });
+            function refresh() {
+                $ledgers.findLedgers().then(function (data) {
+                    $scope.ledgers = data;
+                });
 
-            $ledgers.findLedgerAccounts().then(function (data) {
-                ledgerAccounts = $_.groupBy(data, 'ledger');
-            });
+                $ledgers.findLedgerAccounts().then(function (data) {
+                    ledgerAccounts = $_.groupBy(data, 'ledger');
+                });
+            }
+
+            refresh();
 
             $scope.findLedgerAccounts = function (ledger) {
-                return ledgerAccounts[leger];
+                return ledgerAccounts[ledger];
+            };
+
+            $scope.createLedger = function () {
+                var modal = $modal.open({
+                    templateUrl: 'financial/ledger/ledger.modal.html',
+                    controller: 'CreateLedgerModalController',
+                    size: 'lg'
+                });
+
+                modal.result.then(
+                    function () { refresh(); },
+                    function () { }
+                );
+            }
+        }
+    ]);
+
+    financialApp.controller('CreateLedgerModalController', [
+        '$scope',
+        '$modalInstance',
+        '$ledgers',
+        function ($scope, $modalInstance, $ledgers) {
+            $scope.ok = function () {
+                if ($scope.name) {
+                    $ledgers.createLedger($scope.name).then(function () {
+                        $modalInstance.close();
+                    });
+                }
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
             };
         }
     ]);

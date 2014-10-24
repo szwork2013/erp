@@ -1,17 +1,17 @@
 <h1>Grootboeken en rekeningen</h1>
 <div>
-    <p><a href="">Nieuw grootboek maken</a></p>
+    <p><a href="" data-ng-click="createLedger();">Grootboek aanmaken</a></p>
 </div>
 <div>
     <table class="table">
         <tbody data-ng-repeat="ledger in ledgers">
         <tr>
-            <td>{{ledger.name}}</td>
-            <td>&nbsp;</td>
+            <td><strong>{{ledger.name}}</strong></td>
+            <td><a href="" data-ng-click="createAccount(ledger._id);">Rekening aanmaken</a></td>
         </tr>
-        <tr data-ng-repeat="account in findLedgerAccounts(leder._id)">
+        <tr data-ng-repeat="account in findLedgerAccounts(ledger._id)">
             <td>{{account.name}}</td>
-            <td>&nbps;</td>
+            <td>&nbsp;</td>
         </tr>
         </tbody>
     </table>
