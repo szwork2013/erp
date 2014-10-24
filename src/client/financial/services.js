@@ -79,6 +79,15 @@ require(['angular', 'angular-ui'], function (angular) {
                 createLedger: function (name) {
                     var d = $q.defer();
 
+                    $http
+                        .put('/api/accounting/ledgers', { name: name })
+                        .success(function (data) {
+                            d.resolve(data);
+                        })
+                        .error(function (err) {
+                            d.reject(err);
+                        });
+
                     return d.promise;
                 },
                 findLedgerAccounts: function () {
