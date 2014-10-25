@@ -1,5 +1,5 @@
-require(['require', 'angular', 'angular-route', 'contacts/services'], function (r, angular) {
-    var contactsApp = angular.module('ContactsApp', ['ngRoute', 'ContactsServices']);
+require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services', 'financial/services'], function (r, angular) {
+    var contactsApp = angular.module('ContactsApp', ['ngRoute', 'ui.bootstrap', 'ContactsServices', 'FinancialServices']);
 
     contactsApp.config([
         '$routeProvider',
@@ -8,10 +8,6 @@ require(['require', 'angular', 'angular-route', 'contacts/services'], function (
                 .when('/overview', {
                     controller: 'OverviewController',
                     templateUrl: 'contacts/index.partial.html'
-                })
-                .when('/create', {
-                    controller: 'CreateController',
-                    templateUrl: 'contacts/create.partial.html'
                 })
                 .when('/:contactId', {
                     controller: 'DetailsController',
@@ -25,37 +21,90 @@ require(['require', 'angular', 'angular-route', 'contacts/services'], function (
 
     contactsApp.controller('OverviewController', [
         '$scope',
+        '$modal',
         '$contacts',
-        function ($scope, $contacts) {
-            $contacts.findContacts().then(function (contacts) {
-                $scope.contacts = contacts;
-            });
+        function ($scope, $modal, $contacts) {
+            $scope.create = function () {
+                var modal = $modal.open({
+                    templateUrl: 'contacts/contact.modal.html',
+                    controller: 'CreateModalController'
+                });
+
+                modal.result.then(function () { refresh(); });
+            }
+
+            $scope.edit = function (contact) {
+                var modal = $modal.open({
+                    templateUrl: 'contacts/contact.modal.html',
+                    controller: 'EditModalController',
+                    resolve: {
+                        contact: function () {
+                            return contact;
+                        }
+                    }
+                });
+
+                modal.result.then(function () { refresh(); });
+            }
+
+            function refresh() {
+                $contacts.findContacts().then(function (contacts) {
+                    $scope.contacts = contacts;
+                });
+            }
+
+            refresh();
         }
     ]);
 
-    contactsApp.controller('CreateController', [
+    contactsApp.controller('CreateModalController', [
         '$scope',
-        '$http',
-        '$location',
-        function ($scope, $http, $location) {
-            $scope.name = undefined;
-            $scope.type = {
-                personeel: false,
-                klant: false,
-                leverancier: false
+        '$modalInstance',
+        '$contacts',
+        '$ledgers',
+        function ($scope, $modalInstance, $contacts, $ledgers) {
+            $scope.selectLedger = true;
+
+            $scope.contact = {
+                name: '',
+                type: {
+                    employee: false,
+                    customer: false,
+                    supplier: false
+                },
+                ledger: null
             };
 
-            $scope.save = function () {
-                var contact = {
-                    name: $scope.name,
-                    types: $scope.type
-                };
+            $ledgers.findLedgers().then(function (data) {
+                $scope.ledgers = data;
+            });
 
-                var saveRequest = $http.put('/api/contacts', contact);
-                saveRequest.success(function (data) {
-                    $location.path(data._id);
+            $scope.ok = function () {
+                $contacts.createContact($scope.contact.name, $scope.contact.type, $scope.contact.ledger).then(function (data) {
+                    $modalInstance.close();
                 });
-            };
+            }
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
+            }
+        }
+    ]);
+
+    contactsApp.controller('EditModalController', [
+        '$scope',
+        '$modalInstance',
+        '$contacts',
+        '$ledgers',
+        'contact',
+        function ($scope, $modalInstance, $contacts, $ledgers, contact) {
+            $scope.selectLedger = false;
+
+            $scope.contact = contact;
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
+            }
         }
     ]);
 

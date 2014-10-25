@@ -9,9 +9,9 @@
     var contactSchema = new mongoose.Schema({
         name: { type: String, required: true, unique: true },
         type: {
-            personeel: Boolean,
-            klant: Boolean,
-            leverancier: Boolean
+            employee: { type: Boolean, required: true, 'default': false },
+            customer: { type: Boolean, required: true, 'default': false },
+            supplier: { type: Boolean, required: true, 'default': false }
         }
     });
 

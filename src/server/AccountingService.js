@@ -81,8 +81,6 @@
         function insertBankTransactionBooking(bankTransaction, booking) {
             var d = self.q.defer();
 
-            // bussy
-
             booking.bankTransaction = bankTransaction;
             if (booking.ledgerAccount._id) {
                 booking.ledgerAccount = booking.ledgerAccount._id;
@@ -101,9 +99,9 @@
             return d.promise;
         }
 
-        if (params.bankTransactionId) {
-            return deleteBankTransactionBookings(params.bankTransactionId).then(insertBankTransactionBookings, function () {
-                return deleteBankTransactionBookings(params.bankTransactionId, []);
+        if (request.bankTransactionId) {
+            return deleteBankTransactionBookings(request.bankTransactionId).then(insertBankTransactionBookings, function () {
+                return deleteBankTransactionBookings(request.bankTransactionId, []);
             });
         }
         else {

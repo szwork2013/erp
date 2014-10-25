@@ -17,7 +17,7 @@
 
         router.route('/contacts')
             .put(function (req, res, next) {
-                var p = service.createContact(req.body.name, req.body.types);
+                var p = service.createContact(req.body.name, req.body.type);
                 api.processResponse(p, res);
             })
     };
