@@ -27,6 +27,14 @@
         return d.promise;
     };
 
+    AccountingService.prototype.createLedgerAccount = function (ledger, name) {
+        var d = this.q.defer();
+        var c = this.service.createDbCallback(d);
+        var la = new this.domain.LedgerAccount({ ledger: ledger, name: name });
+        la.save(c);
+        return d.promise;
+    };
+
     AccountingService.prototype.findLedgerAccountBookings = function (params) {
         var d = this.q.defer();
         var c = this.service.createDbCallback(d);
@@ -72,6 +80,8 @@
 
         function insertBankTransactionBooking(bankTransaction, booking) {
             var d = self.q.defer();
+
+            // bussy
 
             booking.bankTransaction = bankTransaction;
             if (booking.ledgerAccount._id) {

@@ -104,6 +104,20 @@ require(['angular', 'angular-ui'], function (angular) {
 
                     return d.promise;
                 },
+                createLedgerAccount: function (account) {
+                    var d = $q.defer();
+
+                    $http
+                        .put('/api/accounting/ledgeraccounts', account)
+                        .success(function (data) {
+                            d.resolve(data);
+                        })
+                        .error(function (err) {
+                            d.reject(err);
+                        });
+
+                    return d.promise;
+                },
                 findBankTransactionBookings: function (bankTransactionId) {
                     var d = $q.defer();
 

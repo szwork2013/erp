@@ -17,6 +17,10 @@
             .get(function (req, res, next) {
                 var p = service.findLedgerAccounts();
                 api.processResponse(p, res);
+            })
+            .put(function (req, res, next) {
+                var p = service.createLedgerAccount(req.body.ledger, req.body.name);
+                api.processResponse(p, res);
             });
 
         router.route('/accounting/ledgeraccountbookings')

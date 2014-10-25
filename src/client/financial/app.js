@@ -54,14 +54,24 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             $scope.createLedger = function () {
                 var modal = $modal.open({
                     templateUrl: 'financial/ledger/ledger.modal.html',
-                    controller: 'CreateLedgerModalController',
-                    size: 'lg'
+                    controller: 'CreateLedgerModalController'
                 });
 
-                modal.result.then(
-                    function () { refresh(); },
-                    function () { }
-                );
+                modal.result.then(function () { refresh(); });
+            }
+
+            $scope.createAccount = function (ledgerId) {
+                var modal = $modal.open({
+                    templateUrl: 'financial/ledger/account.modal.html',
+                    controller: 'CreateAccountModalController',
+                    resolve: {
+                        ledgerId: function () {
+                            return ledgerId;
+                        }
+                    }
+                });
+
+                modal.result.then(function () { refresh(); });
             }
         }
     ]);
@@ -84,6 +94,28 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             $scope.cancel = function () {
                 $modalInstance.dismiss();
             };
+        }
+    ]);
+
+    financialApp.controller('CreateAccountModalController', [
+        '$scope',
+        '$modalInstance',
+        '$ledgers',
+        'ledgerId',
+        function ($scope, $modalInstance, $ledgers, ledgerId) {
+            $scope.account = { ledger: ledgerId, name: '' };
+
+            $scope.ok = function () {
+                if ($scope.account.name) {
+                    $ledgers.createLedgerAccount($scope.account).then(function () {
+                        $modalInstance.close();
+                    });
+                }
+            }
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
+            }
         }
     ]);
 
