@@ -71,9 +71,11 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
         '$modalInstance',
         '$ledgers',
         function ($scope, $modalInstance, $ledgers) {
+            $scope.ledger = {};
+
             $scope.ok = function () {
-                if ($scope.name) {
-                    $ledgers.createLedger($scope.name).then(function () {
+                if ($scope.ledger.name) {
+                    $ledgers.createLedger($scope.ledger.name).then(function () {
                         $modalInstance.close();
                     });
                 }

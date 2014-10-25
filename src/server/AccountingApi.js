@@ -7,6 +7,10 @@
             .get(function (req, res, next) {
                 var p = service.findLedgers();
                 api.processResponse(p, res);
+            })
+            .put(function (req, res, next) {
+                var p = service.createLedger(req.body.name);
+                api.processResponse(p, res);
             });
 
         router.route('/accounting/ledgeraccounts')

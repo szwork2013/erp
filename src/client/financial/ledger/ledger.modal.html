@@ -4,12 +4,12 @@
 <div class="modal-body">
     <form>
         <div class="form-group col-md-12">
-            <input type="text" class="form-control" placeholder="naam" data-ng-model="name" />
+            <input type="text" class="form-control" placeholder="naam" data-ng-model="ledger.name" data-ng-required="true" />
         </div>
         <div class="clearfix"></div>
     </form>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" data-ng-click="ok()">Opslaan</button>
-    <button class="btn btn-default" data-ng-click="cancel()">Annuleren</button>
+    <button type="submit" class="btn btn-primary" data-ng-click="ok()">Opslaan</button>
+    <button type="button" class="btn btn-default" data-ng-click="cancel()">Annuleren</button>
 </div>

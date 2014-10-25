@@ -12,6 +12,14 @@
         return d.promise;
     };
 
+    AccountingService.prototype.createLedger = function (name) {
+        var d = this.q.defer();
+        var c = this.service.createDbCallback(d);
+        var l = new this.domain.Ledger({ name: name });
+        l.save(c);
+        return d.promise;
+    }
+
     AccountingService.prototype.findLedgerAccounts = function () {
         var d = this.q.defer();
         var c = this.service.createDbCallback(d);
