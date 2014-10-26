@@ -20,11 +20,11 @@ require(['angular'], function (angular) {
 
                     return d.promise;
                 },
-                createContact: function (name, types, ledger) {
+                createContact: function (name, type) {
                     var d = $q.defer();
 
                     $http
-                        .put('/api/contacts', { name: name, type: types })
+                        .put('/api/contacts', { name: name, type: type })
                         .success(function (data) {
                             d.resolve(data);
                         })
