@@ -91,10 +91,16 @@ require(['angular', 'angular-ui'], function (angular) {
                     return d.promise;
                 },
                 findLedgerAccounts: function () {
+                    return this._findLedgerAccounts('');
+                },
+                findContactLedgerAccounts: function (contact) {
+
+                },
+                _findLedgerAccounts: function (queryString) {
                     var d = $q.defer();
 
                     $http
-                        .get('/api/accounting/ledgeraccounts')
+                        .get('/api/accounting/ledgeraccounts?' + queryString)
                         .success(function (data) {
                             d.resolve(data);
                         })
