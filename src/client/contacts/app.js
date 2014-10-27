@@ -35,24 +35,12 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services
                     controller: 'EditModalController',
                     resolve: {
                         contact: function () {
-                            return contact;
+                            return angular.copy(contact);
                         }
                     }
                 });
 
                 modal.result.then(function () { refresh(); });
-            }
-
-            $scope.showLedgerAccounts = function (contact) {
-                var modal = $modal.open({
-                    templateUrl: 'contacts/accounts.modal.html',
-                    controller: 'LedgerAccountsModalController',
-                    resolve: {
-                        contact: function () {
-                            return contact;
-                        }
-                    }
-                });
             }
 
             function refresh() {
@@ -69,7 +57,8 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services
         '$scope',
         '$modalInstance',
         '$contacts',
-        function ($scope, $modalInstance, $contacts) {
+        '$ledgers',
+        function ($scope, $modalInstance, $contacts, $ledgers) {
 
             $scope.contact = {
                 name: '',
@@ -80,8 +69,12 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services
                 }
             };
 
+            $ledgers.findLedgers().then(function(data) {
+                $scope.ledgers = data;
+            });
+
             $scope.ok = function () {
-                $contacts.createContact($scope.contact.name, $scope.contact.type).then(function (data) {
+                $contacts.createContact($scope.contact).then(function (data) {
                     $modalInstance.close();
                 });
             }
@@ -96,26 +89,19 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services
         '$scope',
         '$modalInstance',
         '$contacts',
-        'contact',
-        function ($scope, $modalInstance, $contacts, contact) {
-            $scope.contact = contact;
-
-            $scope.cancel = function () {
-                $modalInstance.dismiss();
-            }
-        }
-    ]);
-
-    contactsApp.controller('LedgerAccountsModalController', [
-        '$scope',
-        '$modalInstance',
         '$ledgers',
         'contact',
-        function ($scope, $modalInstance, $ledgers, contact) {
+        function ($scope, $modalInstance, $contacts, $ledgers, contact) {
             $scope.contact = contact;
 
-            $scope.ok = function(){
-                
+            $ledgers.findLedgers().then(function(data) {
+                $scope.ledgers = data;
+            });
+
+            $scope.ok = function () {
+                $contacts.updateContact($scope.contact).then(function (data) {
+                    $modalInstance.close();
+                });
             }
 
             $scope.cancel = function () {

@@ -20,17 +20,31 @@ require(['angular'], function (angular) {
 
                     return d.promise;
                 },
-                createContact: function (name, type) {
+                createContact: function (contact) {
                     var d = $q.defer();
 
                     $http
-                        .put('/api/contacts', { name: name, type: type })
+                        .put('/api/contacts', contact)
                         .success(function (data) {
                             d.resolve(data);
                         })
                         .error(function (err) {
                             d.reject(err);
                         })
+
+                    return d.promise;
+                },
+                updateContact: function (contact) {
+                    var d = $q.defer();
+
+                    $http
+                        .post('/api/contacts/' + contact._id, contact)
+                        .success(function (data) {
+                            d.resolve(data);
+                        })
+                        .error(function (err) {
+                            d.reject(err);
+                        });
 
                     return d.promise;
                 },
