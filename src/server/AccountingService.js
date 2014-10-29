@@ -57,64 +57,33 @@
         return d.promise;
     };
 
-    AccountingService.prototype.saveLedgerAccountBookings = function (request) {
+    AccountingService.prototype.saveLedgerAccountBookings = function (bookings) {
+        console.log(JSON.stringify(bookings));
+
         var self = this;
-
-        // todo add check for total sum (= domain logic)
-
-        function deleteBankTransactionBookings(bankTransactionId, bookings) {
-            var d = self.q.defer();
-
-            self.domain.LedgerAccountBooking.find({ bankTransaction: bankTransactionId }).remove(function (err) {
-                if (err) {
-                    d.reject(err);
+        function insertBooking(booking) {
+            try {
+                if (booking.ledgerAccount && booking.ledgerAccount._id) {
+                    booking.ledgerAccount = booking.ledgerAccount._id;
                 }
-                else {
-                    d.resolve({ bankTransaction: bankTransactionId, bookings: bookings });
-                }
-            });
 
-            return d.promise;
-        }
-
-        function insertBankTransactionBookings(args) {
-            var promises = [];
-            for (var idx = 0; idx < bookings.length; idx++) {
-                promises.push(insertBankTransactionBooking(args.bankTransaction, bookings[idx]));
+                var d = self.q.defer();
+                var c = self.service.createDbCallback(d);
+                var b = new self.domain.LedgerAccountBooking(booking);
+                b.save(c);
+                return d.promise;
             }
-
-            return self.q.all(promises);
-        }
-
-        function insertBankTransactionBooking(bankTransaction, booking) {
-            var d = self.q.defer();
-
-            booking.bankTransaction = bankTransaction;
-            if (booking.ledgerAccount._id) {
-                booking.ledgerAccount = booking.ledgerAccount._id;
+            catch (ex) {
+                console.error(ex);
             }
-
-            var b = new self.domain.LedgerAccountBooking(booking);
-            b.save(function (err) {
-                if (err) {
-                    d.reject(err);
-                }
-                else {
-                    d.resolve();
-                }
-            });
-
-            return d.promise;
         }
 
-        if (request.bankTransactionId) {
-            return deleteBankTransactionBookings(request.bankTransactionId).then(insertBankTransactionBookings, function () {
-                return deleteBankTransactionBookings(request.bankTransactionId, []);
-            });
+        var promises = [];
+        for (var i in bookings) {
+            promises.push(insertBooking(bookings[i]));
         }
-        else {
-            throw new Error('Not implemented yet!');
-        }
+
+        return this.q.all(promises);
     };
 
     AccountingService.prototype.findBankAccounts = function () {

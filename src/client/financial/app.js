@@ -164,19 +164,19 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             $ledgers.findBankTransactionBookings(transaction._id).then(function (data) {
                 $scope.bookings = data;
             });
-
-            $scope.edited = {};
+                        
+            $scope.booking = { bankTransaction: transaction._id };
 
             $scope.addBooking = function () {
-                if ($scope.edited.ledgerAccount && $scope.edited.amount) {
-                    var booking = angular.copy($scope.edited);
-                    $scope.bookings.push(booking);
-                    $scope.edited = {};
+                if ($scope.booking.ledgerAccount && $scope.booking.amount) {
+                    var b = angular.copy($scope.booking);
+                    $scope.bookings.push(b);
+                    $scope.booking = { bankTransaction: transaction._id };
                 }
             }
 
             $scope.ok = function () {
-                $ledgers.saveBankTransactionBookings(transaction._id, $scope.bookings).then(function () {
+                $ledgers.saveBankTransactionBookings($scope.bookings).then(function () {
                     $modalInstance.close();
                 }, function (err) {
                     alert(err);

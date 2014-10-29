@@ -138,11 +138,11 @@ require(['angular', 'angular-ui'], function (angular) {
 
                     return d.promise;
                 },
-                saveBankTransactionBookings: function (bankTransactionId, bookings) {
+                saveBankTransactionBookings: function (bookings) {
                     var d = $q.defer();
 
                     $http
-                        .post('/api/accounting/ledgeraccountbookings?bankTransactionId=' + bankTransactionId, bookings)
+                        .post('/api/accounting/ledgeraccountbookings', bookings)
                         .success(function () {
                             d.resolve();
                         })
