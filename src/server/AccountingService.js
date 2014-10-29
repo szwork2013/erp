@@ -20,10 +20,18 @@
         return d.promise;
     }
 
-    AccountingService.prototype.findLedgerAccounts = function () {
+    AccountingService.prototype.findLedgerAccounts = function (query) {
         var d = this.q.defer();
         var c = this.service.createDbCallback(d);
-        this.domain.LedgerAccount.find({}, c);
+
+        var q = {};
+        if (query) {
+            if (query.contact) {
+                q.contact = query.contact;
+            }
+        }
+
+        this.domain.LedgerAccount.find(q, c);
         return d.promise;
     };
 

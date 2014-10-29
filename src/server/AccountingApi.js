@@ -15,7 +15,7 @@
 
         router.route('/accounting/ledgeraccounts')
             .get(function (req, res, next) {
-                var p = service.findLedgerAccounts();
+                var p = service.findLedgerAccounts(req.query);
                 api.processResponse(p, res);
             })
             .put(function (req, res, next) {

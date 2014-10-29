@@ -93,8 +93,8 @@ require(['angular', 'angular-ui'], function (angular) {
                 findLedgerAccounts: function () {
                     return this._findLedgerAccounts('');
                 },
-                findContactLedgerAccounts: function (contact) {
-
+                findContactLedgerAccounts: function (contactId) {
+                    return this._findLedgerAccounts('contact=' + contactId);
                 },
                 _findLedgerAccounts: function (queryString) {
                     var d = $q.defer();

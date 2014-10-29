@@ -45,7 +45,8 @@
 
     var ledgerAccountSchema = new mongoose.Schema({
         name: { type: String, required: true, unique: true },
-        ledger: { type: mongoose.SchemaTypes.ObjectId, ref: 'Ledger', required: true }
+        ledger: { type: mongoose.SchemaTypes.ObjectId, ref: 'Ledger', required: true },
+        contact: { type: mongoose.SchemaTypes.ObjectId, ref: 'Contact', required: false }
     });
 
     var ledgerAccountBookingSchema = new mongoose.Schema({

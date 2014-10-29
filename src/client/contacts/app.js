@@ -1,4 +1,4 @@
-require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services', 'financial/services'], function (r, angular) {
+require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'contacts/services', 'financial/services'], function (r, angular, underscore) {
     var contactsApp = angular.module('ContactsApp', ['ngRoute', 'ui.bootstrap', 'ContactsServices', 'FinancialServices']);
 
     contactsApp.config([
@@ -43,6 +43,18 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services
                 modal.result.then(function () { refresh(); });
             }
 
+            $scope.showLedgerAccounts = function (contact) {
+                var modal = $modal.open({
+                    templateUrl: 'contacts/ledgeraccounts.modal.html',
+                    controller: 'EditLedgerAccountsModalController',
+                    resolve: {
+                        contact: function () {
+                            return angular.copy(contact);
+                        }
+                    }
+                });
+            }
+
             function refresh() {
                 $contacts.findContacts().then(function (contacts) {
                     $scope.contacts = contacts;
@@ -57,8 +69,7 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services
         '$scope',
         '$modalInstance',
         '$contacts',
-        '$ledgers',
-        function ($scope, $modalInstance, $contacts, $ledgers) {
+        function ($scope, $modalInstance, $contacts) {
 
             $scope.contact = {
                 name: '',
@@ -68,10 +79,6 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services
                     supplier: false
                 }
             };
-
-            $ledgers.findLedgers().then(function(data) {
-                $scope.ledgers = data;
-            });
 
             $scope.ok = function () {
                 $contacts.createContact($scope.contact).then(function (data) {
@@ -89,19 +96,36 @@ require(['require', 'angular', 'angular-route', 'angular-ui', 'contacts/services
         '$scope',
         '$modalInstance',
         '$contacts',
-        '$ledgers',
         'contact',
-        function ($scope, $modalInstance, $contacts, $ledgers, contact) {
+        function ($scope, $modalInstance, $contacts, contact) {
             $scope.contact = contact;
-
-            $ledgers.findLedgers().then(function(data) {
-                $scope.ledgers = data;
-            });
 
             $scope.ok = function () {
                 $contacts.updateContact($scope.contact).then(function (data) {
                     $modalInstance.close();
                 });
+            }
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
+            }
+        }
+    ]);
+
+    contactsApp.controller('EditLedgerAccountsModalController', [
+        '$scope',
+        '$modalInstance',
+        '$ledgers',
+        'contact',
+        function ($scope, $modalInstance, $ledgers, contact) {
+            $scope.contact = contact;
+
+            $ledgers.findContactLedgerAccounts(contact._id).then(function (data) {
+                $scope.accounts = data;
+            });
+
+            $scope.ok = function () {
+
             }
 
             $scope.cancel = function () {
