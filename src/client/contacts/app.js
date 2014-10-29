@@ -120,15 +120,44 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'con
         function ($scope, $modalInstance, $ledgers, contact) {
             $scope.contact = contact;
 
-            $ledgers.findContactLedgerAccounts(contact._id).then(function (data) {
-                $scope.accounts = data;
-            });
-
-            $scope.ok = function () {
-
+            function refreshAccounts() {
+                $ledgers.findContactLedgerAccounts(contact._id).then(function (data) {
+                    $scope.accounts = data;
+                });
             }
 
-            $scope.cancel = function () {
+            refreshAccounts();
+
+            $ledgers.findLedgers().then(function (data) {
+                $scope.ledgers = data;
+            });
+
+            $scope.newaccount = {
+                contact: contact._id,
+                name: contact.name,
+                ledger: null
+            };
+
+            $scope.createAccount = function () {
+                var na = $scope.newaccount;
+                if (na && na.contact && na.name && na.ledger) {
+                    $ledgers.createLedgerAccount({
+                        ledger: na.ledger._id,
+                        name: na.name,
+                        contact: na.contact
+                    }).then(function () {
+                        $scope.newaccount = {
+                            contact: contact._id,
+                            name: contact.name,
+                            ledger: null
+                        };
+
+                        refreshAccounts();
+                    });
+                }
+            }
+
+            $scope.close = function () {
                 $modalInstance.dismiss();
             }
         }

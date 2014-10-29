@@ -2,38 +2,50 @@
     <h3 class="modal-title">Grootboekrekeningen voor {{contact.name}}</h3>
 </div>
 <div class="modal-body">
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Grootboek</th>
-            <th>Rekening</th>
-        </tr>
+    <div class="panel panel-default">
+        <div class="panel-heading">Bestaande rekeningen</div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Grootboek</th>
+                    <th>Rekening</th>
+                </tr>
         </thead>
-        <tbody>
-        <tr data-ng-repeat="account in accounts">
-            <td>{{account.ledger.name}}</td>
-            <td>{{account.name}}</td>
-        </tr>
+                <tbody>
+                <tr data-ng-repeat="account in accounts">
+                    <td>{{account.ledger.name}}</td>
+                    <td>{{account.name}}</td>
+                </tr>
         </tbody>
-    </table>
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label class="control-label col-md-3" for="name">Naam:</label>
-            <div class="col-md-9">
-                <input type="text" name="name" class="form-control" placeholder="Naam" data-ng-model="contact.name" />
-            </div>
+            </table>
         </div>
-        <div class="form-group">
-            <label class="control-label col-md-3">Type:</label>
-            <div class="col-md-9">
-                <div><input type="checkbox" data-ng-model="contact.type.employee" />&nbsp;Personeel</div>
-                <div><input type="checkbox" data-ng-model="contact.type.customer" />&nbsp;Klant</div>
-                <div><input type="checkbox" data-ng-model="contact.type.supplier" />&nbsp;Leverancier</div>
-            </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Nieuwe rekening maken</div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-md-3">Grootboek</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" data-ng-model="newaccount.ledger" data-typeahead="l as l.name for l in ledgers | filter:{name:$viewValue}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Naam</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" data-ng-model="newaccount.name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="submit" class="btn btn-primary" data-ng-click="createAccount();">Rekening aanmaken</button>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 <div class="modal-footer">
-    <button type="submit" class="btn btn-primary" data-ng-click="ok()">Opslaan</button>
-    <button type="button" class="btn btn-default" data-ng-click="cancel()">Annuleren</button>
+    <button type="button" class="btn btn-primary" data-ng-click="close()">Sluiten</button>
 </div>

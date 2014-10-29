@@ -41,7 +41,7 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
                 });
 
                 $ledgers.findLedgerAccounts().then(function (data) {
-                    ledgerAccounts = $_.groupBy(data, 'ledger');
+                    ledgerAccounts = $_.groupBy(data, function (i) { return i.ledger._id; });
                 });
             }
 

@@ -31,14 +31,14 @@
             }
         }
 
-        this.domain.LedgerAccount.find(q, c);
+        this.domain.LedgerAccount.find(q).populate('ledger').exec(c);
         return d.promise;
     };
 
-    AccountingService.prototype.createLedgerAccount = function (ledger, name) {
+    AccountingService.prototype.createLedgerAccount = function (account) {
         var d = this.q.defer();
         var c = this.service.createDbCallback(d);
-        var la = new this.domain.LedgerAccount({ ledger: ledger, name: name });
+        var la = new this.domain.LedgerAccount({ ledger: account.ledger, name: account.name, contact: account.contact });
         la.save(c);
         return d.promise;
     };

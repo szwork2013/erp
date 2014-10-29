@@ -44,10 +44,12 @@
     });
 
     var ledgerAccountSchema = new mongoose.Schema({
-        name: { type: String, required: true, unique: true },
+        name: { type: String, required: true },
         ledger: { type: mongoose.SchemaTypes.ObjectId, ref: 'Ledger', required: true },
         contact: { type: mongoose.SchemaTypes.ObjectId, ref: 'Contact', required: false }
     });
+
+    ledgerAccountSchema.index({ name: 1, ledger: 1 }, { unique: true });
 
     var ledgerAccountBookingSchema = new mongoose.Schema({
         bankTransaction: { type: mongoose.SchemaTypes.ObjectId, ref: 'BankTransaction', required: false },

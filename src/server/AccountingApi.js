@@ -19,7 +19,7 @@
                 api.processResponse(p, res);
             })
             .put(function (req, res, next) {
-                var p = service.createLedgerAccount(req.body.ledger, req.body.name);
+                var p = service.createLedgerAccount(req.body);
                 api.processResponse(p, res);
             });
 
