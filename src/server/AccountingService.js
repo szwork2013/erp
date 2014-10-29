@@ -58,8 +58,6 @@
     };
 
     AccountingService.prototype.saveLedgerAccountBookings = function (bookings) {
-        console.log(JSON.stringify(bookings));
-
         var self = this;
         function insertBooking(booking) {
             try {
