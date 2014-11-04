@@ -286,6 +286,23 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
                 });
             };
 
+            $scope.showBookings = function (expense) {
+                var modal = $modal.open({
+                    templateUrl: 'financial/expenses/bookings.modal.html',
+                    controller: 'ExpenseBookingsModalController',
+                    size: 'lg',
+                    resolve: {
+                        expense: function () {
+                            return angular.copy(expense);
+                        }
+                    }
+                });
+
+                modal.result.then(function () {
+                    $scope.reloadExpenses();
+                });
+            };
+
             $scope.filter = {};
 
             $scope.reloadExpenses = function () {
@@ -318,7 +335,7 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
                 $scope.suppliers = data;
             });
 
-            // something with type[date]
+            // something with type[date] and data binding in angular
             if (expense && expense.date) {
                 expense.date = $filter('date')(expense.date, 'yyyy-MM-dd');
             }
@@ -356,6 +373,25 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
                 $expenses.createExpense($scope.expense).then(function () {
                     $modalInstance.close();
                 });
+            }
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
+            }
+        }
+    ]);
+
+    financialApp.controller('ExpenseBookingsModalController', [
+        '$scope',
+        '$modalInstance',
+        'expense',
+        function ($scope, $modalInstance, expense) {
+            $scope.expense = expense;
+
+            $scope.bookings = [];
+
+            $scope.ok = function () {
+
             }
 
             $scope.cancel = function () {
