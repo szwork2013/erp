@@ -43,6 +43,13 @@
         return d.promise;
     };
 
+    AccountingService.prototype.getLedgerAccount = function (id) {
+        var d = this.q.defer();
+        var c = this.service.createDbCallback(d);
+        var la = this.domain.LedgerAccount.findOne({ '_id': id }).populate('ledger').exec(c);
+        return d.promise;
+    };
+
     AccountingService.prototype.findLedgerAccountBookings = function (params) {
         var d = this.q.defer();
         var c = this.service.createDbCallback(d);
@@ -143,24 +150,19 @@
 
     AccountingService.prototype.createExpense = function (expense) {
         var d = this.q.defer();
-        var me = this;
 
-        var sp = this.domain.nextValue('expenses');
-        sp.then(function (seq) {
-            expense.sequence = seq;
-            var ex = new me.domain.Expense(expense);
+        if (expense.supplier && expense.supplier._id) {
+            expense.supplier = expense.supplier._id;
+        }
 
-            ex.save(function (err) {
-                if (err) {
-                    d.reject(err);
-                }
-                else {
-                    console.error('done');
-                    d.resolve(ex);
-                }
-            });
-        }, function (err) {
-            d.reject(err);
+        var ex = new this.domain.Expense(expense);
+        ex.save(function (err) {
+            if (err) {
+                d.reject(err);
+            }
+            else {
+                d.resolve(ex);
+            }
         });
 
         return d.promise;

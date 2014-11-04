@@ -35,8 +35,7 @@
         paymentMessage: { type: String },
         netAmount: { type: Number, required: true },
         vatAmount: { type: Number, required: true },
-        totalAmount: { type: Number, required: true },
-        outstandingBalance: { type: Number, required: false }
+        totalAmount: { type: Number, required: true }
     });
 
     var ledgerSchema = new mongoose.Schema({

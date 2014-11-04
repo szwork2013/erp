@@ -23,6 +23,12 @@
                 api.processResponse(p, res);
             });
 
+        router.route('/accounting/ledgeraccounts/:id')
+            .get(function (req, res, next) {
+                var p = service.getLedgerAccount(req.params.id);
+                api.processResponse(p, res);
+            })
+
         router.route('/accounting/ledgeraccountbookings')
             .get(function (req, res, next) {
                 var p = service.findLedgerAccountBookings(req.query);

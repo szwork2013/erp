@@ -10,7 +10,7 @@
             <td><a href="" data-ng-click="createAccount(ledger._id);">Rekening aanmaken</a></td>
         </tr>
         <tr data-ng-repeat="account in findLedgerAccounts(ledger._id)">
-            <td>{{account.name}}</td>
+            <td><a data-ng-href="#/ledgeraccount/{{account._id}}">{{account.name}}</a></td>
             <td>&nbsp;</td>
         </tr>
         </tbody>

@@ -52,7 +52,7 @@ require(['angular'], function (angular) {
                     var d = $q.defer();
 
                     $http
-                        .get('/api/contacts/leverancier')
+                        .get('/api/contacts/supplier')
                         .success(function (data) {
                             d.resolve(data);
                         })

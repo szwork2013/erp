@@ -1,9 +1,5 @@
 <h1>Kosten</h1>
-<ul class="nav nav-tabs">
-    <li class="active"><a href="#/expenses">Overzicht</a></li>
-    <li><a href="#/expenses/purchases">Aankopen</a></li>
-</ul>
-<br />
+<p><a href="" data-ng-click="create();">Nieuwe kost ingeven</a></p>
 <div class="panel panel-default">
     <div class="panel-body">
         <form>
@@ -26,7 +22,7 @@
             <th>Vervaldatum</th>
             <th>Documentnr.</th>
             <th class="text-right">Bedrag</th>
-            <th class="text-right">Saldo</th>
+            <th>&nbsp;</th>
         </tr>
         </thead>
         <tbody>
@@ -37,7 +33,7 @@
             <td>{{expense.expirationDate|date:'dd/MM/yyyy'}}</td>
             <td>{{expense.documentNumber}}</td>
             <td class="text-right">{{expense.totalAmount|currency:"€ "}}</td>
-            <td class="text-right">{{expense.outstandingBalance|currency:"€ "}}</td>
+            <td>Boekingen</td>
         </tr>
         </tbody>
     </table>

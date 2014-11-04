@@ -7,6 +7,10 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             controller: 'LedgerOverviewController',
             templateUrl: 'financial/ledger/overview.partial.html'
         })
+        .when('/ledgeraccount/:id', {
+            controller: 'LedgerAccountOverviewController',
+            templateUrl: 'financial/ledger/account.partial.html'
+        })
         .when('/bank', {
             controller: 'BankController',
             templateUrl: 'financial/bank/overview.partial.html'
@@ -19,12 +23,8 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             controller: 'ExpensesController',
             templateUrl: 'financial/expenses/overview.partial.html'
         })
-        .when('/expenses/purchases', {
-            controller: 'PurchasesController',
-            templateUrl: 'financial/expenses/purchases.partial.html'
-        })
         .otherwise({
-            redirectTo: '/bank'
+            redirectTo: '/ledger'
         });
     } ]);
 
@@ -73,6 +73,17 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
 
                 modal.result.then(function () { refresh(); });
             }
+        }
+    ]);
+
+    financialApp.controller('LedgerAccountOverviewController', [
+        '$scope',
+        '$ledgers',
+        '$routeParams',
+        function ($scope, $ledgers, $routerParams) {
+            $ledgers.getLedgerAccount($routerParams.id).then(function (data) {
+                $scope.account = data;
+            });
         }
     ]);
 
@@ -164,7 +175,7 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             $ledgers.findBankTransactionBookings(transaction._id).then(function (data) {
                 $scope.bookings = data;
             });
-                        
+
             $scope.booking = { bankTransaction: transaction._id };
 
             $scope.addBooking = function () {
@@ -246,6 +257,18 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
         '$http',
         '$modal',
         function ($scope, $expenses, $contacts, $http, $modal) {
+            $scope.create = function () {
+                var modalInstance = $modal.open({
+                    templateUrl: 'financial/expenses/detail.modal.html',
+                    controller: 'ExpenseCreateModalController',
+                    size: 'lg'
+                });
+
+                modalInstance.result.then(function () {
+                    $scope.reloadExpenses();
+                });
+            };
+
             $scope.show = function (ex) {
                 var modalInstance = $modal.open({
                     templateUrl: 'financial/expenses/detail.modal.html',
@@ -258,13 +281,10 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
                     }
                 });
 
-                modalInstance.result.then(
-                    function () {
-                        $scope.reloadExpenses();
-                    },
-                    function () { }
-                );
-            }
+                modalInstance.result.then(function () {
+                    $scope.reloadExpenses();
+                });
+            };
 
             $scope.filter = {};
 
@@ -291,14 +311,21 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
         '$scope',
         '$modalInstance',
         '$contacts',
-        '$common',
         'expense',
-        function ($scope, $modalInstance, $contacts, $common, expense) {
+        '$filter',
+        function ($scope, $modalInstance, $contacts, expense, $filter) {
             $contacts.findSuppliers().then(function (data) {
                 $scope.suppliers = data;
             });
 
-            $scope.dates = $common.findDates(367, 0);
+            // something with type[date]
+            if (expense && expense.date) {
+                expense.date = $filter('date')(expense.date, 'yyyy-MM-dd');
+            }
+
+            if (expense && expense.expirationDate) {
+                expense.expirationDate = $filter('date')(expense.expirationDate, 'yyyy-MM-dd');
+            }
 
             $scope.expense = expense;
 
@@ -312,84 +339,30 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
         }
     ]);
 
-    financialApp.controller('PurchasesController', [
+    financialApp.controller('ExpenseCreateModalController', [
         '$scope',
-        '$http',
-        '$filter',
-        function ($scope, $http, $filter) {
-            $scope.expenses = [];
-            function refreshExpenses() {
-                var expensesRequest = $http.get('/api/accounting/expenses/25');
-                expensesRequest.success(function (data) {
-                    $scope.expenses = data;
-                });
-            }
+        '$modalInstance',
+        '$contacts',
+        '$ledgers',
+        '$expenses',
+        function ($scope, $modalInstance, $contacts, $ledgers, $expenses) {
+            $scope.expense = {};
 
-            var now = new Date();
-            var dates = [];
-            for (var i = -367; i <= 100; i++) {
-                var d = new Date().setDate(now.getDate() + i);
-                dates.push({ date: d, text: $filter('date')(d, 'dd/MM/yyyy') });
-            }
-            $scope.dates = dates;
-
-            $scope.suppliersLookup = {};
-            $scope.suppliers = [];
-            var suppliersRequest = $http.get('/api/contacts/leverancier');
-            suppliersRequest.success(function (data) {
-                angular.forEach(data, function (item) {
-                    $scope.suppliersLookup[item._id] = item;
-                });
+            $contacts.findSuppliers().then(function (data) {
                 $scope.suppliers = data;
-
-                refreshExpenses();
             });
 
-            resetPurchase();
-
-            function resetPurchase() {
-                $scope.purchase = {
-                    netAmount: 0,
-                    vatAmount: 0,
-                    totalAmount: 0,
-                    update: function () {
-                        this.netAmount = Math.round(this.netAmount * 10000) / 10000;
-                        this.vatAmount = Math.round(this.vatAmount * 10000) / 10000;
-                        this.totalAmount = this.netAmount + this.vatAmount;
-                    }
-                };
+            $scope.ok = function () {
+                $expenses.createExpense($scope.expense).then(function () {
+                    $modalInstance.close();
+                });
             }
 
-            $scope.$watch('purchase', function () {
-                $scope.purchase.update();
-            }, true);
-
-            $scope.save = function () {
-                var ex = {};
-                angular.copy($scope.purchase, ex);
-                ex.supplierId = ex.supplier._id;
-                delete ex.supplier;
-                var d = ex.date;
-                ex.date = d.date;
-                d = ex.expirationDate;
-                ex.expirationDate = d.date;
-
-                var saveRequest = $http.put('/api/accounting/expenses', ex);
-                saveRequest.success(function (data) {
-                    resetPurchase();
-                    refreshExpenses();
-                });
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
             }
         }
     ]);
-
-    financialApp.directive('focusOn', function () {
-        return function (scope, elem, attr) {
-            scope.$on(attr.focusOn, function (e) {
-                elem[0].focus();
-            });
-        };
-    });
 
     r(['domReady!'], function (document) {
         angular.bootstrap(document, ['FinancialApp']);
