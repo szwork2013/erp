@@ -390,6 +390,10 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
 
             $scope.bookings = [];
 
+            $scope.remainder = {
+                amount: expense.totalAmount
+            };
+
             $scope.ok = function () {
 
             }
