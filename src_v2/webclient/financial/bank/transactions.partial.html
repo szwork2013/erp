@@ -1,0 +1,39 @@
+<h1>Bankrekeningen</h1>
+<ul class="nav nav-tabs">
+    <li><a href="#/bank">Overzicht</a></li>
+    <li class="active"><a href="#/bank/transactions">Verrichtingen</a></li>
+</ul>
+<br />
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form>
+            <div class="form-group col-md-8">
+                <input type="text" class="form-control" placeholder="rekening" data-ng-model="transaction.bankAccount" data-typeahead="ba as ba.name for ba in bankAccounts | filter:{name:$viewValue}" data-typeahead-input-formatter="$model.name" data-focus-on="TransactionSaved" />
+            </div>
+            <div class="form-group col-md-4">
+                <input type="text" class="form-control" placeholder="datum" data-ng-model="transaction.date" data-typeahead="d as d.text for d in dates | filter:{text:$viewValue}" />
+            </div>
+            <div class="form-group col-md-4">
+                <input type="text" class="form-control" placeholder="bedrag" data-ng-model="transaction.amount" />
+            </div>
+            <div class="form-group col-md-8">
+                <input type="text" class="form-control" placeholder="mededeling" data-ng-model="transaction.message" />
+            </div>
+            <div class="form-group col-md-12">
+                <button type="button" class="btn btn-primary" data-ng-click="saveTransaction();">Opslaan</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <table class="table">
+        <tbody>
+        <tr data-ng-repeat="transaction in transactions">
+            <td>{{transaction.bankAccount.name}}</td>
+            <td>{{transaction.date |date:'dd/MM/yyyy'}}</td>
+            <td>{{transaction.amount|currency:'€'}}</td>
+            <td>{{transaction.message}}</td>
+        </tr>
+    </tbody>
+    </table>
+</div>

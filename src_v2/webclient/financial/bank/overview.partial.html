@@ -1,0 +1,26 @@
+<h1>Bankrekeningen</h1>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#/bank">Overzicht</a></li>
+    <li><a href="#/bank/transactions">Verrichtingen</a></li>
+</ul>
+<br />
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Datum</th>
+            <th>Bedrag</th>
+            <th>Geboekt</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="transaction in transactions">
+            <td>{{transaction.date |date:'dd/MM/yyyy'}}</td>
+            <td>{{transaction.amount|currency:'€'}}</td>
+            <td><span data-ng-if="transaction.booked"><i class="glyphicon glyphicon-ok"></i></span></td>
+            <td><a href="" data-ng-click="showBookings(transaction);">boekingen</a></td>
+        </tr>
+    </tbody>
+    </table>
+</div>

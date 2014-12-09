@@ -1,0 +1,13 @@
+{
+  "name": "erp",
+  "description": "ERP",
+  "version": "0.0.2",
+  "private": true,
+  "dependencies": {
+    "express": "4.x",
+	"body-parser": "1.x",
+    "q": "1.0.x",
+    "mongoose": "3.8.x",
+    "zmq": "2.8.x"
+  }
+}

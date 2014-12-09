@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Contacten</h1>
+            <p><a href="" data-ng-click="create();">Nieuw contact aanmaken</a></p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Naam</th>
+                    <th>Personeel</th>
+                    <th>Klant</th>
+                    <th>Leverancier</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-ng-repeat="contact in contacts">
+                    <td><a href="" data-ng-click="edit(contact);">{{contact.name}}</a></td>
+                    <td><i data-ng-if="contact.type.employee" class="glyphicon glyphicon-ok"></i></td>
+                    <td><i data-ng-if="contact.type.customer" class="glyphicon glyphicon-ok"></i></td>
+                    <td><i data-ng-if="contact.type.supplier" class="glyphicon glyphicon-ok"></i></td>
+                    <td>&nbsp;</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

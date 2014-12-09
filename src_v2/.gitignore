@@ -1,0 +1,15 @@
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# directories
+server/node_modules
+server/iisnode
+data
+server/aspnet_client
+webclient/aspnet_client

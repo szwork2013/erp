@@ -38,3 +38,5 @@ Icon
 *.csv
 *.xls
 *.xlsx
+*.log
+/poc
