@@ -11,14 +11,6 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             controller: 'LedgerAccountController',
             templateUrl: 'financial/ledgeraccounts/account.partial.html'
         })
-        .when('/bank', {
-            controller: 'BankController',
-            templateUrl: 'financial/bank/overview.partial.html'
-        })
-        .when('/bank/transactions', {
-            controller: 'TransactionsController',
-            templateUrl: 'financial/bank/transactions.partial.html'
-        })
         .when('/expenses', {
             controller: 'ExpensesController',
             templateUrl: 'financial/expenses/overview.partial.html'
@@ -46,228 +38,10 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             $ledgerAccounts.getLedgerAccount($routeParams.id).then(function (data) {
                 $scope.ledgerAccount = data;
             });
-        }
-    ]);
 
-    financialApp.controller('LedgerOverviewController', [
-        '$scope',
-        '$ledgers',
-        '$modal',
-        function ($scope, $ledgers, $modal) {
-            var ledgerAccounts = {};
-
-            function refresh() {
-                $ledgers.findLedgers().then(function (data) {
-                    $scope.ledgers = data;
-                });
-
-                $ledgers.findLedgerAccounts().then(function (data) {
-                    ledgerAccounts = $_.groupBy(data, function (i) { return i.ledger._id; });
-                });
-            }
-
-            refresh();
-
-            $scope.findLedgerAccounts = function (ledger) {
-                return ledgerAccounts[ledger];
-            };
-
-            $scope.createLedger = function () {
-                var modal = $modal.open({
-                    templateUrl: 'financial/ledger/ledger.modal.html',
-                    controller: 'CreateLedgerModalController'
-                });
-
-                modal.result.then(function () { refresh(); });
-            }
-
-            $scope.createAccount = function (ledgerId) {
-                var modal = $modal.open({
-                    templateUrl: 'financial/ledger/account.modal.html',
-                    controller: 'CreateAccountModalController',
-                    resolve: {
-                        ledgerId: function () {
-                            return ledgerId;
-                        }
-                    }
-                });
-
-                modal.result.then(function () { refresh(); });
-            }
-        }
-    ]);
-
-    financialApp.controller('LedgerAccountOverviewController', [
-        '$scope',
-        '$ledgers',
-        '$routeParams',
-        function ($scope, $ledgers, $routerParams) {
-            $ledgers.getLedgerAccount($routerParams.id).then(function (data) {
-                $scope.account = data;
-            });
-        }
-    ]);
-
-    financialApp.controller('CreateLedgerModalController', [
-        '$scope',
-        '$modalInstance',
-        '$ledgers',
-        function ($scope, $modalInstance, $ledgers) {
-            $scope.ledger = {};
-
-            $scope.ok = function () {
-                if ($scope.ledger.name) {
-                    $ledgers.createLedger($scope.ledger.name).then(function () {
-                        $modalInstance.close();
-                    });
-                }
-            };
-
-            $scope.cancel = function () {
-                $modalInstance.dismiss();
-            };
-        }
-    ]);
-
-    financialApp.controller('CreateAccountModalController', [
-        '$scope',
-        '$modalInstance',
-        '$ledgers',
-        'ledgerId',
-        function ($scope, $modalInstance, $ledgers, ledgerId) {
-            $scope.account = { ledger: ledgerId, name: '' };
-
-            $scope.ok = function () {
-                if ($scope.account.name) {
-                    $ledgers.createLedgerAccount($scope.account).then(function () {
-                        $modalInstance.close();
-                    });
-                }
-            }
-
-            $scope.cancel = function () {
-                $modalInstance.dismiss();
-            }
-        }
-    ]);
-
-    financialApp.controller('BankController', [
-        '$scope',
-        '$bankTransactions',
-        '$modal',
-        function ($scope, $bankTransactions, $modal) {
-            $bankTransactions.findBankTransactions(50).then(function (transactions) {
-                $scope.transactions = transactions;
-            });
-
-            $scope.showBookings = function (transaction) {
-                var modal = $modal.open({
-                    templateUrl: 'financial/bank/bookings.modal.html',
-                    controller: 'TransactionBookingsModalController',
-                    size: 'lg',
-                    resolve: {
-                        transaction: function () {
-                            return angular.copy(transaction);
-                        }
-                    }
-                });
-
-                modal.result.then(
-                    function () { },
-                    function () { }
-                );
-            }
-        }
-    ]);
-
-    financialApp.controller('TransactionBookingsModalController', [
-        '$scope',
-        '$modalInstance',
-        '$ledgers',
-        'transaction',
-        function ($scope, $modalInstance, $ledgers, transaction) {
-            $scope.transaction = transaction;
-            $scope.bookings = [];
-
-            $ledgers.findLedgerAccounts().then(function (data) {
-                $scope.ledgerAccounts = data;
-            });
-
-            $ledgers.findBankTransactionBookings(transaction._id).then(function (data) {
+            $ledgerAccounts.findLedgerAccountBookings($routeParams.id).then(function (data) {
                 $scope.bookings = data;
             });
-
-            $scope.booking = { bankTransaction: transaction._id };
-
-            $scope.addBooking = function () {
-                if ($scope.booking.ledgerAccount && $scope.booking.amount) {
-                    var b = angular.copy($scope.booking);
-                    $scope.bookings.push(b);
-                    $scope.booking = { bankTransaction: transaction._id };
-                }
-            }
-
-            $scope.ok = function () {
-                $ledgers.saveBankTransactionBookings($scope.bookings).then(function () {
-                    $modalInstance.close();
-                }, function (err) {
-                    alert(err);
-                });
-            };
-
-            $scope.cancel = function () {
-                $modalInstance.dismiss();
-            };
-        }
-    ]);
-
-    financialApp.controller('TransactionsController', [
-        '$scope',
-        '$http',
-        '$common',
-        function ($scope, $http, $common) {
-            $scope.transaction = {};
-
-            $scope.dates = $common.findDates(367, 0);
-
-            var bankAccountsLookup = {};
-            var bankAccountsRequest = $http.get('/api/accounting/bank/accounts');
-            bankAccountsRequest.success(function (data) {
-                $scope.bankAccounts = data;
-                angular.forEach(data, function (value) {
-                    bankAccountsLookup[value._id] = value;
-                });
-            });
-
-            function refreshTransactions() {
-                var bankTransactionsRequest = $http.get('/api/accounting/bank/transactions/250');
-                bankTransactionsRequest.success(function (data) {
-                    $scope.transactions = data;
-                    angular.forEach($scope.transactions, function (transaction) {
-                        transaction.bankAccount = bankAccountsLookup[transaction.bankAccountId];
-                    });
-                });
-            }
-
-            refreshTransactions();
-
-            $scope.saveTransaction = function () {
-                var trans = {
-                    bankAccountId: $scope.transaction.bankAccount._id,
-                    date: $scope.transaction.date.date,
-                    amount: $scope.transaction.amount,
-                    message: $scope.transaction.message
-                };
-
-                var saveTransactionRequest = $http.put('/api/accounting/bank/transactions', trans);
-                saveTransactionRequest.success(function () {
-                    $scope.transaction.amount = 0;
-                    $scope.transaction.message = '';
-                    $scope.$broadcast('TransactionSaved');
-
-                    refreshTransactions();
-                });
-            }
         }
     ]);
 
@@ -307,23 +81,6 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
                 });
             };
 
-            $scope.showBookings = function (expense) {
-                var modal = $modal.open({
-                    templateUrl: 'financial/expenses/bookings.modal.html',
-                    controller: 'ExpenseBookingsModalController',
-                    size: 'lg',
-                    resolve: {
-                        expense: function () {
-                            return angular.copy(expense);
-                        }
-                    }
-                });
-
-                modal.result.then(function () {
-                    $scope.reloadExpenses();
-                });
-            };
-
             $scope.filter = {};
 
             $scope.reloadExpenses = function () {
@@ -332,7 +89,7 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
                     query.supplier = $scope.filter.supplier._id;
                 }
 
-                $expenses.findExpenses(100, query).then(function (expenses) {
+                $expenses.findExpenses(query).then(function (expenses) {
                     $scope.expenses = expenses;
                 });
             }
@@ -381,9 +138,8 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
         '$scope',
         '$modalInstance',
         '$contacts',
-        '$ledgers',
         '$expenses',
-        function ($scope, $modalInstance, $contacts, $ledgers, $expenses) {
+        function ($scope, $modalInstance, $contacts, $expenses) {
             $scope.expense = {};
 
             $contacts.findSuppliers().then(function (data) {
@@ -394,29 +150,6 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
                 $expenses.createExpense($scope.expense).then(function () {
                     $modalInstance.close();
                 });
-            }
-
-            $scope.cancel = function () {
-                $modalInstance.dismiss();
-            }
-        }
-    ]);
-
-    financialApp.controller('ExpenseBookingsModalController', [
-        '$scope',
-        '$modalInstance',
-        'expense',
-        function ($scope, $modalInstance, expense) {
-            $scope.expense = expense;
-
-            $scope.bookings = [];
-
-            $scope.remainder = {
-                amount: expense.totalAmount
-            };
-
-            $scope.ok = function () {
-
             }
 
             $scope.cancel = function () {

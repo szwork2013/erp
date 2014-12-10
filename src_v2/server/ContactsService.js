@@ -7,10 +7,14 @@
 
     }
 
-    ContactsService.prototype.findContacts = function () {
+    ContactsService.prototype.findContacts = function (type) {
         var d = q.defer();
+        var query = {};
+        if (type) {
+            query['type.' + type] = true;
+        }
 
-        domain.Contact.find({}, d.makeNodeResolver());
+        domain.Contact.find(query, d.makeNodeResolver());
 
         return d.promise;
     }

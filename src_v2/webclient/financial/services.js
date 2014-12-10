@@ -6,7 +6,7 @@ require(['angular', 'angular-ui', 'underscore'], function (angular, angularui, u
         '$q',
         function ($http, $q) {
             return {
-                findExpenses: function (pageSize, query) {
+                findExpenses: function (query) {
                     var querystring = '?';
                     for (var field in query) {
                         if (query.hasOwnProperty(field)) {
@@ -16,7 +16,7 @@ require(['angular', 'angular-ui', 'underscore'], function (angular, angularui, u
 
                     var d = $q.defer();
                     $http
-                        .get('/api/accounting/expenses/' + pageSize + querystring)
+                        .get('/api/accounting/expenses/' + querystring)
                         .success(function (data) {
                             d.resolve(data);
                         })
@@ -114,6 +114,20 @@ require(['angular', 'angular-ui', 'underscore'], function (angular, angularui, u
                         .error(function (err) {
                             d.reject(err);
                         })
+
+                    return d.promise;
+                },
+                findLedgerAccountBookings: function (ledgerAccountId) {
+                    var d = $q.defer();
+
+                    $http
+                        .get('/api/accounting/ledgeraccountbookings/' + ledgerAccountId)
+                        .success(function (data) {
+                            d.resolve(data);
+                        })
+                        .error(function (err) {
+                            d.reject(err);
+                        });
 
                     return d.promise;
                 }

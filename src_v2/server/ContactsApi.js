@@ -3,9 +3,9 @@
         var service = require('./ContactsService.js');
         var api = require('./Api.js');
 
-        router.route('/')
+        router.route('/:type?')
             .get(function (req, res, next) {
-                var p = service.findContacts();
+                var p = service.findContacts(req.params.type);
                 api.processResponse(p, res);
             })
             .put(function (req, res, next) {

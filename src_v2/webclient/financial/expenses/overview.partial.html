@@ -22,8 +22,6 @@
             <th>Vervaldatum</th>
             <th>Documentnr.</th>
             <th class="text-right">Bedrag</th>
-            <th class="text-center">Geboekt?</th>
-            <th>&nbsp;</th>
         </tr>
         </thead>
         <tbody>
@@ -34,8 +32,6 @@
             <td>{{expense.expirationDate|date:'dd/MM/yyyy'}}</td>
             <td>{{expense.documentNumber}}</td>
             <td class="text-right">{{expense.totalAmount|currency:"€ "}}</td>
-            <td class="text-center"><i class="glyphicon glyphicon-ok" data-ng-if="expense.status=='booked'"></i></td>
-            <td><a href="" data-ng-click="showBookings(expense)">Boekingen</a></td>
         </tr>
         </tbody>
     </table>
