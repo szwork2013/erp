@@ -1,4 +1,4 @@
-require(['angular', 'angular-ui'], function (angular) {
+require(['angular', 'angular-ui', 'underscore'], function (angular, angularui, underscore) {
     var services = angular.module('FinancialServices', ['ui.bootstrap']);
 
     services.factory('$expenses', [
@@ -71,65 +71,28 @@ require(['angular', 'angular-ui'], function (angular) {
         }
     ]);
 
-    services.factory('$ledgers', [
+    services.factory('$ledgerAccounts', [
         '$http',
         '$q',
         function ($http, $q) {
             return {
-                findLedgers: function () {
-                    var d = $q.defer();
-
-                    $http
-                        .get('/api/accounting/ledgers')
-                        .success(function (data) {
-                            d.resolve(data);
-                        })
-                        .error(function (err) {
-                            d.reject(err);
-                        });
-
-                    return d.promise;
-                },
-                createLedger: function (name) {
-                    var d = $q.defer();
-
-                    $http
-                        .put('/api/accounting/ledgers', { name: name })
-                        .success(function (data) {
-                            d.resolve(data);
-                        })
-                        .error(function (err) {
-                            d.reject(err);
-                        });
-
-                    return d.promise;
+                _findLedgerAccountTypes: function () {
+                    return {
+                        'supplier': { name: 'Leverancier' },
+                        'customer': { name: 'Klant' }
+                    }
                 },
                 findLedgerAccounts: function () {
-                    return this._findLedgerAccounts('');
-                },
-                findContactLedgerAccounts: function (contactId) {
-                    return this._findLedgerAccounts('contact=' + contactId);
-                },
-                _findLedgerAccounts: function (queryString) {
                     var d = $q.defer();
+                    var me = this;
 
                     $http
-                        .get('/api/accounting/ledgeraccounts?' + queryString)
+                        .get('/api/accounting/ledgeraccounts')
                         .success(function (data) {
-                            d.resolve(data);
-                        })
-                        .error(function (err) {
-                            d.reject(err);
-                        });
-
-                    return d.promise;
-                },
-                createLedgerAccount: function (account) {
-                    var d = $q.defer();
-
-                    $http
-                        .put('/api/accounting/ledgeraccounts', account)
-                        .success(function (data) {
+                            var types = me._findLedgerAccountTypes();
+                            underscore.each(data, function (item) {
+                                item.type = types[item.type].name;
+                            });
                             d.resolve(data);
                         })
                         .error(function (err) {
@@ -140,43 +103,17 @@ require(['angular', 'angular-ui'], function (angular) {
                 },
                 getLedgerAccount: function (id) {
                     var d = $q.defer();
+                    var me = this;
 
                     $http
                         .get('/api/accounting/ledgeraccounts/' + id)
                         .success(function (data) {
+                            data.type = me._findLedgerAccountTypes()[data.type].name;
                             d.resolve(data);
                         })
                         .error(function (err) {
                             d.reject(err);
-                        });
-
-                    return d.promise;
-                },
-                findBankTransactionBookings: function (bankTransactionId) {
-                    var d = $q.defer();
-
-                    $http
-                        .get('/api/accounting/ledgeraccountbookings/?bankTransactionId=' + bankTransactionId)
-                        .success(function (data) {
-                            d.resolve(data);
                         })
-                        .error(function (err) {
-                            d.reject(err);
-                        });
-
-                    return d.promise;
-                },
-                saveBankTransactionBookings: function (bookings) {
-                    var d = $q.defer();
-
-                    $http
-                        .post('/api/accounting/ledgeraccountbookings', bookings)
-                        .success(function () {
-                            d.resolve();
-                        })
-                        .error(function (err) {
-                            d.reject(err);
-                        });
 
                     return d.promise;
                 }

@@ -1,15 +1,15 @@
-require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'financial/services', 'contacts/services', 'common/services'], function (r, angular, $_) {
-    var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap', 'FinancialServices', 'ContactsServices', 'CommonServices']);
+require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'financial/services', 'contacts/services'], function (r, angular, $_) {
+    var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap', 'FinancialServices', 'ContactsServices']);
 
     financialApp.config(['$routeProvider', function ($routeProvider) {
         $routeProvider
-        .when('/ledger', {
-            controller: 'LedgerOverviewController',
-            templateUrl: 'financial/ledger/overview.partial.html'
+        .when('/ledgeraccounts', {
+            controller: 'LedgerAccountsOverviewController',
+            templateUrl: 'financial/ledgeraccounts/overview.partial.html'
         })
-        .when('/ledgeraccount/:id', {
-            controller: 'LedgerAccountOverviewController',
-            templateUrl: 'financial/ledger/account.partial.html'
+        .when('/ledgeraccounts/:id', {
+            controller: 'LedgerAccountController',
+            templateUrl: 'financial/ledgeraccounts/account.partial.html'
         })
         .when('/bank', {
             controller: 'BankController',
@@ -24,9 +24,30 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             templateUrl: 'financial/expenses/overview.partial.html'
         })
         .otherwise({
-            redirectTo: '/ledger'
+            redirectTo: '/ledgeraccounts'
         });
     } ]);
+
+    financialApp.controller('LedgerAccountsOverviewController', [
+        '$scope',
+        '$ledgerAccounts',
+        function ($scope, $ledgerAccounts) {
+            $ledgerAccounts.findLedgerAccounts().then(function (data) {
+                $scope.ledgerAccounts = data;
+            });
+        }
+    ]);
+
+    financialApp.controller('LedgerAccountController', [
+        '$scope',
+        '$ledgerAccounts',
+        '$routeParams',
+        function ($scope, $ledgerAccounts, $routeParams) {
+            $ledgerAccounts.getLedgerAccount($routeParams.id).then(function (data) {
+                $scope.ledgerAccount = data;
+            });
+        }
+    ]);
 
     financialApp.controller('LedgerOverviewController', [
         '$scope',

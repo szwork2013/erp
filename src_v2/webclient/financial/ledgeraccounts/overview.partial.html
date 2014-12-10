@@ -1,0 +1,19 @@
+<h1>Rekeningen</h1>
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Type</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="ledgerAccount in ledgerAccounts">
+            <td><a href="" data-ng-href="#/ledgeraccounts/{{ledgerAccount._id}}">{{ledgerAccount.name}}</a></td>
+            <td>{{ledgerAccount.type}}</td>
+            <td>&nbsp;</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

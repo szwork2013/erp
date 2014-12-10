@@ -6,6 +6,24 @@
 
     }
 
+    AccountingService.prototype.findLedgerAccounts = function (type) {
+        var d = q.defer();
+        var query = {};
+        if (type) {
+            query.type = type;
+        }
+
+        domain.LedgerAccount.find(query, d.makeNodeResolver());
+
+        return d.promise;
+    }
+
+    AccountingService.prototype.getLedgerAccount = function (id) {
+        var d = q.defer();
+        domain.LedgerAccount.findById(id, d.makeNodeResolver());
+        return d.promise;
+    }
+
     AccountingService.prototype.onContactUpdate = function (contact) {
 
         var promises = [];
