@@ -1,26 +1,59 @@
 <h1>Bankrekeningen</h1>
-<ul class="nav nav-tabs">
-    <li class="active"><a href="#/bank">Overzicht</a></li>
-    <li><a href="#/bank/transactions">Verrichtingen</a></li>
-</ul>
-<br />
+<p><button class="btn btn-primary" data-ng-file-select="" data-ng-model="file" data-ng-multiple="false">Bestand importeren</button></p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form>
+            <div class="form-group col-md-10">
+                <select class="form-control" data-ng-model="filter.status">
+                    <option value=""></option>
+                    <option value="booked">Geboekt</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <button class="form-control btn btn-primary" data-ng-click="refreshTransactions()"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
 <div>
     <table class="table">
         <thead>
         <tr>
+            <th>Rekening</th>
             <th>Datum</th>
-            <th>Bedrag</th>
-            <th>Geboekt</th>
-            <th>&nbsp;</th>
+            <th>Mededeling</th>
+            <th class="text-right">Bedrag</th>
         </tr>
         </thead>
-        <tbody>
-        <tr data-ng-repeat="transaction in transactions">
+        <tbody data-ng-repeat="transaction in bankTransactions">
+        <tr data-ng-if="transaction.info && transaction.info.type == 'credit-transfer'">
+            <td>{{transaction.account}}</td>
             <td>{{transaction.date |date:'dd/MM/yyyy'}}</td>
-            <td>{{transaction.amount|currency:'€'}}</td>
-            <td><span data-ng-if="transaction.booked"><i class="glyphicon glyphicon-ok"></i></span></td>
-            <td><a href="" data-ng-click="showBookings(transaction);">boekingen</a></td>
+            <td>{{transaction.info.message}}</td>
+            <td class="text-right">{{transaction.amount|currency:'€'}}</td>
         </tr>
-    </tbody>
+        <tr data-ng-if="transaction.info && transaction.info.type == 'direct-debit'">
+            <td>{{transaction.account}}</td>
+            <td>{{transaction.date |date:'dd/MM/yyyy'}}</td>
+            <td>DOMICILIERING: {{transaction.info.creditor}}<br />{{transaction.info.message}}</td>
+            <td class="text-right">{{transaction.amount|currency:'€'}}</td>
+        </tr>
+        <tr data-ng-if="!transaction.info || (transaction.info.type != 'credit-transfer' && transaction.info.type != 'direct-debit')">
+            <td>{{transaction.account}}</td>
+            <td>{{transaction.date |date:'dd/MM/yyyy'}}</td>
+            <td>{{transaction.message}}</td>
+            <td class="text-right">{{transaction.amount|currency:'€'}}</td>
+        </tr>
+        <tr data-ng-if="transaction.status != 'booked'">
+            <td>&nbsp;</td>
+            <td colspan="3">
+                <div class="col-md-10">
+                    <input type="text" class="form-control" placeholder="rekening" data-ng-model="ledgerAccount" data-typeahead="la as la.name + ' (' + la.type + ')' for la in ledgerAccounts | filter:{name:$viewValue}" />
+                    </div>
+                    <button type="button" class="btn btn-primary col-md-2" data-ng-click="book(transaction, ledgerAccount)">Boeken</button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
     </table>
 </div>

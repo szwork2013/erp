@@ -8,6 +8,9 @@
 	"body-parser": "1.x",
     "q": "1.0.x",
     "mongoose": "3.8.x",
-    "zmq": "2.8.x"
+    "zmq": "2.8.x",
+    "connect-multiparty":"1.2.x",
+    "ya-csv":"0.9.x",
+    "mongodb":"1.4.x"
   }
 }

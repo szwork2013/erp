@@ -13,7 +13,7 @@
     });
 
     module.exports['LedgerAccount'] = mongoose.model('LedgerAccount', ledgerAccountSchema, 'LedgerAccounts');
-    
+
     var expenseSchema = new mongoose.Schema({
         sequence: { type: Number, required: true, unique: true },
         supplier: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'Contact' },
@@ -28,12 +28,25 @@
 
     module.exports['Expense'] = mongoose.model('Expense', expenseSchema, 'Expenses');
 
+    var bankTransactionSchema = new mongoose.Schema({
+        account: { type: String, required: true },
+        date: { type: Date, required: true },
+        valueDate: { type: Date, required: true },
+        message: { type: String, required: false },
+        amount: { type: Number, required: true },
+        status: { type: String, required: false },
+        info: { type: mongoose.SchemaTypes.Mixed, required: false }
+    });
+
+    module.exports['BankTransaction'] = mongoose.model('BankTransaction', bankTransactionSchema, 'BankTransactions');
+
     var ledgerAccountBookingSchema = new mongoose.Schema({
         ledgerAccount: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'LedgerAccount' },
         date: { type: Date, required: true },
         amount: { type: Number, required: true },
         message: { type: String, required: true },
-        expense: { type: mongoose.SchemaTypes.ObjectId, required: false, ref: 'Expense' }
+        expense: { type: mongoose.SchemaTypes.ObjectId, required: false, ref: 'Expense' },
+        bankTransaction: { type: mongoose.SchemaTypes.ObjectId, required: false, ref: 'BankTransaction' }
     });
 
     module.exports['LedgerAccountBooking'] = mongoose.model('LedgerAccountBooking', ledgerAccountBookingSchema, 'LedgerAccountBookings');

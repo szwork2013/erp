@@ -13,6 +13,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json());
+
 var contactsRouter = express.Router();
 require('./ContactsApi.js')(contactsRouter);
 app.use('/contacts', contactsRouter);

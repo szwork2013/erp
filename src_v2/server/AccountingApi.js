@@ -3,6 +3,8 @@
         var service = require('./AccountingService.js');
         var api = require('./Api.js');
 
+        router.use(require('connect-multiparty')());
+
         // rest 
         router.route('/ledgeraccounts/:id?')
             .get(function (req, res, next) {
@@ -32,6 +34,27 @@
                 var p = service.createExpense(req.body);
                 api.processResponse(p, res);
             });
+
+        router.route('/bank/transactions')
+            .get(function (req, res, next) {
+                var p = service.findBankStatements(req.query);
+                api.processResponse(p, res);
+            })
+            .post(function (req, res, next) {
+                if (req.files && req.files.file) {
+                    var p = service.importBankTransactions(req.files.file.path);
+                    api.processResponse(p, res);
+                }
+                else {
+                    res.status(200).end('ok');
+                }
+            });
+
+        router.route('/bank/booking')
+            .put(function (req, res, next) {
+                var p = service.bookBankTransaction(req.body.transaction, req.body.ledgerAccount);
+                api.processResponse(p, res);
+            })
 
         // event handlers
         var eventDispatcher = require('./EventDispatcher.js');

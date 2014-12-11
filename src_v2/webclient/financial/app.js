@@ -1,5 +1,5 @@
-require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'financial/services', 'contacts/services'], function (r, angular, $_) {
-    var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap', 'FinancialServices', 'ContactsServices']);
+require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'financial/services', 'contacts/services', 'angular-file-upload'], function (r, angular, $_) {
+    var financialApp = angular.module('FinancialApp', ['ngRoute', 'ui.bootstrap', 'angularFileUpload', 'FinancialServices', 'ContactsServices']);
 
     financialApp.config(['$routeProvider', function ($routeProvider) {
         $routeProvider
@@ -14,6 +14,10 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
         .when('/expenses', {
             controller: 'ExpensesController',
             templateUrl: 'financial/expenses/overview.partial.html'
+        })
+        .when('/bank', {
+            controller: 'BankController',
+            templateUrl: 'financial/bank/overview.partial.html'
         })
         .otherwise({
             redirectTo: '/ledgeraccounts'
@@ -41,6 +45,8 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
 
             $ledgerAccounts.findLedgerAccountBookings($routeParams.id).then(function (data) {
                 $scope.bookings = data;
+
+                $scope.balance = $_.reduce(data, function (memo, item) { return memo + item.amount; }, 0);
             });
         }
     ]);
@@ -155,6 +161,49 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             $scope.cancel = function () {
                 $modalInstance.dismiss();
             }
+        }
+    ]);
+
+    financialApp.controller('BankController', [
+        '$scope',
+        '$upload',
+        '$bankTransactions',
+        '$ledgerAccounts',
+        function ($scope, $upload, $bankTransactions, $ledgerAccounts) {
+            $scope.file = null;
+            $scope.$watch('file', function () {
+                if ($scope.file) {
+                    $scope.upload = $upload.upload({
+                        url: '/api/accounting/bank/transactions',
+                        method: 'POST',
+                        file: $scope.file
+                    }).success(function () {
+                        $scope.file = null;
+                    });
+                }
+            });
+
+            $ledgerAccounts.findLedgerAccounts().then(function (data) {
+                $scope.ledgerAccounts = data;
+            });
+
+            $scope.book = function (transaction, ledgerAccount) {
+                $bankTransactions.book(transaction, ledgerAccount).then(function (data) {
+                    refreshTransactions();
+                });
+            }
+
+            $scope.filter = {};
+
+            function refreshTransactions() {
+                $bankTransactions.findBankTransactions($scope.filter).then(function (data) {
+                    $scope.bankTransactions = data;
+                });
+            }
+
+            $scope.refreshTransactions = refreshTransactions;
+
+            refreshTransactions();
         }
     ]);
 

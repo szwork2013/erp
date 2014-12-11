@@ -123,7 +123,129 @@
                 }
             });
         });
+    };
+
+    AccountingService.prototype.findBankStatements = function (query) {
+        var d = q.defer();
+
+        domain.BankTransaction.find({}).sort({ 'date': 'desc' }).exec(d.makeNodeResolver());
+
+        return d.promise;
     }
+
+    AccountingService.prototype.importBankTransactions = function (path) {
+        var d = q.defer();
+
+        function parseDate(str) {
+            var split = str.split('/');
+            return new Date(split[2], split[1] - 1, split[0], 0, 0, 0);
+        }
+
+        var regex = [
+            {
+                regex: new RegExp(/^EUROPESE OVERSCHRIJVING NAAR (.*) BANKIER BEGUNSTIGDE: ([a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?) (.*) DOORGEGEVEN OP [0-9\-]{8,10} MET KBC-ONLINE FOR BUSINESS \/ ISABEL/),
+                parse: function (match) {
+                    return {
+                        type: 'credit-transfer',
+                        creditorAccountNumber: match[1].replace(' ', ''),
+                        message: match[4]
+                    };
+                }
+            },
+            {
+                regex: new RegExp(/^EUROPESE OVERSCHRIJVING VAN (.*) BANKIER OPDRACHTGEVER: ([a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?) (.*)/),
+                parse: function (match) {
+                    return {
+                        type: 'credit-transfer',
+                        debtorAccountNumber: match[1],
+                        message: match[4]
+                    };
+                }
+            },
+            {
+                regex: new RegExp(/^EUROPESE DOMICILIERING( B2B)? SCHULDEISER(\s*): (.*) REF\. SCHULDEISER: (.*) MANDAATREFERTE(\s*): (.*) EIGEN OMSCHR\.(\s*): (.*) MEDEDELING[\s]{0,}: (.*)/),
+                parse: function (match) {
+                    return {
+                        type: 'direct-debit',
+                        creditor: match[3],
+                        creditorReference: match[4],
+                        creditorMandateReference: match[6],
+                        creditorDescription: match[8],
+                        message: match[9]
+                    };
+                }
+            }
+        ];
+
+        var csv = require('ya-csv');
+        var reader = csv.createCsvFileReader(path, {
+            columnsFromHeader: true,
+            separator: ';',
+            quote: '"'
+        });
+
+        reader.on('data', function (record) {
+            var trans = new domain.BankTransaction({
+                account: record.Rekeningnummer,
+                date: parseDate(record.Datum),
+                valueDate: parseDate(record.Valuta),
+                message: record.Omschrijving,
+                amount: parseFloat(record.Bedrag.replace(',', '.'))
+            });
+
+            for (var i = 0; i < regex.length; i++) {
+                var r = regex[i];
+                var match = record.Omschrijving.match(r.regex);
+                if (match) {
+                    trans.info = r.parse(match);
+                    break;
+                }
+            }
+
+            trans.save(function (err) {
+                if (err) {
+                    console.error(err);
+                }
+            });
+        });
+
+        reader.on('error', function (err) {
+            d.reject(err);
+        });
+
+        reader.on('end', function () {
+            d.resolve();
+        });
+
+        return d.promise;
+    };
+
+    AccountingService.prototype.bookBankTransaction = function (transactionId, ledgerAccountId) {
+        var d = q.defer();
+
+        domain.BankTransaction.findById(transactionId, function (err, transaction) {
+            if (err) {
+                return d.reject(err);
+            }
+
+            new domain.LedgerAccountBooking({
+                ledgerAccount: ledgerAccountId,
+                date: transaction.date,
+                amount: transaction.amount,
+                message: 'betaling via bank',
+                bankTransaction: transaction._id
+            }).save(function (err) {
+                if (err) {
+                    return d.reject(err);
+                }
+
+                transaction.status = 'booked';
+                transaction.save(d.makeNodeResolver());
+            });
+        });
+
+        return d.promise;
+    };
 
     module.exports = new AccountingService();
 })();

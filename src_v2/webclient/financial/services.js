@@ -49,15 +49,25 @@ require(['angular', 'angular-ui', 'underscore'], function (angular, angularui, u
         '$q',
         function ($http, $q) {
             return {
-                findBankTransactions: function (pageSize) {
-                    if (!pageSize) {
-                        pageSize = 50;
-                    }
-
+                findBankTransactions: function (filter) {
                     var d = $q.defer();
 
                     $http
-                        .get('/api/accounting/bank/transactions/' + pageSize)
+                        .get('/api/accounting/bank/transactions')
+                        .success(function (data) {
+                            d.resolve(data);
+                        })
+                        .error(function (err) {
+                            d.reject(err);
+                        });
+
+                    return d.promise;
+                },
+                book: function (transaction, ledgerAccount) {
+                    var d = $q.defer();
+
+                    $http
+                        .put('/api/accounting/bank/booking', { transaction: transaction._id, ledgerAccount: ledgerAccount._id })
                         .success(function (data) {
                             d.resolve(data);
                         })
