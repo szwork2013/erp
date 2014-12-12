@@ -14,7 +14,7 @@
             query['type.' + type] = true;
         }
 
-        domain.Contact.find(query, d.makeNodeResolver());
+        domain.Contact.find(query).sort({name:'asc'}).exec(d.makeNodeResolver());
 
         return d.promise;
     }
