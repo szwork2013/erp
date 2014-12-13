@@ -48,6 +48,24 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
 
                 $scope.balance = $_.reduce(data, function (memo, item) { return memo + item.amount; }, 0);
             });
+
+            $scope.balanceSelected = 0;
+            $scope.selected = [];
+
+            $scope.select = function (booking) {
+                if (booking.selected) {
+                    $scope.selected.push(booking);
+                    $scope.selected = $_.uniq($scope.selected);
+                }
+                else {
+                    var i = $_.indexOf($scope.selected, booking);
+                    if (i > -1) {
+                        $scope.selected.splice(i, 1);
+                    }
+                }
+
+                $scope.balanceSelected = $_.reduce($scope.selected, function (memo, b) { return memo + b.amount; }, 0);
+            }
         }
     ]);
 

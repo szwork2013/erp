@@ -54,7 +54,7 @@
             .put(function (req, res, next) {
                 var p = service.bookBankTransaction(req.body.transaction, req.body.ledgerAccount);
                 api.processResponse(p, res);
-            })
+            });
 
         // event handlers
         var eventDispatcher = require('./EventDispatcher.js');

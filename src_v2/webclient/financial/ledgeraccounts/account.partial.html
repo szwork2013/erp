@@ -1,6 +1,6 @@
 <h1>Rekening: {{ledgerAccount.name}} ({{ledgerAccount.type}})</h1>
 <div>
-<h3>Saldo: {{balance|currency:'€'}}</h3>
+    <h3>Saldo: {{balance|currency:'€'}}</h3>
 </div>
 <div>
     <table class="table">
@@ -17,7 +17,14 @@
             <td>{{booking.date|date:'dd/MM/yyyy'}}</td>
             <td>{{booking.message}}</td>
             <td class="text-right">{{booking.amount|currency:'€'}}</td>
-            <td><input type="checkbox"/></td>
+            <td><input type="checkbox" data-ng-model="booking.selected" data-ng-change="select(booking);" /></td>
+        </tr>
+        </tbody>
+        <tbody>
+        <tr>
+            <td colspan="2"><button class="btn btn-primary" data-ng-click="" data-ng-disabled="balanceSelected != 0 || !selected.length">Boekingen afsluiten</button></td>
+            <td class="text-right">{{balanceSelected|currency:'€'}}</td>
+            <td>&nbsp;</td>
         </tr>
         </tbody>
     </table>
