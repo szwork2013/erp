@@ -66,6 +66,11 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
 
                 $scope.balanceSelected = $_.reduce($scope.selected, function (memo, b) { return memo + b.amount; }, 0);
             }
+
+            $scope.closeBookings = function () {
+                var request = $_.map($scope.selected, function (i) { return i._id; });
+                alert('TODO');
+            }
         }
     ]);
 

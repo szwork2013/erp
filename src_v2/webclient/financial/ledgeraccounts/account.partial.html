@@ -22,7 +22,7 @@
         </tbody>
         <tbody>
         <tr>
-            <td colspan="2"><button class="btn btn-primary" data-ng-click="" data-ng-disabled="balanceSelected != 0 || !selected.length">Boekingen afsluiten</button></td>
+            <td colspan="2"><button class="btn btn-primary" data-ng-click="closeBookings();" data-ng-disabled="balanceSelected != 0 || !selected.length">Boekingen afsluiten</button></td>
             <td class="text-right">{{balanceSelected|currency:'€'}}</td>
             <td>&nbsp;</td>
         </tr>
