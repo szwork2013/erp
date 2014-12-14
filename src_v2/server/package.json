@@ -11,6 +11,7 @@
     "zmq": "2.8.x",
     "connect-multiparty":"1.2.x",
     "ya-csv":"0.9.x",
-    "mongodb":"1.4.x"
+    "mongodb":"1.4.x",
+    "underscore":"1.7.x"
   }
 }

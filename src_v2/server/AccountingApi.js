@@ -25,6 +25,12 @@
                 api.processResponse(p, res);
             });
 
+        router.route('/ledgeraccountbookings/close')
+            .put(function (req, res, next) {
+                var p = service.closeLedgerAccountBookings(req.body);
+                api.processResponse(p, res);
+            });
+
         router.route('/expenses')
             .get(function (req, res, next) {
                 var p = service.findExpenses(req.query);
@@ -61,6 +67,7 @@
         eventDispatcher.handle('contact_created', service.onContactUpdate);
         eventDispatcher.handle('contact_updated', service.onContactUpdate);
         eventDispatcher.handle('expense_created', service.onExpenseUpdate);
+        eventDispatcher.handle('ledgeraccountbooking_closed', service.onBookingClose);
     }
 
     module.exports = registerApi;

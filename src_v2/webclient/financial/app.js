@@ -43,11 +43,14 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
                 $scope.ledgerAccount = data;
             });
 
-            $ledgerAccounts.findLedgerAccountBookings($routeParams.id).then(function (data) {
-                $scope.bookings = data;
+            function refreschBookings() {
+                $ledgerAccounts.findLedgerAccountBookings($routeParams.id).then(function (data) {
+                    $scope.bookings = data;
+                    $scope.balance = $_.reduce(data, function (memo, item) { return memo + item.amount; }, 0);
+                });
+            }
 
-                $scope.balance = $_.reduce(data, function (memo, item) { return memo + item.amount; }, 0);
-            });
+            refreschBookings();
 
             $scope.balanceSelected = 0;
             $scope.selected = [];
@@ -68,8 +71,11 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
             }
 
             $scope.closeBookings = function () {
-                var request = $_.map($scope.selected, function (i) { return i._id; });
-                alert('TODO');
+                $ledgerAccounts.closeBookings($scope.selected).then(function () {
+                    $scope.balanceSelected = 0;
+                    $scope.selected = [];
+                    refreschBookings();
+                });
             }
         }
     ]);

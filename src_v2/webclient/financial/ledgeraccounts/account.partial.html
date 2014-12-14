@@ -17,7 +17,7 @@
             <td>{{booking.date|date:'dd/MM/yyyy'}}</td>
             <td>{{booking.message}}</td>
             <td class="text-right">{{booking.amount|currency:'€'}}</td>
-            <td><input type="checkbox" data-ng-model="booking.selected" data-ng-change="select(booking);" /></td>
+            <td><input type="checkbox" data-ng-if="booking.status != 'closed'" data-ng-model="booking.selected" data-ng-change="select(booking);" />&nbsp;</td>
         </tr>
         </tbody>
         <tbody>

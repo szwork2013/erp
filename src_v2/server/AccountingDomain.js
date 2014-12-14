@@ -23,7 +23,8 @@
         paymentMessage: { type: String },
         netAmount: { type: Number, required: true },
         vatAmount: { type: Number, required: true },
-        totalAmount: { type: Number, required: true }
+        totalAmount: { type: Number, required: true },
+        status: { type: String, required: true, 'default': 'open' }
     });
 
     module.exports['Expense'] = mongoose.model('Expense', expenseSchema, 'Expenses');
@@ -34,7 +35,7 @@
         valueDate: { type: Date, required: true },
         message: { type: String, required: false },
         amount: { type: Number, required: true },
-        status: { type: String, required: false },
+        status: { type: String, required: true, 'default': 'open' },
         info: { type: mongoose.SchemaTypes.Mixed, required: false }
     });
 
@@ -45,6 +46,7 @@
         date: { type: Date, required: true },
         amount: { type: Number, required: true },
         message: { type: String, required: true },
+        status: { type: String, required: true, 'default': 'open' },
         expense: { type: mongoose.SchemaTypes.ObjectId, required: false, ref: 'Expense' },
         bankTransaction: { type: mongoose.SchemaTypes.ObjectId, required: false, ref: 'BankTransaction' }
     });

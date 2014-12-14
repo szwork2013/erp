@@ -140,6 +140,20 @@ require(['angular', 'angular-ui', 'underscore'], function (angular, angularui, u
                         });
 
                     return d.promise;
+                },
+                closeBookings: function (bookings) {
+                    var d = $q.defer();
+
+                    $http
+                        .put('/api/accounting/ledgeraccountbookings/close', bookings)
+                        .success(function (data) {
+                            d.resolve(data);
+                        })
+                        .error(function (err) {
+                            d.reject(err);
+                        });
+
+                    return d.promise;
                 }
             };
         }

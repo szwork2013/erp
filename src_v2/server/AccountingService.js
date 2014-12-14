@@ -2,6 +2,7 @@
     var domain = require('./AccountingDomain.js');
     var q = require('q');
     var eventDispatcher = require('./EventDispatcher.js');
+    var _ = require('underscore');
 
     function AccountingService() {
 
@@ -95,6 +96,54 @@
         var d = q.defer();
 
         domain.LedgerAccountBooking.find({ ledgerAccount: ledgerAccountId }).sort({ date: 'desc' }).exec(d.makeNodeResolver());
+
+        return d.promise;
+    }
+
+    AccountingService.prototype.closeLedgerAccountBookings = function (bookings) {
+        var d = q.defer();
+
+        var sum = _.reduce(bookings, function (sum, b) { return sum + b.amount; }, 0);
+        if (sum != 0) {
+            d.reject('Sum of bookings must be 0');
+            return d.promise;
+        }
+
+        function close(booking) {
+            var _d = q.defer();
+
+            if (booking.status != 'closed') {
+                domain.LedgerAccountBooking.findByIdAndUpdate(booking._id, { $set: { status: 'closed'} }, function (err, b) {
+                    if (err) {
+                        _d.reject(err);
+                        return;
+                    }
+
+                    eventDispatcher.send('ledgeraccountbooking_closed', b);
+                    _d.resolve(b);
+                });
+
+                return _d.promise;
+            };
+        }
+
+        var promises = _.map(bookings, close);
+        return q.all(promises);
+    }
+
+    AccountingService.prototype.onBookingClose = function (booking) {
+        var d = q.defer();
+
+        if (booking && booking.expense) {
+            domain.Expense.findByIdAndUpdate(booking.expense, { $set: { status: 'paid'} }, d.makeNodeResolver());
+        }
+        else if (booking && booking.bankTransaction) {
+            domain.BankTransaction.findByIdAndUpdate(booking.bankTransaction, { $set: { status: 'paid'} }, d.makeNodeResolver());
+        }
+        else {
+            // nothing to do...
+            d.resolve();
+        }
 
         return d.promise;
     }
