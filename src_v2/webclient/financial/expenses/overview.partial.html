@@ -22,6 +22,7 @@
             <th>Vervaldatum</th>
             <th>Documentnr.</th>
             <th class="text-right">Bedrag</th>
+            <th>Betaald?</th>
         </tr>
         </thead>
         <tbody>
@@ -32,6 +33,7 @@
             <td>{{expense.expirationDate|date:'dd/MM/yyyy'}}</td>
             <td>{{expense.documentNumber}}</td>
             <td class="text-right">{{expense.totalAmount|currency:"€ "}}</td>
+            <td><i class="glyphicon glyphicon-ok" data-ng-if="expense.status == 'paid'"></i></td>
         </tr>
         </tbody>
     </table>

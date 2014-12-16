@@ -142,8 +142,9 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
         '$modalInstance',
         '$contacts',
         'expense',
+        '$expenses',
         '$filter',
-        function ($scope, $modalInstance, $contacts, expense, $filter) {
+        function ($scope, $modalInstance, $contacts, expense, $expenses, $filter) {
             $contacts.findSuppliers().then(function (data) {
                 $scope.suppliers = data;
             });
@@ -159,9 +160,13 @@ require(['require', 'angular', 'underscore', 'angular-route', 'angular-ui', 'fin
 
             $scope.expense = expense;
 
-            $scope.ok = function () {
-                $modalInstance.close();
-            };
+            if ($scope.expense.status != 'paid') {
+                $scope.ok = function () {
+                    $expenses.updateExpense($scope.expense).then(function () {
+                        $modalInstance.close();
+                    });
+                };
+            }
 
             $scope.cancel = function () {
                 $modalInstance.dismiss();

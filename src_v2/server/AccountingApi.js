@@ -39,6 +39,10 @@
             .put(function (req, res, next) {
                 var p = service.createExpense(req.body);
                 api.processResponse(p, res);
+            })
+            .post(function (req, res, next) {
+                var p = service.updateExpense(req.body);
+                api.processResponse(p, res);
             });
 
         router.route('/bank/transactions')
@@ -67,6 +71,7 @@
         eventDispatcher.handle('contact_created', service.onContactUpdate);
         eventDispatcher.handle('contact_updated', service.onContactUpdate);
         eventDispatcher.handle('expense_created', service.onExpenseUpdate);
+        eventDispatcher.handle('expense_updated', service.onExpenseUpdate);
         eventDispatcher.handle('ledgeraccountbooking_closed', service.onBookingClose);
     }
 

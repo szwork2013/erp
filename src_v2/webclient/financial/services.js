@@ -39,6 +39,20 @@ require(['angular', 'angular-ui', 'underscore'], function (angular, angularui, u
                         });
 
                     return d.promise;
+                },
+                updateExpense: function (expense) {
+                    var d = $q.defer();
+
+                    $http
+                        .post('/api/accounting/expenses/', expense)
+                        .success(function (data) {
+                            d.resolve(data);
+                        })
+                        .error(function (err) {
+                            d.reject(err);
+                        });
+
+                    return d.promise;
                 }
             };
         }

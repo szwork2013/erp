@@ -15,7 +15,7 @@
             query.type = type;
         }
 
-        domain.LedgerAccount.find(query, d.makeNodeResolver());
+        domain.LedgerAccount.find(query).sort({ name: 'asc' }).exec(d.makeNodeResolver());
 
         return d.promise;
     }
@@ -92,6 +92,37 @@
         return d.promise;
     }
 
+    AccountingService.prototype.updateExpense = function (exp) {
+        var d = q.defer();
+
+        domain.Expense.findById(exp._id, function (err, expense) {
+            if (err || !expense) {
+                d.reject(err);
+                return;
+            }
+
+            if (expense.status == 'paid') {
+                d.reject('Expense is already paid');
+                return;
+            }
+
+            expense.sequence = exp.sequence;
+            expense.supplier = exp.supplier._id;
+            expense.date = exp.date;
+            expense.expirationDate = exp.expirationDate;
+            expense.documentNumber = exp.documentNumber;
+            expense.paymentMessage = exp.paymentMessage;
+            expense.netAmount = exp.netAmount;
+            expense.vatAmount = exp.vatAmount;
+            expense.totalAmount = exp.totalAmount;
+
+            expense.save(d.makeNodeResolver());
+            eventDispatcher.send('expense_updated', expense);
+        });
+
+        return d.promise;
+    }
+
     AccountingService.prototype.findLedgerAccountBookings = function (ledgerAccountId) {
         var d = q.defer();
 
@@ -160,16 +191,31 @@
                 return;
             }
 
-            new domain.LedgerAccountBooking({
-                ledgerAccount: ledgerAccount._id,
-                date: expense.date,
-                amount: expense.totalAmount,
-                message: 'onkost ' + expense.sequence,
-                expense: expense._id
-            }).save(function (err) {
+            domain.LedgerAccountBooking.findOne({ expense: expense._id }, function (err, exp) {
                 if (err) {
                     console.error(err);
+                    return;
                 }
+
+                if (!exp) {
+                    exp = new domain.LedgerAccountBooking({
+                        ledgerAccount: ledgerAccount._id,
+                        date: expense.date,
+                        amount: expense.totalAmount,
+                        message: 'onkost ' + expense.sequence,
+                        expense: expense._id
+                    });
+                }
+
+                exp.date = expense.date;
+                exp.amount = expense.totalAmount;
+                exp.message = 'onkost ' + expense.sequence;
+
+                exp.save(function (err) {
+                    if (err) {
+                        console.error(err);
+                    }
+                });
             });
         });
     };
